@@ -9,8 +9,44 @@ const VerifyToken = () => {
     const [token, setToken] = useState('');
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(300); 
     const history = useHistory();
     const isMounted = useRef(true);
+
+    useEffect(() => {
+        const savedTime = localStorage.getItem('tokenExpireTime');
+        const currentTime = Math.floor(Date.now() / 1000); 
+
+        if (savedTime) {
+            const expireTime = parseInt(savedTime, 10);
+            const remainingTime = expireTime - currentTime;
+
+            if (remainingTime > 0) {
+                setTimeLeft(remainingTime);
+            } else {
+                localStorage.removeItem('tokenExpireTime'); 
+            }
+        } else {
+            const expireTime = Math.floor(Date.now() / 1000) + 300; 
+            localStorage.setItem('tokenExpireTime', expireTime);
+        }
+
+        const timer = setInterval(() => {
+            setTimeLeft((prev) => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    localStorage.removeItem('tokenExpireTime'); 
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => {
+            clearInterval(timer);
+            isMounted.current = false;
+        };
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,16 +62,10 @@ const VerifyToken = () => {
         } catch (err) {
         } finally {
             if (isMounted.current) {
-                setLoading(false); 
+                setLoading(false);
             }
         }
     };
-
-    useEffect(() => {
-        return () => {
-            isMounted.current = false; 
-        };
-    }, []);
 
     return (
         <Container maxWidth="xs">
@@ -102,6 +132,17 @@ const VerifyToken = () => {
                         }}
                     >
                         Por favor, ingresa tu KEY de usuario y el token que recibiste en el correo electrónico
+                    </Typography>
+                    <Typography 
+                        variant="body2" 
+                        align="center" 
+                        sx={{ 
+                            mb: 4, 
+                            color: 'red', 
+                            fontWeight: 600 
+                        }}
+                    >
+                        Token expira en {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')} minutos
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
