@@ -1,20 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { TextField, Button, Container, Typography, Box, Alert, Grid } from '@mui/material';
+import { Typography, Box, Button, TextField, Grid, Alert, Container, CircularProgress } from '@mui/material';
 import AtmIcon from '@mui/icons-material/Atm';
+import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
     const [userId, setUserId] = useState('');
     const [token, setToken] = useState('');
     const { verifyToken, error } = useAuth();
-    const [message] = useState('');
+    const [loading, setLoading] = useState(false);
     const history = useHistory();
     const isMounted = useRef(true);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setLoading(true);
         try {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
             const response = await verifyToken({ userId, token });
             if (isMounted.current) {
                 if (response && response.msg === 'Logged in!') {
@@ -22,12 +24,16 @@ const VerifyToken = () => {
                 }
             }
         } catch (err) {
+        } finally {
+            if (isMounted.current) {
+                setLoading(false); 
+            }
         }
     };
 
     useEffect(() => {
         return () => {
-            isMounted.current = false;
+            isMounted.current = false; 
         };
     }, []);
 
@@ -140,20 +146,18 @@ const VerifyToken = () => {
                                 color="primary" 
                                 fullWidth
                                 sx={{ borderRadius: 2 }} 
+                                disabled={loading}
                             >
-                                Verificar
+                                {loading ? (
+                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                        <CircularProgress size={20} sx={{ color: '#074EE7FF' }} />
+                                        <Typography sx={{ ml: 1, color: '#074EE7FF', fontSize: '0.875rem' }}>Verificando...</Typography>
+                                    </Box>
+                                ) : (
+                                    'Verificar'
+                                )}
                             </Button>
                         </Grid>
-                        {message && (
-                            <Grid item xs={12}>
-                                <Alert 
-                                    severity={message.includes('inválido') ? 'error' : 'info'} 
-                                    sx={{ mt: 2 }}
-                                >
-                                    {message}
-                                </Alert>
-                            </Grid>
-                        )}
                         {error && (
                             <Grid item xs={12}>
                                 <Alert severity="error" sx={{ mt: 2 }}>
