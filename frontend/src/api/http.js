@@ -1,7 +1,7 @@
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
-const baseApi = 'http://192.168.100.4:4000/secure/api'
+const baseApi = 'http://192.168.100.3:4000/secure/api'
 
 
 // Endpoints usuario
