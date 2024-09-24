@@ -79,12 +79,14 @@ export class UserController {
     };
   }
 
+  
   @UseGuards(AuthenticatedGuard)
   @Post('logout')
   logout(@Request() req) {
     req.logout(() => {});
   }
-//cambios
+
+
   @UseGuards(AuthenticatedGuard)
   @Post('change-password')
   async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
