@@ -15,7 +15,7 @@ export default function ProvidersList() {
             <Box display="flex" alignItems="center" mb={2}>
                 <Box display="flex" alignItems="center" p={1} bgcolor="#333" borderRadius={2}>
                     <MonetizationOnIcon style={{ color: 'green', marginRight: '8px' }} />
-                    <Typography variant="h6" style={{ color: 'red' }}>
+                    <Typography variant="h6" style={{ color: 'white' }}>
                         Vender P2P
                     </Typography>
                 </Box>
