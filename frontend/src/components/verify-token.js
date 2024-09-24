@@ -9,7 +9,8 @@ const VerifyToken = () => {
     const [token, setToken] = useState('');
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(300); 
+    const [timeLeft, setTimeLeft] = useState(300);
+    const [tokenExpired, setTokenExpired] = useState(false); 
     const history = useHistory();
     const isMounted = useRef(true);
 
@@ -25,6 +26,7 @@ const VerifyToken = () => {
                 setTimeLeft(remainingTime);
             } else {
                 localStorage.removeItem('tokenExpireTime'); 
+                setTokenExpired(true); 
             }
         } else {
             const expireTime = Math.floor(Date.now() / 1000) + 300; 
@@ -36,6 +38,7 @@ const VerifyToken = () => {
                 if (prev <= 1) {
                     clearInterval(timer);
                     localStorage.removeItem('tokenExpireTime'); 
+                    setTokenExpired(true); 
                     return 0;
                 }
                 return prev - 1;
@@ -50,6 +53,9 @@ const VerifyToken = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (tokenExpired) {
+            return; 
+        }
         setLoading(true);
         try {
             await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -141,7 +147,9 @@ const VerifyToken = () => {
                         fontWeight: 600 
                     }}
                 >
-                    Token expira en {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')} minutos
+                    {tokenExpired 
+                        ? 'Token expirado, intenta de nuevo.' 
+                        : `Token expira en ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')} minutos`}
                 </Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
@@ -177,6 +185,7 @@ const VerifyToken = () => {
                                     border: '1px solid #ddd'  
                                 } 
                             }}
+                            disabled={tokenExpired} 
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -186,7 +195,7 @@ const VerifyToken = () => {
                             color="primary" 
                             fullWidth
                             sx={{ borderRadius: 2 }} 
-                            disabled={loading}
+                            disabled={loading || tokenExpired} 
                         >
                             {loading ? (
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -203,7 +212,7 @@ const VerifyToken = () => {
                             <Alert severity="error" sx={{ mt: 2 }}>
                                 {error}
                             </Alert>
-                        </Grid>
+                    </Grid>
                     )}
                 </Grid>
             </Box>
