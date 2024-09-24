@@ -8,30 +8,20 @@ const VerifyToken = () => {
     const [userId, setUserId] = useState('');
     const [token, setToken] = useState('');
     const { verifyToken, error } = useAuth();
-    const [message, setMessage] = useState('');
+    const [message] = useState('');
     const history = useHistory();
-    const isMounted = useRef(true); 
+    const isMounted = useRef(true);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await verifyToken({ userId, token });
-            if (isMounted.current) { 
+            if (isMounted.current) {
                 if (response && response.msg === 'Logged in!') {
                     history.push('/');
-                } else if (response && response.msg === 'Código de verificación enviado a tu correo electrónico.') {
-                    setMessage('¡Verifica tu correo electrónico! Se ha enviado un código de verificación.');
-                } else if (response && response.msg === 'Código de verificación inválido.') {
-                    setMessage('Código de verificación inválido. Por favor, verifica el código e intenta de nuevo.');
-                } else {
-                    setMessage('Respuesta inesperada del servidor. Por favor, intenta de nuevo.');
                 }
             }
         } catch (err) {
-            console.error('Error verifying token:', err.message);
-            if (isMounted.current) {
-                setMessage('User-Key o Token incorrecto por favor intenta de nuevo.');
-            }
         }
     };
 
@@ -57,7 +47,7 @@ const VerifyToken = () => {
                         width: '100%',
                         padding: 3,
                         borderRadius: 2,
-                        boxShadow: '0 0 25px rgba(0, 123, 255, 0.6)', // Mejorado
+                        boxShadow: '0 0 25px rgba(0, 123, 255, 0.6)',
                         bgcolor: 'background.paper',
                         display: 'flex',
                         flexDirection: 'column',
@@ -65,7 +55,7 @@ const VerifyToken = () => {
                         border: '1px solid #ddd',
                         position: 'relative',
                         overflow: 'hidden',
-                        animation: 'glow 1.5s infinite alternate' // Animación de resplandor
+                        animation: 'glow 1.5s infinite alternate'
                     }}
                     component="form"
                     onSubmit={handleSubmit}
@@ -80,7 +70,7 @@ const VerifyToken = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            mb: 2, 
+                            mb: 2,
                         }}
                     >
                         <AtmIcon sx={{ color: 'white' }} />

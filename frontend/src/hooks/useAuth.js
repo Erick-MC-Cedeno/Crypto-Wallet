@@ -52,25 +52,14 @@ export default function useAuth() {
             if (data && 'msg' in data) {
                 if (data.msg === 'Código de verificación enviado a tu correo electrónico.') {
                     history.push('/verifytoken');
-                } else if (data.msg === 'Logged in!') {
-                    await setUserContext();
                 } else {
                     setError(data.error);
                 }
             } else {
-                setError('Unexpected response format');
+                setError('Credenciales incorrectas.');
             }
         } catch (err) {
-            if (err.response) {
-                console.log('Error response:', err.response); 
-                if (err.response.status === 401) {
-                    setError(err.response.data.error || 'Unauthorized');
-                } else {
-                    setError(err.response.data.error || 'An unexpected error occurred');
-                }
-            } else {
-                setError(err.message);
-            }
+            setError('Credenciales incorrectas.');
         }
     };
 
@@ -84,19 +73,9 @@ export default function useAuth() {
                 return data;
             } else {
                 setError(data.error || 'Código de verificación inválido.');
-                return data;
             }
         } catch (err) {
-            if (err.response) {
-                console.log('Error response:', err.response); 
-                if (err.response.status === 401) {
-                    setError(err.response.data.error || 'Unauthorized');
-                } else {
-                    setError(err.response.data.error || 'An unexpected error occurred');
-                }
-            } else {
-                setError(err.message);
-            }
+            setError('Token o User-Key incorrectos.');
             throw err;
         }
     };
@@ -105,24 +84,14 @@ export default function useAuth() {
         try {
             const { data } = await User.changePassword(body);
             if (data && data.message === 'Contraseña actualizada con éxito') {
-                setSuccessMessage('Contraseña actualizada con éxito');  // Establecer mensaje de éxito
+                setSuccessMessage('Contraseña actualizada con éxito');
             } else {
                 setError(data.error || 'Error al cambiar la contraseña.');
             }
         } catch (err) {
-            if (err.response) {
-                console.log('Error response:', err.response); 
-                if (err.response.status === 400) {
-                    setError(err.response.data.error || 'Bad request');
-                } else {
-                    setError(err.response.data.error || 'An unexpected error occurred');
-                }
-            } else {
-                setError(err.message);
-            }
+            setError(err.message);
         }
     };
-
 
     return {
         registerUser,
@@ -132,6 +101,5 @@ export default function useAuth() {
         changePassword,
         error,
         successMessage
-
     };
 }
