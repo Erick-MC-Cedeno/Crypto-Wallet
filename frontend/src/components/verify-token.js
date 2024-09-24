@@ -4,8 +4,6 @@ import AtmIcon from '@mui/icons-material/Atm';
 import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
-//CAMBIOS 23/09/2024
-
 const VerifyToken = () => {
     const [userId, setUserId] = useState('');
     const [token, setToken] = useState('');
