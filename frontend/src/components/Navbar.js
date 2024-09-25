@@ -23,9 +23,8 @@ import { useHistory } from 'react-router-dom';
 import {
     Atm as AtmIcon,
     SupportAgent as SupportAgentIcon,
-    ArrowForwardIos as ArrowForwardIosIcon,
     SwapHoriz as SwapHorizIcon,
-    MobileFriendly as MobileFriendlyIcon,
+    QrCode as QrCodeIcon,
     Menu as MenuIcon,
     AccountBalanceWallet as WalletIcon,
     Settings as SettingsIcon,
@@ -115,8 +114,8 @@ function DashboardContent() {
     const navItems = [
         { href: '/welcome', label: 'Crypto Soporte', Icon: SupportAgentIcon },
         { href: 'https://portfolio.metamask.io/swap?_gl=1*6qza6d*_gcl_au*MTMzNjQ0NzQwNi4xNzIzNTk2MTA5', label: 'Swap Coin', Icon: SwapHorizIcon },
-        { href: '/providers', label: 'Vender P2P', Icon: MobileFriendlyIcon },
-        { href: '/create', label: 'Proveedor P2P', Icon: ArrowForwardIosIcon },
+        { href: '/providers', label: 'Vender P2P', Icon: QrCodeIcon  },
+        { href: '/create', label: 'Proveedor P2P', Icon: QrCodeIcon  },
     ];
 
     const renderNavLinks = () => (

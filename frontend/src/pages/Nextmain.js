@@ -1,12 +1,18 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box, Link, Button, IconButton, Drawer, List, ListItem, ListItemText, Divider, Grid, Card, CardContent } from '@mui/material';
+import {
+    AppBar, Toolbar, Typography, Box, Link, Button, IconButton, Drawer,
+    List, ListItem, ListItemText, Divider, Grid, Card, CardContent
+} from '@mui/material';
 import AtmIcon from '@mui/icons-material/Atm';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink } from 'react-router-dom';
 import heroBanner from '../assets/hero-banner.png';
 import blockchainImg from '../assets/blockchain.png';
 import web3Img from '../assets/web3.png';
-import zetachainlogo from '../assets/zetachain.png'
+import zetachainlogo from '../assets/zetachain.png';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 
 const pairs = [
     { label: 'Bitcoin (BTC)', value: 'bitcoin', logo: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' },
@@ -15,8 +21,15 @@ const pairs = [
     { label: 'Binance (BNB)', value: 'binancecoin', logo: 'https://cryptologos.cc/logos/bnb-bnb-logo.png' },
     { label: 'Fantom (FTM)', value: 'fantom', logo: 'https://cryptologos.cc/logos/fantom-ftm-logo.png' },
     { label: 'Avalanche (AVAX)', value: 'avalanche-2', logo: 'https://cryptologos.cc/logos/avalanche-avax-logo.png' },
-    {label: 'Optimism (OP)', value: 'BINANCE:OPUSDT', logo: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png'},
-     {label: 'zetachain (ZETA)', value: 'BINANCE:ZETAUSDT', logo: zetachainlogo}
+    { label: 'Optimism (OP)', value: 'BINANCE:OPUSDT', logo: 'https://cryptologos.cc/logos/optimism-ethereum-op-logo.png' },
+    { label: 'Zetachain (ZETA)', value: 'BINANCE:ZETAUSDT', logo: zetachainlogo }
+];
+
+const navItems = [
+    { to: '/create', icon: <QrCodeIcon />, text: 'Proveedor P2P' },
+    { to: '/providers', icon: <QrCodeIcon />, text: 'Vender P2P' },
+    { to: '/servicios', icon: <RecentActorsIcon />, text: 'Servicios' },
+    { to: '/contactanos', icon: <ContactMailIcon />, text: 'Contáctanos' }
 ];
 
 const Nextmain = () => {
@@ -29,70 +42,25 @@ const Nextmain = () => {
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
             <List>
-                <ListItem>
-                    <ListItemText>
-                        <Link
-                            component={RouterLink}
-                            to="/create"
-                            sx={{
-                                textDecoration: 'none',
-                                color: 'text.primary',
-                                fontWeight: 'bold',
-                                fontSize: '0.75rem', 
-                            }}
-                        >
-                            Proveedor P2P
-                        </Link>
-                    </ListItemText>
-                </ListItem>
-                <ListItem>
-                    <ListItemText>
-                        <Link
-                            component={RouterLink}
-                            to="/providers"
-                            sx={{
-                                textDecoration: 'none',
-                                color: 'text.primary',
-                                fontWeight: 'bold',
-                                fontSize: '0.75rem',  
-                            }}
-                        >
-                            Vender P2P
-                        </Link>
-                    </ListItemText>
-                </ListItem>
-                <ListItem>
-                    <ListItemText>
-                        <Link
-                            component={RouterLink}
-                            to="/servicios"
-                            sx={{
-                                textDecoration: 'none',
-                                color: 'text.primary',
-                                fontWeight: 'bold',
-                                fontSize: '0.75rem',  
-                            }}
-                        >
-                            Servicios
-                        </Link>
-                    </ListItemText>
-                </ListItem>
-                <ListItem>
-                    <ListItemText>
-                        <Link
-                            component={RouterLink}
-                            to="/contactanos"
-                            sx={{
-                                textDecoration: 'none',
-                                color: 'text.primary',
-                                fontWeight: 'bold',
-                                fontSize: '0.75rem',  
-                            }}
-                        >
-                            Contáctanos
-                        </Link>
-                    </ListItemText>
-                </ListItem>
+                {navItems.map((item, index) => (
+                    <ListItem key={index}>
+                        <ListItemText>
+                            <Link
+                                component={RouterLink}
+                                to={item.to}
+                                sx={{
+                                    textDecoration: 'none',
+                                    color: 'text.primary',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.75rem',
+                                }}
+                            >
+                                {item.icon && <span style={{ verticalAlign: 'middle', marginRight: '0.5rem' }}>{item.icon}</span>}
+                                {item.text}
+                            </Link>
+                        </ListItemText>
+                    </ListItem>
+                ))}
                 <ListItem>
                     <ListItemText>
                         <Button
@@ -104,7 +72,7 @@ const Nextmain = () => {
                                 width: '100%',
                                 mb: 1,
                                 borderColor: 'text.primary',
-                                fontSize: '0.75rem',  
+                                fontSize: '0.75rem',
                                 '&:hover': {
                                     borderColor: '#FFD700',
                                     color: '#FFD700',
@@ -120,7 +88,7 @@ const Nextmain = () => {
                             color="primary"
                             sx={{
                                 width: '100%',
-                                fontSize: '0.75rem', 
+                                fontSize: '0.75rem',
                             }}
                         >
                             Registrarse
@@ -130,8 +98,6 @@ const Nextmain = () => {
             </List>
         </Box>
     );
-    
-
     return (
         <div>
             <AppBar position="fixed" sx={{ width: '100%', top: 0, bgcolor: '#1976d2' }}>
@@ -146,7 +112,7 @@ const Nextmain = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-
+    
                     {/* Logo and Title */}
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
@@ -168,35 +134,38 @@ const Nextmain = () => {
                             <AtmIcon sx={{ color: 'white' }} />
                         </Box>
                     </Box>
-
-                    
+    
                     <Box sx={{ display: { xs: 'none', sm: 'flex' }, alignItems: 'center' }}>
                         <Link
                             component={RouterLink}
                             to="/create"
-                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 2, fontWeight: 'bold', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
+                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 4, fontWeight: 'bold', fontSize: '0.9rem', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
                         >
+                            <QrCodeIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
                             Proveedor P2P
                         </Link>
                         <Link
                             component={RouterLink}
                             to="/providers"
-                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 2, fontWeight: 'bold', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
+                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 4, fontWeight: 'bold', fontSize: '0.9rem', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
                         >
+                            <QrCodeIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
                             Vender P2P
                         </Link>
                         <Link
                             component={RouterLink}
                             to="/servicios"
-                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 2, fontWeight: 'bold', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
+                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 4, fontWeight: 'bold', fontSize: '0.9rem', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
                         >
+                            <RecentActorsIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
                             Servicios
                         </Link>
                         <Link
                             component={RouterLink}
                             to="/contactanos"
-                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 2, fontWeight: 'bold', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
+                            sx={{ color: 'white', textDecoration: 'none', marginLeft: 4, fontWeight: 'bold', fontSize: '0.9rem', '&:hover': { textDecoration: 'underline', color: '#FFD700' } }}
                         >
+                            <ContactMailIcon sx={{ verticalAlign: 'middle', mr: 0.5 }} />
                             Contáctanos
                         </Link>
                     </Box>
@@ -306,73 +275,74 @@ const Nextmain = () => {
         overflow: 'hidden'
     }}
 >
-    <Typography variant="h4" sx={{ textAlign: 'center', mb: 2, color: '#333', fontWeight: 'bold', letterSpacing: '1px', fontFamily: 'Roboto, sans-serif' }}>
-        We Offer These Networks
-    </Typography>
 
-    <Typography variant="h6" sx={{ textAlign: 'center', mb: 4, color: '#555', fontWeight: 'normal', fontFamily: 'Roboto, sans-serif', fontStyle: 'italic' }}>
-        Bridging the Gap in Digital Finance
-    </Typography>
 
+<Typography variant="h4" sx={{ textAlign: 'center', mb: 2, color: '#333', fontWeight: 'bold', letterSpacing: '1px', fontFamily: 'Roboto, sans-serif' }}>
+    We Offer These Networks
+</Typography>
+
+<Typography variant="h6" sx={{ textAlign: 'center', mb: 4, color: '#555', fontWeight: 'normal', fontFamily: 'Roboto, sans-serif', fontStyle: 'italic' }}>
+    Bridging the Gap in Digital Finance
+</Typography>
+
+<Box
+    sx={{
+        display: 'flex',
+        overflowX: 'auto',
+        scrollBehavior: 'smooth',
+        width: '100%',
+        '&::-webkit-scrollbar': {
+            display: 'none', 
+        },
+        '&:hover': {
+            '& .logos-container': {
+                transform: 'translateX(-20%)', 
+            }
+        }
+    }}
+>
     <Box
+        className="logos-container"
         sx={{
             display: 'flex',
-            overflowX: 'auto',
-            scrollBehavior: 'smooth',
-            width: '100%',
-            '&::-webkit-scrollbar': {
-                display: 'none', 
-            },
-            '&:hover': {
-                '& .logos-container': {
-                    transform: 'translateX(-20%)', 
-                }
-            }
+            transition: 'transform 0.5s ease-in-out',
+            width: 'max-content',
         }}
     >
-        <Box
-            className="logos-container"
-            sx={{
-                display: 'flex',
-                transition: 'transform 0.5s ease-in-out',
-                width: 'max-content',
-            }}
-        >
-            {pairs.map((pair) => (
-                <Box
-                    key={pair.value}
-                    sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center', 
-                        p: 2, 
-                        borderRadius: '50%', 
-                        background: 'linear-gradient(145deg, #ffffff, #f0f0f0)', 
-                        boxShadow: '0 0 20px rgba(0, 255, 200, 0.8)', 
-                        transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease', 
-                        '&:hover': { 
-                            transform: 'scale(1.1)', 
-                            boxShadow: '0 0 30px rgba(0, 255, 200, 1)', 
-                            background: 'linear-gradient(145deg, #e0f7fa, #b2ebf2)' 
-                        },
-                        mx: 1 
+        {pairs.map((pair) => (
+            <Box
+                key={pair.value}
+                sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    p: 2, 
+                    borderRadius: '50%', 
+                    background: 'transparent', 
+                    boxShadow: '0 0 20px rgba(0, 255, 200, 0.8)', 
+                    transition: 'transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease', 
+                    '&:hover': { 
+                        transform: 'scale(1.1)', 
+                        boxShadow: '0 0 30px rgba(0, 255, 200, 1)', 
+                        background: 'transparent' 
+                    },
+                    mx: 1 
+                }}
+            >
+                <img
+                    src={pair.logo}
+                    alt={pair.label}
+                    style={{
+                        maxWidth: '80px',
+                        height: 'auto',
+                        objectFit: 'contain',
                     }}
-                >
-                    <img
-                        src={pair.logo}
-                        alt={pair.label}
-                        style={{
-                            maxWidth: '100px', 
-                            height: 'auto',
-                            objectFit: 'contain',
-                        }}
-                    />
-                </Box>
-            ))}
-        </Box>
+                />
+            </Box>
+        ))}
     </Box>
 </Box>
-
+</Box>
 
 
 <Divider sx={{ my: 10, bgcolor: '#ddd', height: 2 }} />
@@ -532,12 +502,20 @@ const Nextmain = () => {
         boxShadow: '0 6px 12px rgba(0, 0, 0, 0.2)',
     }}
 >
-    <Typography variant="h4" sx={{ textAlign: 'center', mb: 4, color: '#000', fontWeight: 'bold', letterSpacing: '1px' }}>
+    <Typography
+        variant="h4"
+        sx={{
+            textAlign: 'center',
+            mb: 4,
+            color: '#000',
+            fontWeight: 'bold',
+            letterSpacing: '1px',
+        }}
+    >
         Trading View
     </Typography>
-    
+
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-    
         <iframe
             src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_12345&symbol=BTCUSD"
             width="100%"
@@ -552,10 +530,9 @@ const Nextmain = () => {
     </Box>
 </Box>
 
-
-            </main>
-        </div>
-    );
+</main>
+</div>
+);
 };
 
 export default Nextmain;
