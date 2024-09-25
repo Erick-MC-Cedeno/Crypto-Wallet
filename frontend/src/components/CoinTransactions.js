@@ -83,7 +83,7 @@ export default function CoinTransactions({ transactions, coin, chainId }) {
                 }}
             >
                 <Title>Historial de transacciones</Title>
-                <TableContainer>
+                <TableContainer sx={{ maxHeight: 210 }}>
                     <Table size="small">
                         <TableHead>
                             <TableRow>

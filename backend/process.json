@@ -25,10 +25,6 @@
             "script": "./daemon/subscriptions/chain/evm/native-coins/optimism.js"
         },
         {
-            "name": "ME: ZETA Broadcast NODE",
-            "script": "./daemon/subscriptions/chain/evm/native-coins/zetachain.js"
-        },
-        {
             "name": "ME: App Withdraw Broadcast NODE",
             "script": "./daemon/subscriptions/app/withdraws.js"
         },
@@ -56,11 +52,6 @@
             "name": "ME: optimism Worker NODE",
             "script": "./daemon/workers/chain/optimism.js"
         },
-        {
-            "name": "ME: zetachain Worker NODE",
-            "script": "./daemon/workers/chain/zetachain.js"
-        },
-        
         {
             "name": "ME: App Withdraw Worker NODE",
             "script": "./daemon/workers/local/withdrawRequests.js"

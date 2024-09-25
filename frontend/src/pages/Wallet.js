@@ -39,8 +39,9 @@ import useTransitions from '../hooks/useTransactions';
 
 export default function Wallet() {
     const [copied, setCopied] = React.useState(false);
-    const [withdrawAmount, setWithdrawAmount] = React.useState(0);
-    const [withdrawAddress, setWithdrawAddress] = React.useState(undefined);
+    const [withdrawAmount, setWithdrawAmount] = React.useState('');
+    const [withdrawAddress, setWithdrawAddress] = React.useState('');
+    const [error, setError] = React.useState('');
 
     const { walletId } = useParams();
     const defaultNetworkId = getDefaultNetworkId(walletId);
@@ -53,18 +54,32 @@ export default function Wallet() {
     const theme = useTheme();
 
     const handleWithdraw = async () => {
+        if (parseFloat(withdrawAmount) > parseFloat(walletInfo.balance)) {
+            setError('Fondos insuficientes');
+            return;
+        }
         const result = await withdraw(withdrawAmount, withdrawAddress);
-        if (result && result === 'success') {
+        if (result === 'success') {
             getTransactions();
+            setError('');
+            setWithdrawAmount('');
+            setWithdrawAddress('');
         }
     };
 
     const handleInputAddress = (e) => {
         setWithdrawAddress(e.target.value);
+        setError('');
     };
 
     const handleInputAmount = (e) => {
         setWithdrawAmount(e.target.value);
+        setError('');
+    };
+
+    const setMaxAmount = () => {
+        setWithdrawAmount(walletInfo.balance);
+        setError('');
     };
 
     const truncateToDecimals = (num, dec) => {
@@ -77,7 +92,6 @@ export default function Wallet() {
             coin: walletId,
             chainId: defaultNetworkId
         });
-
         if (wallet) {
             setWalletInfo(wallet);
         }
@@ -86,34 +100,25 @@ export default function Wallet() {
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} md={8}>
-                <CoinTransactions
-                    transactions={transactions}
-                    chainId={defaultNetworkId}
-                    coin={walletId} />
+                <CoinTransactions transactions={transactions} chainId={defaultNetworkId} coin={walletId} />
             </Grid>
             <Grid item xs={12} md={4}>
                 <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3 }}>
                     <Box>
-                        {!isWalletLoading ?
-                            walletInfo ?
+                        {!isWalletLoading ? (
+                            walletInfo ? (
                                 <>
                                     <Typography variant="body2" color="text.secondary" mb={1}>
                                         Balance
                                     </Typography>
                                     <Typography variant="h4" fontWeight={700} mb={1} sx={{ color: theme.palette.primary.main }}>
                                         {truncateToDecimals(walletInfo.balance, getCoinDecimalsPlace(walletInfo.coin))}
-                                        <Typography
-                                            component="span"
-                                            variant="h4"
-                                            fontWeight={700}
-                                        >
+                                        <Typography component="span" variant="h4" fontWeight={700}>
                                             {` ${walletInfo.coin}`}
                                         </Typography>
                                     </Typography>
                                     <Typography variant="body1" color="text.secondary" mb={2}>
-                                        {coinPrice ?
-                                            `$${(parseFloat(walletInfo.balance) * parseFloat(coinPrice)).toFixed(2)}`
-                                            : ''}
+                                        {coinPrice ? `$${(parseFloat(walletInfo.balance) * parseFloat(coinPrice)).toFixed(2)}` : ''}
                                     </Typography>
                                     <Divider sx={{ mb: 2 }} />
                                     <FormControl fullWidth disabled sx={{ mb: 2 }}>
@@ -126,25 +131,17 @@ export default function Wallet() {
                                             value={defaultNetworkId}
                                             label={`Selecciona la red para ${walletId.toUpperCase()}`}
                                         >
-                                            {
-                                                getNetWorkList(walletId).map((network) => (
-                                                    <MenuItem key={network.id} value={network.id}>{network.name}</MenuItem>
-                                                ))
-                                            }
+                                            {getNetWorkList(walletId).map((network) => (
+                                                <MenuItem key={network.id} value={network.id}>{network.name}</MenuItem>
+                                            ))}
                                         </Select>
                                     </FormControl>
                                     <Typography variant="caption" color="text.secondary" mb={2}>
                                         Tu dirección de {walletInfo.coin} ({getNetworkName(walletInfo.chainId)})
                                     </Typography>
                                     <Stack direction="row" alignItems="center" spacing={2} mb={2}>
-                                        <Box
-                                            sx={{ p: 1, bgcolor: "#F5F5F5", borderRadius: "8px", flexGrow: 1 }}
-                                        >
-                                            <Stack
-                                                direction="row"
-                                                alignItems="center"
-                                                justifyContent="space-between"
-                                            >
+                                        <Box sx={{ p: 1, bgcolor: "#F5F5F5", borderRadius: "8px", flexGrow: 1 }}>
+                                            <Stack direction="row" alignItems="center" justifyContent="space-between">
                                                 <Input
                                                     disableUnderline
                                                     value={walletInfo.address}
@@ -157,23 +154,11 @@ export default function Wallet() {
                                                     onCopy={() => setCopied(true)}
                                                 >
                                                     <Tooltip
-                                                        title={
-                                                            copied ? (
-                                                                <Typography variant="caption" color="success">
-                                                                    Dirección copiada!
-                                                                </Typography>
-                                                            ) : (
-                                                                "Copiar"
-                                                            )
-                                                        }
+                                                        title={copied ? <Typography variant="caption" color="success">Dirección copiada!</Typography> : "Copiar"}
                                                         TransitionComponent={Zoom}
                                                     >
                                                         <IconButton>
-                                                            <img
-                                                                src={CopyIcon}
-                                                                alt="Copiar"
-                                                                style={{ width: "24px", height: "24px" }}
-                                                            />
+                                                            <img src={CopyIcon} alt="Copiar" style={{ width: "24px", height: "24px" }} />
                                                         </IconButton>
                                                     </Tooltip>
                                                 </CopyToClipboard>
@@ -188,7 +173,7 @@ export default function Wallet() {
                                         <Grid container spacing={2}>
                                             <Grid item xs={12} sm={6}>
                                                 <Input
-                                                    value={withdrawAddress || ''}
+                                                    value={withdrawAddress}
                                                     onChange={handleInputAddress}
                                                     placeholder={`Dirección ${getNetworkName(walletInfo.chainId)}...`}
                                                     fullWidth
@@ -197,7 +182,7 @@ export default function Wallet() {
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                                 <Button
-                                                    disabled={!(withdrawAmount > 0 && withdrawAmount <= walletInfo.balance && withdrawAddress)}
+                                                    disabled={!(withdrawAmount > 0 && withdrawAddress && parseFloat(withdrawAmount) <= parseFloat(walletInfo.balance))}
                                                     onClick={handleWithdraw}
                                                     variant="contained"
                                                     color="error"
@@ -210,14 +195,20 @@ export default function Wallet() {
                                         </Grid>
                                         <Grid container spacing={2}>
                                             <Grid item xs={12} sm={6}>
-                                                <Input
-                                                    type='number'
-                                                    onChange={handleInputAmount}
-                                                    value={withdrawAmount || ''}
-                                                    placeholder={`Monto a retirar...`}
-                                                    fullWidth
-                                                    sx={{ borderRadius: 1, bgcolor: "#FFFFFF" }}
-                                                />
+                                                <Stack direction="row" spacing={1}>
+                                                    <Input
+                                                        type='number'
+                                                        onChange={handleInputAmount}
+                                                        value={withdrawAmount || ''}
+                                                        placeholder={`Monto a retirar...`}
+                                                        fullWidth
+                                                        sx={{ borderRadius: 1, bgcolor: "#FFFFFF" }}
+                                                    />
+                                                    <Button variant="outlined" onClick={setMaxAmount}>
+                                                        Max
+                                                    </Button>
+                                                </Stack>
+                                                {error && <Typography variant="caption" color="error">{error}</Typography>}
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
                                                 <Typography variant="caption" color="text.secondary">
@@ -227,7 +218,8 @@ export default function Wallet() {
                                         </Grid>
                                     </Stack>
                                 </>
-                                : <Button
+                            ) : (
+                                <Button
                                     onClick={handleCreateWallet}
                                     color="info"
                                     fullWidth
@@ -235,9 +227,10 @@ export default function Wallet() {
                                 >
                                     CREAR BILLETERA PARA {walletId.toUpperCase()} AHORA
                                 </Button>
-                            :
+                            )
+                        ) : (
                             <Typography variant="body1" color="text.secondary">Cargando...</Typography>
-                        }
+                        )}
                     </Box>
                 </Paper>
             </Grid>
