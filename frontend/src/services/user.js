@@ -1,12 +1,14 @@
 import {
     get,
     post,
+    patch,
     registerApi,
     loginApi,
     logoutApi,
     userInfoApi,
     verifyTokenApi,
-    changePasswordApi
+    changePasswordApi,
+    updateTokenStatusApi
 } from '../api/http';
 
 export default class User {
@@ -32,5 +34,9 @@ export default class User {
 
     static async changePassword(body) {
         return await post(changePasswordApi, body);
+    }
+
+    static async updateTokenStatus(body) { 
+        return await patch(updateTokenStatusApi, body);
     }
 }

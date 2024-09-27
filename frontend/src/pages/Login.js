@@ -24,8 +24,14 @@ export default function Login() {
         try {
             await new Promise((resolve) => setTimeout(resolve, 2000));
             const responseMessage = await loginUser(data);
-            if (isMounted.current && responseMessage) {
-                history.push('/verifytoken');
+            if (isMounted.current) {
+                if (responseMessage && responseMessage.msg === 'Código de verificación enviado a tu correo electrónico.') {
+                    history.push('/verifytoken');
+                } else if (responseMessage && responseMessage.msg === 'Logged in!') {
+                    history.push('/');
+                } else {
+                    setOpenSnackbar(true);
+                }
             }
         } catch (e) {
             if (isMounted.current) {

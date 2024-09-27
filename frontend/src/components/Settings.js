@@ -16,10 +16,10 @@ function Settings() {
                 sx={{
                     mt: 4,
                     p: 3,
-                    bgcolor: '#F7F9FA', // Fondo gris claro similar al de Facebook
-                    color: '#1C1E21', // Texto en gris oscuro para contraste
+                    bgcolor: '#F7F9FA', 
+                    color: '#1C1E21', 
                     borderRadius: 2,
-                    boxShadow: 'none', // Sin sombra para un estilo más limpio
+                    boxShadow: 'none', 
                 }}
             >
                 <Typography variant="h4" component="h1" gutterBottom>
@@ -27,14 +27,14 @@ function Settings() {
                 </Typography>
 
                 <Paper
-                    elevation={0} // Sin elevación para mantener el estilo plano
+                    elevation={0} 
                     sx={{
                         mb: 4,
                         p: 3,
-                        bgcolor: '#FFFFFF', // Fondo blanco para las secciones
+                        bgcolor: '#FFFFFF', 
                         borderRadius: 1,
-                        border: '1px solid #E0E0E0', // Borde sutil para las tarjetas
-                        boxShadow: 'none', // Sin sombra para mantener el estilo plano
+                        border: '1px solid #E0E0E0', 
+                        boxShadow: 'none', 
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -88,7 +88,7 @@ function Settings() {
                             <SecurityIcon />
                         </IconButton>
                         <Typography variant="h6" component="h2" fontWeight={600}>
-                            Autenticación de Dos Pasos
+                            Seguridad de la cuenta
                         </Typography>
                     </Box>
                     <TwoFactorAuthComponent />
@@ -118,7 +118,6 @@ function Settings() {
                     <LanguageSelectorComponent />
                 </Paper>
 
-                {/* Puedes añadir más secciones de ajustes aquí */}
             </Box>
         </Container>
     );

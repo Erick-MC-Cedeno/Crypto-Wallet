@@ -52,6 +52,9 @@ export default function useAuth() {
             if (data && 'msg' in data) {
                 if (data.msg === 'Código de verificación enviado a tu correo electrónico.') {
                     history.push('/verifytoken');
+                } else if (data.msg === 'Logged in!') {
+                    await setUserContext();
+                    history.push('/');
                 } else {
                     setError(data.error);
                 }
@@ -93,12 +96,26 @@ export default function useAuth() {
         }
     };
 
+    const updateTokenStatus = async (body) => {
+        try {
+            const { data } = await User.updateTokenStatus(body);
+            if (data && data.msg === 'seguridad de la cuenta actualizada con éxito.') {
+                setSuccessMessage('seguridad de la cuenta actualizada con éxito.');
+            } else {
+                setError(data.error || 'Error al actualizar el estado de seguridad.');
+            }
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     return {
         registerUser,
         loginUser,
         logoutUser,
         verifyToken,
         changePassword,
+        updateTokenStatus,
         error,
         successMessage
     };

@@ -31,6 +31,9 @@ export class User {
 
     @Prop({ default: false })
     isValid: boolean;
+
+    @Prop({ default: false })
+    isTokenEnabled: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

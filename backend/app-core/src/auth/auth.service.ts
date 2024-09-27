@@ -20,14 +20,22 @@ export class AuthService {
   }
 
   async sendVerificationToken(userId: string, email: string): Promise<void> {
-    try {
-      await this.twoFactorAuthService.sendToken(userId, email);
-    } catch (error) {
-      throw new Error('Failed to send verification token.');
+    const user = await this.userService.getUserById(userId);
+    if (user.isTokenEnabled) {
+      try {
+        await this.twoFactorAuthService.sendToken(userId, email);
+      } catch (error) {
+        throw new Error('Failed to send verification token.');
+      }
     }
   }
 
   async validateToken(userId: string, token: string): Promise<any> {
+    const user = await this.userService.getUserById(userId);
+    if (!user.isTokenEnabled) {
+      return { isValid: true, userId };
+    }
+
     try {
       const { isValid, message } = await this.twoFactorAuthService.verifyToken(userId, token);
       if (isValid) {
@@ -40,3 +48,4 @@ export class AuthService {
     }
   }
 }
+

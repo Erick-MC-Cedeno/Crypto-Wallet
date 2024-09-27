@@ -10,6 +10,8 @@ const logoutApi = `${baseApi}/user/logout`
 const registerApi = `${baseApi}/user/register`
 const userInfoApi = `${baseApi}/user/info`
 const verifyTokenApi = `${baseApi}/user/verify-token`;
+const updateTokenStatusApi = `${baseApi}/user/update-token-status`;
+
 
 
 // Endpoints wallet
@@ -45,9 +47,14 @@ async function post(url, body) {
     return await axios.post(url, body)
 }
 
+async function patch(url, body) {
+    return await axios.patch(url, body)
+}
+
 export {
     get,
     post,
+    patch,
     priceApi,
     loginApi,
     logoutApi,
@@ -62,6 +69,7 @@ export {
     providerApi,
     createapi,
     verifyTokenApi,
-    changePasswordApi
+    changePasswordApi,
+    updateTokenStatusApi
 
 }
