@@ -1,5 +1,5 @@
 import React from 'react';
-import AtmIcon from '@mui/icons-material/Atm';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import {
     Typography,
     Box,
@@ -80,10 +80,10 @@ export default function Register() {
                         justifyContent: 'center',
                     }}
                 >
-                    <AtmIcon sx={{ color: 'white' }} />
+                    <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                 </Box>
                 <Typography component="h1" variant="h5">
-                    NextCryptoATM
+                    NicaBlockVault
                 </Typography>
                 <Box
                     sx={{

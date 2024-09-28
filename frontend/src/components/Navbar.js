@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import {
-    Atm as AtmIcon,
+    ArrowDropDown as ArrowDropDownIcon,
     SupportAgent as SupportAgentIcon,
     SwapHoriz as SwapHorizIcon,
     QrCode as QrCodeIcon,
@@ -62,6 +62,12 @@ const navLinksStyle = {
     },
 };
 
+const navLinkIconStyle = {
+    mr: 1,
+    display: 'flex',
+    alignItems: 'center',
+};
+
 const navLinkItemStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -97,6 +103,8 @@ function DashboardContent() {
         setAnchorElUser(null);
     };
 
+
+
     const getAvatarColor = (name) => {
         const colors = ['#F6851B', '#3C3C3B', '#E8E8E8'];
         return colors[name.charCodeAt(0) % colors.length];
@@ -116,14 +124,22 @@ function DashboardContent() {
         { href: 'https://portfolio.metamask.io/swap?_gl=1*6qza6d*_gcl_au*MTMzNjQ0NzQwNi4xNzIzNTk2MTA5', label: 'Swap Coin', Icon: SwapHorizIcon },
         { href: '/providers', label: 'Vender P2P', Icon: QrCodeIcon  },
         { href: '/create', label: 'Proveedor P2P', Icon: QrCodeIcon  },
+
     ];
 
     const renderNavLinks = () => (
         <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
             {navItems.map(({ href, label, Icon }) => (
-                <Link key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} sx={navLinksStyle}>
-                    <Icon sx={{ mr: 1 }} />
-                    <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>{label}</Typography>
+                <Link
+                    key={label}
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    sx={navLinksStyle}
+                >
+                    <Icon sx={navLinkIconStyle} />
+                    <Typography variant="body1" sx={{ fontWeight: 'bold', fontSize: '1rem' }}>
+                        {label}
+                    </Typography>
                 </Link>
             ))}
         </Box>
@@ -136,7 +152,7 @@ function DashboardContent() {
                     <Box sx={{ flexGrow: 1 }}>
                         <Link href='/' sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-                                NextCryptoATM
+                                NicaBlockVault
                                 <Box
                                     sx={{
                                         m: 1,
@@ -149,7 +165,7 @@ function DashboardContent() {
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <AtmIcon sx={{ color: 'white' }} />
+                                    <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                                 </Box>
                             </Typography>
                         </Link>

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Box, Button, TextField, Grid, Link, Snackbar, Alert, IconButton, InputAdornment, CircularProgress } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import AtmIcon from '@mui/icons-material/Atm';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useHistory } from 'react-router-dom';
 import useAuth from './../hooks/useAuth';
 
@@ -92,10 +92,10 @@ export default function Login() {
                         justifyContent: 'center',
                     }}
                 >
-                    <AtmIcon sx={{ color: 'white' }} />
+                     <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                 </Box>
                 <Typography component="h1" variant="h5">
-                    NextCryptoATM
+                   NicaBlockVault
                 </Typography>
                 <Box
                     sx={{

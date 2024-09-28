@@ -3,7 +3,7 @@ import {
     AppBar, Toolbar, Typography, Box, Link, Button, IconButton, Drawer,
     List, ListItem, ListItemText, Divider, Grid, Card, CardContent
 } from '@mui/material';
-import AtmIcon from '@mui/icons-material/Atm';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link as RouterLink } from 'react-router-dom';
 import heroBanner from '../assets/hero-banner.png';
@@ -122,7 +122,7 @@ const Nextmain = () => {
                     </IconButton>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-                            NextCryptoATM
+                            NicaBlockVault
                         </Typography>
                         <Box
                             sx={{
@@ -137,7 +137,7 @@ const Nextmain = () => {
                                 ml: 1,
                             }}
                         >
-                            <AtmIcon sx={{ color: 'white' }} />
+                            <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                         </Box>
                     </Box>
     
