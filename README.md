@@ -68,10 +68,10 @@ node generate.js (--numer of wallets--) + (--networl ID--)
 # Wallets
 ![Wallets](frontend/src/assets/screenshots/Wallets.png)
 
-# Home Settings
+# Home 
 ![Home (2)](frontend/src/assets/screenshots/Home%20(2).png)
 
-# Settinsg
+# Settings
 ![Settings](frontend/src/assets/screenshots/Settings.png)
 
 # Transactions
