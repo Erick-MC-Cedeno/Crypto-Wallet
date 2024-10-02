@@ -50,15 +50,31 @@ node generate.js (--numer of wallets--) + (--networl ID--)
 
 
 ### Screenshots
-
+# Login
 ![Login](frontend/src/assets/screenshots/Login.png)
+
+# Register
 ![Register](frontend/src/assets/screenshots/Register.png)
+
+# 2FA Auth
 ![2FA](frontend/src/assets/screenshots/2FA.png)
+
+ # Dashboard
 ![Home](frontend/src/assets/screenshots/Home.png)
+
+# Dashboard wallets
 ![Wallet](frontend/src/assets/screenshots/Wallet.png)
+
+# Wallets
 ![Wallets](frontend/src/assets/screenshots/Wallets.png)
+
+# Home Settings
 ![Home (2)](frontend/src/assets/screenshots/Home%20(2).png)
+
+# Settinsg
 ![Settings](frontend/src/assets/screenshots/Settings.png)
+
+# Transactions
 ![Transa](frontend/src/assets/screenshots/Transa.png)
 
 
