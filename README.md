@@ -49,10 +49,12 @@ truffle deploy --network (--network name--)
 node generate.js (--numer of wallets--) + (--networl ID--)
 
 
+
+
 # Licencia de Uso para NicBlockVault
 
 ## Estado del Proyecto
-NicBlockVault es un proyecto de intercambio de criptomonedas que actualmente se encuentra en desarrollo. Agradecemos tu interés en este repositorio.
+NicBlockVault es un proyecto de intercambio de criptomonedas que actualmente se encuentra en desarrollo. Agradecemos tu interés en este repositorio y estamos abiertos a colaboraciones.
 
 ## Clonación y Modificación
 Si decides clonar o descargar este repositorio, por favor ten en cuenta lo siguiente:
@@ -63,6 +65,9 @@ Si decides clonar o descargar este repositorio, por favor ten en cuenta lo sigui
 
 3. **Reconocimiento**: Si decides lanzar tu propia versión, sería genial que reconozcas el trabajo realizado en este repositorio original.
 
+## Colaboraciones
+Estamos abiertos a colaboraciones. Si tienes ideas, mejoras o deseas contribuir al proyecto, envianos tu pull y la evaluaremos este directorio esta en actual desarrollo.
+
 ## Responsabilidad
 El uso de este repositorio es bajo tu propio riesgo. No nos hacemos responsables de ningún problema que pueda surgir al utilizar el código o al operar el intercambio.
 
@@ -70,7 +75,9 @@ El uso de este repositorio es bajo tu propio riesgo. No nos hacemos responsables
 
 ---
 
-*NicBlockVault © 2024 Civernets Systems*
+*NicBlockVault © 2024 Cibernet Systems*
+
+
 
 
 
