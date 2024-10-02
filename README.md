@@ -1,48 +1,35 @@
-+-------------------------------------------------+
-|                    # NicBlockVault            |
-+-------------------------------------------------+
+# NicBlockVault
 
-+-------------------------------------------------+
-|                     # START FRONTEND            |
-| cd frontend                                      |
-| npm install                                      |
-| npm start                                        |
-+-------------------------------------------------+
+## START FRONTEND
+cd frontend  
+npm install  
+npm start  
 
-+-------------------------------------------------+
-|              # INSTALL BACKEND DEPENDENCIES     |
-| cd backend                                       |
-| npm install                                      |
-| npm install -g pm2                              |
-| npm install -g solc                             |
-+-------------------------------------------------+
+## INSTALL BACKEND DEPENDENCIES
+cd backend  
+npm install  
+npm install -g pm2  
+npm install -g solc  
 
-+-------------------------------------------------+
-|                     # START APP-CORE           |
-| cd backend/app-core                              |
-| npm i -g @nestjs/cli                            |
-| npm install                                      |
-| nest start --watch (listening mode)             |
-| nest start                                       |
-+-------------------------------------------------+
+## START APP-CORE
+cd backend/app-core  
+npm i -g @nestjs/cli  
+npm install  
+nest start --watch (listening mode)  
+nest start  
 
-+-------------------------------------------------+
-|                     # START DAEMONS             |
-| docker-compose up                                |
-| download redis server                            |
-| download mongo server                            |
-| redis-server                                     |
-| mongod --port --                                |
-+-------------------------------------------------+
+## START DAEMONS
+docker-compose up  
+download redis server  
+download mongo server  
+redis-server  
+mongod --port --  
 
-+-------------------------------------------------+
-|  # DEPLOY SMART CONTRACT AND GENERATE WALLETS   |
-| cd backend/tasks/                               |
-| npm install -g truffle                          |
-| truffle deploy --network (--network name--)     |
-| node generate.js (--number of wallets--) +      |
-| (--network ID--)                                |
-+-------------------------------------------------+
+## DEPLOY SMART CONTRACT AND GENERATE WALLETS
+cd backend/tasks/  
+npm install -g truffle  
+truffle deploy --network (--network name--)  
+node generate.js (--number of wallets--) + (--network ID--)  
 
 
 
