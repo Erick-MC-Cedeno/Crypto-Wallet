@@ -5,40 +5,31 @@ import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
-    const [userId, setUserId] = useState('');
-    const [token, setToken] = useState('');
+    const [formValues, setFormValues] = useState({ userId: '', token: '' });
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
     const [timeLeft, setTimeLeft] = useState(300);
-    const [tokenExpired, setTokenExpired] = useState(false); 
+    const [tokenExpired, setTokenExpired] = useState(false);
     const history = useHistory();
     const isMounted = useRef(true);
 
     useEffect(() => {
         const savedTime = localStorage.getItem('tokenExpireTime');
-        const currentTime = Math.floor(Date.now() / 1000); 
+        const currentTime = Math.floor(Date.now() / 1000);
 
         if (savedTime) {
             const expireTime = parseInt(savedTime, 10);
             const remainingTime = expireTime - currentTime;
 
-            if (remainingTime > 0) {
-                setTimeLeft(remainingTime);
-            } else {
-                localStorage.removeItem('tokenExpireTime'); 
-                setTokenExpired(true); 
-            }
+            remainingTime > 0 ? setTimeLeft(remainingTime) : handleTokenExpiration();
         } else {
-            const expireTime = Math.floor(Date.now() / 1000) + 300; 
-            localStorage.setItem('tokenExpireTime', expireTime);
+            localStorage.setItem('tokenExpireTime', Math.floor(Date.now() / 1000) + 300);
         }
 
         const timer = setInterval(() => {
-            setTimeLeft((prev) => {
+            setTimeLeft(prev => {
                 if (prev <= 1) {
-                    clearInterval(timer);
-                    localStorage.removeItem('tokenExpireTime'); 
-                    setTokenExpired(true); 
+                    handleTokenExpiration();
                     return 0;
                 }
                 return prev - 1;
@@ -47,43 +38,43 @@ const VerifyToken = () => {
 
         return () => {
             clearInterval(timer);
-            isMounted.current = false;
+            isMounted.current = false; // Clean up the mounted state
         };
     }, []);
 
+    const handleTokenExpiration = () => {
+        localStorage.removeItem('tokenExpireTime');
+        setTokenExpired(true);
+    };
+
+    const handleChange = (e) => {
+        setFormValues({ ...formValues, [e.target.name]: e.target.value });
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (tokenExpired) {
-            return; 
-        }
+        if (tokenExpired) return;
+
         setLoading(true);
         try {
             await new Promise((resolve) => setTimeout(resolve, 2000));
-            const response = await verifyToken({ userId, token });
-            if (isMounted.current) {
-                if (response && response.msg === 'Logged in!') {
-                    history.push('/');
-                }
+            const response = await verifyToken(formValues);
+            if (isMounted.current && response?.msg === 'Logged in!') {
+                history.push('/');
             }
         } catch (err) {
+            // Handle error if needed
         } finally {
-            if (isMounted.current) {
-                setLoading(false);
-            }
+            if (isMounted.current) setLoading(false);
         }
     };
 
     return (
-        <Container 
-            maxWidth="xs" 
-            sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center',
-                marginTop: 2 
-            }}
-        >
+        <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
             <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -98,9 +89,6 @@ const VerifyToken = () => {
                     overflow: 'hidden',
                     animation: 'glow 1.5s infinite alternate'
                 }}
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
             >
                 <Box
                     sx={{
@@ -116,78 +104,35 @@ const VerifyToken = () => {
                 >
                     <AtmIcon sx={{ color: 'white' }} />
                 </Box>
-                <Typography 
-                    component="h1" 
-                    variant="h5" 
-                    align="center" 
-                    sx={{ 
-                        mb: 2, 
-                        fontFamily: 'Arial, sans-serif', 
-                        fontWeight: 600
-                    }}
-                >
+                <Typography component="h1" variant="h5" align="center" sx={{ mb: 2, fontFamily: 'Arial, sans-serif', fontWeight: 600 }}>
                     NextCryptoATM
                 </Typography>
-                <Typography 
-                    variant="body1" 
-                    align="center" 
-                    sx={{ 
-                        mb: 4, 
-                        fontFamily: 'Arial, sans-serif', 
-                    }}
-                >
+                <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
                     Por favor, ingresa tu KEY de usuario y el token que recibiste en el correo electrónico
                 </Typography>
-                <Typography 
-                    variant="body2" 
-                    align="center" 
-                    sx={{ 
-                        mb: 4, 
-                        color: 'red', 
-                        fontWeight: 600 
-                    }}
-                >
+                <Typography variant="body2" align="center" sx={{ mb: 4, color: 'red', fontWeight: 600 }}>
                     {tokenExpired 
                         ? 'Token expirado, intenta de nuevo.' 
                         : `Token expira en ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')} minutos`}
                 </Typography>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="User Key"
-                            variant="outlined"
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
-                            required
-                            margin="normal"
-                            autoFocus
-                            InputProps={{ 
-                                sx: { 
-                                    borderRadius: 2,  
-                                    border: '1px solid #ddd'  
-                                } 
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Token"
-                            variant="outlined"
-                            value={token}
-                            onChange={(e) => setToken(e.target.value)}
-                            required
-                            margin="normal"
-                            InputProps={{ 
-                                sx: { 
-                                    borderRadius: 2,  
-                                    border: '1px solid #ddd'  
-                                } 
-                            }}
-                            disabled={tokenExpired} 
-                        />
-                    </Grid>
+                    {['userId', 'token'].map((field, index) => (
+                        <Grid item xs={12} key={index}>
+                            <TextField
+                                fullWidth
+                                label={field === 'userId' ? 'User Key' : 'Token'}
+                                variant="outlined"
+                                name={field}
+                                value={formValues[field]}
+                                onChange={handleChange}
+                                required
+                                margin="normal"
+                                autoFocus={field === 'userId'}
+                                InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
+                                disabled={field === 'token' && tokenExpired}
+                            />
+                        </Grid>
+                    ))}
                     <Grid item xs={12}>
                         <Button 
                             type="submit" 
@@ -202,9 +147,7 @@ const VerifyToken = () => {
                                     <CircularProgress size={20} sx={{ color: '#074EE7FF' }} />
                                     <Typography sx={{ ml: 1, color: '#074EE7FF', fontSize: '0.875rem' }}>Verificando...</Typography>
                                 </Box>
-                            ) : (
-                                'Verificar'
-                            )}
+                            ) : 'Verificar'}
                         </Button>
                     </Grid>
                     {error && (
@@ -212,7 +155,7 @@ const VerifyToken = () => {
                             <Alert severity="error" sx={{ mt: 2 }}>
                                 {error}
                             </Alert>
-                    </Grid>
+                        </Grid>
                     )}
                 </Grid>
             </Box>
