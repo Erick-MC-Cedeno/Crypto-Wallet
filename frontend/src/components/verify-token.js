@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
     const [formValues, setFormValues] = useState({ userId: '', token: '' });
-    const { verifyToken, error, resendToken } = useAuth();
+    const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
     const [timeLeft, setTimeLeft] = useState(60); 
     const [tokenExpired, setTokenExpired] = useState(false);
