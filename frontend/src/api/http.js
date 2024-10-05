@@ -11,6 +11,7 @@ const registerApi = `${baseApi}/user/register`
 const userInfoApi = `${baseApi}/user/info`
 const verifyTokenApi = `${baseApi}/user/verify-token`;
 const updateTokenStatusApi = `${baseApi}/user/update-token-status`;
+const resendTokenApi = `${baseApi}/user/resend-token`
 
 
 
@@ -70,6 +71,7 @@ export {
     createapi,
     verifyTokenApi,
     changePasswordApi,
-    updateTokenStatusApi
+    updateTokenStatusApi,
+    resendTokenApi
 
 }

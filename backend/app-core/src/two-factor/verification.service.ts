@@ -6,7 +6,7 @@ import { Token } from './schemas/verification.schema';
 
 @Injectable()
 export class TwoFactorAuthService {
-  private readonly TOKEN_EXPIRY_MS = 300000; 
+  private readonly TOKEN_EXPIRY_MS = 60000; // 1 minuto
 
   constructor(
     private readonly emailService: EmailService,
@@ -14,24 +14,9 @@ export class TwoFactorAuthService {
   ) {}
 
   async sendToken(userId: string, toEmail: string): Promise<{ message: string }> {
-    try {
-      const token = await this.emailService.generateToken(userId);
-      const timestamp = Date.now();
-      await this.tokenModel.create({
-        userId,
-        email: toEmail, 
-        token,
-        timestamp,
-        isValid: false,
-      });
-      await this.emailService.sendTokenLogin(userId, toEmail, token);
-      return { message: `Token sent to email ${toEmail}` };
-    } catch (error) {
-      throw new InternalServerErrorException('Failed to send token.');
-    }
+    return this.createAndSendToken(userId, toEmail);
   }
 
-  
   async verifyToken(userId: string, token: string): Promise<{ isValid: boolean; message: string }> {
     try {
       const tokenEntry = await this.tokenModel.findOne({ token, userId }).exec();
@@ -40,7 +25,6 @@ export class TwoFactorAuthService {
       }
       const currentTime = Date.now();
       const tokenAge = currentTime - tokenEntry.timestamp;
-
 
       if (tokenAge > this.TOKEN_EXPIRY_MS) {
         await this.tokenModel.deleteOne({ token }).exec();
@@ -55,6 +39,28 @@ export class TwoFactorAuthService {
     } catch (error) {
       console.error('Token verification failed', error);
       throw new InternalServerErrorException('Token verification failed.');
+    }
+  }
+
+  async resendToken(userId: string, toEmail: string): Promise<{ message: string }> {
+    return this.createAndSendToken(userId, toEmail);
+  }
+
+  private async createAndSendToken(userId: string, toEmail: string): Promise<{ message: string }> {
+    try {
+      const token = await this.emailService.generateToken(userId);
+      const timestamp = Date.now();
+      await this.tokenModel.create({
+        userId,
+        email: toEmail,
+        token,
+        timestamp,
+        isValid: false,
+      });
+      await this.emailService.sendTokenLogin(userId, toEmail, token);
+      return { message: `Token sent to email ${toEmail}` };
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to send token.');
     }
   }
 }

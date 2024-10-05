@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { HashService } from '../user/hash.service';
 import { TwoFactorAuthService } from '../two-factor/verification.service';
@@ -30,6 +30,17 @@ export class AuthService {
     }
   }
 
+  async resendVerificationToken(userId: string, email: string): Promise<void> {
+    const user = await this.userService.getUserById(userId);
+    if (user.isTokenEnabled) {
+      try {
+        await this.twoFactorAuthService.resendToken(userId, email);
+      } catch (error) {
+        throw new Error('Failed to resend verification token.');
+      }
+    }
+  }
+
   async validateToken(userId: string, token: string): Promise<any> {
     const user = await this.userService.getUserById(userId);
     if (!user.isTokenEnabled) {
@@ -48,4 +59,3 @@ export class AuthService {
     }
   }
 }
-

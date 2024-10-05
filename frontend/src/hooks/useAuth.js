@@ -83,6 +83,19 @@ export default function useAuth() {
         }
     };
 
+    const resendToken = async (body) => {
+        try {
+            const { data } = await User.resendToken(body);
+            if (data && data.message === 'Código de verificación reenviado a tu correo electrónico.') {
+                setSuccessMessage(data.message);
+            } else {
+                setError(data.error || 'Error al reenviar el código de verificación.');
+            }
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     const changePassword = async (body) => {
         try {
             const { data } = await User.changePassword(body);
@@ -114,6 +127,7 @@ export default function useAuth() {
         loginUser,
         logoutUser,
         verifyToken,
+        resendToken,  // Añadido aquí
         changePassword,
         updateTokenStatus,
         error,

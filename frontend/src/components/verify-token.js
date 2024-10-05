@@ -6,9 +6,9 @@ import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
     const [formValues, setFormValues] = useState({ userId: '', token: '' });
-    const { verifyToken, error } = useAuth();
+    const { verifyToken, error, resendToken } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(300);
+    const [timeLeft, setTimeLeft] = useState(60); 
     const [tokenExpired, setTokenExpired] = useState(false);
     const history = useHistory();
     const isMounted = useRef(true);
@@ -23,7 +23,7 @@ const VerifyToken = () => {
 
             remainingTime > 0 ? setTimeLeft(remainingTime) : handleTokenExpiration();
         } else {
-            localStorage.setItem('tokenExpireTime', Math.floor(Date.now() / 1000) + 300);
+            localStorage.setItem('tokenExpireTime', Math.floor(Date.now() / 1000) + 60); 
         }
 
         const timer = setInterval(() => {
@@ -38,7 +38,7 @@ const VerifyToken = () => {
 
         return () => {
             clearInterval(timer);
-            isMounted.current = false; // Clean up the mounted state
+            isMounted.current = false;
         };
     }, []);
 
@@ -57,16 +57,18 @@ const VerifyToken = () => {
 
         setLoading(true);
         try {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
             const response = await verifyToken(formValues);
             if (isMounted.current && response?.msg === 'Logged in!') {
                 history.push('/');
             }
         } catch (err) {
-            // Handle error if needed
         } finally {
             if (isMounted.current) setLoading(false);
         }
+    };
+
+    const handleResend = () => {
+        history.push('/resendtoken');
     };
 
     return (
@@ -150,6 +152,19 @@ const VerifyToken = () => {
                             ) : 'Verificar'}
                         </Button>
                     </Grid>
+                    {tokenExpired && (
+                        <Grid item xs={12}>
+                            <Button
+                                onClick={handleResend}
+                                variant="contained"
+                                color="secondary"
+                                fullWidth
+                                sx={{ mt: 2, borderRadius: 2 }}
+                            >
+                                Reenviar Token
+                            </Button>
+                        </Grid>
+                    )}
                     {error && (
                         <Grid item xs={12}>
                             <Alert severity="error" sx={{ mt: 2 }}>

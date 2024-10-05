@@ -19,6 +19,7 @@ import CreateProvider from './pages/Create';
 import Nextmain from './pages/Nextmain'
 import VerifyToken from './components/verify-token'
 import Settings from './components/Settings'
+import ResendTokenForm from './components/ResendTokenForm'
 
 
 
@@ -59,6 +60,7 @@ export default function App() {
                                     <PublicRoute exact path='/register' component={Register} />
                                     <PublicRoute exact path='/nextmain' component={Nextmain}/>
                                     <PublicRoute exact path='/verifytoken' component={VerifyToken} />
+                                    <PublicRoute exact path='/resendtoken' component={ResendTokenForm}/>
                                 </Switch>
                                 
                             </Container>

@@ -8,7 +8,9 @@ import {
     userInfoApi,
     verifyTokenApi,
     changePasswordApi,
-    updateTokenStatusApi
+    updateTokenStatusApi,
+    resendTokenApi
+    
 } from '../api/http';
 
 export default class User {
@@ -38,5 +40,9 @@ export default class User {
 
     static async updateTokenStatus(body) { 
         return await patch(updateTokenStatusApi, body);
+    }
+
+    static async resendToken(body) {
+        return await post(resendTokenApi, body);
     }
 }

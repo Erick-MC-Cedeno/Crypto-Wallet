@@ -2,7 +2,7 @@ import React from 'react';
 import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
-import UserProfileComponent from './Userprofile'; // Asegúrate de que este sea el nombre correcto
+import UserProfileComponent from './Userprofile';
 import { Container, Typography, Box, Divider, Paper, IconButton } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -16,29 +16,28 @@ function Settings() {
                 sx={{
                     mt: 4,
                     p: 3,
-                    bgcolor: '#F7F9FA', 
+                    bgcolor: '#FFFFFF', 
                     color: '#1C1E21', 
                     borderRadius: 2,
-                    boxShadow: 'none', 
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}
             >
-                <Typography variant="h4" component="h1" gutterBottom>
+                <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold' }}>
                     Configuración de la Cuenta
                 </Typography>
 
                 <Paper
-                    elevation={0} 
+                    elevation={3} 
                     sx={{
                         mb: 4,
                         p: 3,
-                        bgcolor: '#FFFFFF', 
-                        borderRadius: 1,
+                        bgcolor: '#F5F5F5', 
+                        borderRadius: 2,
                         border: '1px solid #E0E0E0', 
-                        boxShadow: 'none', 
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                        <IconButton color="primary" sx={{ p: 1 }}>
+                        <IconButton color="primary" sx={{ p: 1, bgcolor: '#E3F2FD' }}>
                             <LockIcon />
                         </IconButton>
                         <Typography variant="h6" component="h2" fontWeight={600}>
@@ -51,18 +50,17 @@ function Settings() {
                 <Divider sx={{ mb: 4, borderColor: '#E0E0E0' }} />
 
                 <Paper
-                    elevation={0}
+                    elevation={3}
                     sx={{
                         mb: 4,
                         p: 3,
-                        bgcolor: '#FFFFFF',
-                        borderRadius: 1,
+                        bgcolor: '#F5F5F5',
+                        borderRadius: 2,
                         border: '1px solid #E0E0E0',
-                        boxShadow: 'none',
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                        <IconButton color="primary" sx={{ p: 1 }}>
+                        <IconButton color="primary" sx={{ p: 1, bgcolor: '#E3F2FD' }}>
                             <PersonIcon />
                         </IconButton>
                         <Typography variant="h6" component="h2" fontWeight={600}>
@@ -72,19 +70,20 @@ function Settings() {
                     <UserProfileComponent />
                 </Paper>
 
+                <Divider sx={{ mb: 4, borderColor: '#E0E0E0' }} />
+
                 <Paper
-                    elevation={0}
+                    elevation={3}
                     sx={{
                         mb: 4,
                         p: 3,
-                        bgcolor: '#FFFFFF',
-                        borderRadius: 1,
+                        bgcolor: '#F5F5F5',
+                        borderRadius: 2,
                         border: '1px solid #E0E0E0',
-                        boxShadow: 'none',
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                        <IconButton color="primary" sx={{ p: 1 }}>
+                        <IconButton color="primary" sx={{ p: 1, bgcolor: '#E3F2FD' }}>
                             <SecurityIcon />
                         </IconButton>
                         <Typography variant="h6" component="h2" fontWeight={600}>
@@ -97,18 +96,17 @@ function Settings() {
                 <Divider sx={{ mb: 4, borderColor: '#E0E0E0' }} />
 
                 <Paper
-                    elevation={0}
+                    elevation={3}
                     sx={{
                         mb: 4,
                         p: 3,
-                        bgcolor: '#FFFFFF',
-                        borderRadius: 1,
+                        bgcolor: '#F5F5F5',
+                        borderRadius: 2,
                         border: '1px solid #E0E0E0',
-                        boxShadow: 'none',
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-                        <IconButton color="primary" sx={{ p: 1 }}>
+                        <IconButton color="primary" sx={{ p: 1, bgcolor: '#E3F2FD' }}>
                             <LanguageIcon />
                         </IconButton>
                         <Typography variant="h6" component="h2" fontWeight={600}>
@@ -117,7 +115,6 @@ function Settings() {
                     </Box>
                     <LanguageSelectorComponent />
                 </Paper>
-
             </Box>
         </Container>
     );

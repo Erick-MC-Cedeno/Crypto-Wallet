@@ -1,8 +1,8 @@
-// src/components/ChangePasswordComponent.js
 import React, { useState } from 'react';
-import { TextField, Button, Alert, Box, Typography, InputAdornment, IconButton } from '@mui/material';
+import { TextField, Button, Alert, Box, Typography, InputAdornment, IconButton, Paper, Avatar } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import LockIcon from '@mui/icons-material/Lock';
 import useAuth from '../hooks/useAuth';
 
 function ChangePasswordComponent() {
@@ -37,10 +37,15 @@ function ChangePasswordComponent() {
     };
 
     return (
-        <Box sx={{ mt: 4, maxWidth: 500, mx: 'auto' }}>
-            <Typography variant="h6" gutterBottom>
-                Cambiar Contraseña
-            </Typography>
+        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: 400, mx: 'auto' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
+                <Avatar sx={{ bgcolor: '#1976D2', width: 48, height: 48 }}>
+                    <LockIcon />
+                </Avatar>
+                <Typography variant="h6" component="h2" sx={{ mt: 1, fontWeight: 'bold' }}>
+                    Cambiar Contraseña
+                </Typography>
+            </Box>
             <Box component="form" noValidate autoComplete="off" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
                     name="currentPassword"
@@ -62,10 +67,7 @@ function ChangePasswordComponent() {
                                 </IconButton>
                             </InputAdornment>
                         ),
-                        sx: {
-                            borderRadius: 2,  
-                            border: '1px solid #ddd',  
-                        },
+                        sx: { borderRadius: 2, borderColor: '#ddd' },
                     }}
                 />
                 <TextField
@@ -88,10 +90,7 @@ function ChangePasswordComponent() {
                                 </IconButton>
                             </InputAdornment>
                         ),
-                        sx: {
-                            borderRadius: 2,  
-                            border: '1px solid #ddd',  
-                        },
+                        sx: { borderRadius: 2, borderColor: '#ddd' },
                     }}
                 />
                 <TextField
@@ -114,24 +113,21 @@ function ChangePasswordComponent() {
                                 </IconButton>
                             </InputAdornment>
                         ),
-                        sx: {
-                            borderRadius: 2,  
-                            border: '1px solid #ddd',  
-                        },
+                        sx: { borderRadius: 2, borderColor: '#ddd' },
                     }}
                 />
                 <Button 
                     variant="contained" 
                     color="primary" 
                     onClick={handleChangePassword}
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, borderRadius: 2 }}
                 >
                     Cambiar Contraseña
                 </Button>
-                {successMessage && <Alert severity="success" sx={{ mt: 2 }}>{successMessage}</Alert>}
-                {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+                {successMessage && <Alert severity="success" sx={{ mt: 2, borderRadius: 2 }}>{successMessage}</Alert>}
+                {error && <Alert severity="error" sx={{ mt: 2, borderRadius: 2 }}>{error}</Alert>}
             </Box>
-        </Box>
+        </Paper>
     );
 }
 

@@ -54,40 +54,47 @@ export class UserController {
       });
     }
   }
+  
 
   @Post('verify-token')
-async verifyToken(@Body() verifyTokenDto: VerifyTokenDto, @Request() req) {
-  const { userId, token } = verifyTokenDto;
-  try {
-    const tokenData = await this.authService.validateToken(userId, token);
-    if (tokenData && tokenData.isValid) {
-      const user = await this.userService.getUserById(userId);
-      if (!user) {
-        throw new UnauthorizedException('Usuario no encontrado.');
-      }
-      if (!user.isTokenEnabled) {
-        throw new UnauthorizedException('La verificación de token está desactivada.');
-      }
-      return new Promise((resolve, reject) => {
-        req.login(user, (err) => {
-          if (err) {
-            reject(new UnauthorizedException('Error al iniciar sesión.'));
-          } else {
-            resolve({ msg: 'Logged in!' });
-          }
+  async verifyToken(@Body() verifyTokenDto: VerifyTokenDto, @Request() req) {
+    const { userId, token } = verifyTokenDto;
+    try {
+      const tokenData = await this.authService.validateToken(userId, token);
+      if (tokenData && tokenData.isValid) {
+        const user = await this.userService.getUserById(userId);
+        if (!user) {
+          throw new UnauthorizedException('Usuario no encontrado.');
+        }
+        if (!user.isTokenEnabled) {
+          throw new UnauthorizedException('La verificación de token está desactivada.');
+        }
+        return new Promise((resolve, reject) => {
+          req.login(user, (err) => {
+            if (err) {
+              reject(new UnauthorizedException('Error al iniciar sesión.'));
+            } else {
+              resolve({ msg: 'Logged in!' });
+            }
+          });
         });
-      });
-    } else {
-      throw new UnauthorizedException(tokenData.message || 'Código de verificación inválido.');
-    }
-  } catch (error) {
-    if (error instanceof UnauthorizedException) {
-      throw error;
-    } else {
-      throw new BadRequestException('Token o User-Key incorrectos.');
+      } else {
+        throw new UnauthorizedException(tokenData.message || 'Código de verificación inválido.');
+      }
+    } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      } else {
+        throw new BadRequestException('Token o User-Key incorrectos.');
+      }
     }
   }
-}
+
+  @Post('resend-token')
+  async resendToken(@Body() { userId, email }: { userId: string; email: string }) {
+    await this.authService.resendVerificationToken(userId, email);
+    return { message: 'Código de verificación reenviado a tu correo electrónico.' };
+  }
 
   @UseGuards(AuthenticatedGuard)
   @Patch('update-token-status')
@@ -110,11 +117,13 @@ async verifyToken(@Body() verifyTokenDto: VerifyTokenDto, @Request() req) {
     };
   }
 
-  @UseGuards(AuthenticatedGuard)
+
+@UseGuards(AuthenticatedGuard)
   @Post('logout')
   logout(@Request() req) {
     req.logout(() => {});
   }
+
 
   @UseGuards(AuthenticatedGuard)
   @Post('change-password')

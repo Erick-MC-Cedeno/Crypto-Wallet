@@ -75,7 +75,7 @@ const getNetWorkList = (coin) => {
             name: 'Optimism',
             abbr: 'optimism',
             coin: 'op',
-            explorerBase: 'https://optimistic.etherscan.io/tx/'
+            explorerBase: 'https://sepolia-optimism.etherscan.io/tx/'
         }
         
 

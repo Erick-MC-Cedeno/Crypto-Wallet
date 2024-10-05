@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../hooks/AuthContext';
 import User from '../services/user';
 import useAuth from '../hooks/useAuth';
-import { Switch, FormControlLabel, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Paper } from '@mui/material';
+import { Switch, FormControlLabel, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Paper, Snackbar } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import MuiAlert from '@mui/material/Alert';
 
 const TwoFactorAuthComponent = () => {
   const { auth } = useContext(AuthContext);
@@ -13,6 +13,7 @@ const TwoFactorAuthComponent = () => {
   const [isTokenEnabled, setIsTokenEnabled] = useState(() => localStorage.getItem('isTokenEnabled') === 'true');
   const [showWarning, setShowWarning] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     const fetchTokenStatus = async () => {
@@ -49,6 +50,7 @@ const TwoFactorAuthComponent = () => {
       await updateTokenStatus({ userId, isTokenEnabled: newStatus });
       setIsTokenEnabled(newStatus);
       localStorage.setItem('isTokenEnabled', newStatus);
+      setOpenSnackbar(true);
     } catch (err) {
       setError(err.message);
     }
@@ -61,9 +63,15 @@ const TwoFactorAuthComponent = () => {
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, maxWidth: 400, margin: 'auto' }}>
-      <Typography variant="h5" gutterBottom>Autenticación de Dos Factores</Typography>
+      <Typography variant="h5" gutterBottom>
+        Autenticación de Dos Factores
+      </Typography>
       <FormControlLabel
         control={
           <Switch
@@ -74,7 +82,7 @@ const TwoFactorAuthComponent = () => {
         }
         label={isTokenEnabled ? (
           <span style={{ display: 'flex', alignItems: 'center' }}>
-            Desactivar 
+            Desactivar
             <CheckCircleIcon style={{ color: 'green', marginLeft: 4, fontSize: '1.2rem' }} />
           </span>
         ) : 'Activar'}
@@ -91,18 +99,6 @@ const TwoFactorAuthComponent = () => {
             <Typography variant="body2">
               Desactivar la autenticación de dos factores pone en riesgo tu cuenta.
             </Typography>
-          </Box>
-        )}
-        {error && (
-          <Box sx={{ display: 'flex', alignItems: 'center', color: 'red', marginBottom: 1 }}>
-            <ErrorOutlineIcon sx={{ marginRight: 1 }} />
-            <Typography variant="body2">{error}</Typography>
-          </Box>
-        )}
-        {successMessage && (
-          <Box sx={{ display: 'flex', alignItems: 'center', color: 'green', marginBottom: 1 }}>
-            <CheckCircleIcon sx={{ marginRight: 1 }} />
-            <Typography variant="body2">{successMessage}</Typography>
           </Box>
         )}
       </Box>
@@ -123,6 +119,28 @@ const TwoFactorAuthComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <MuiAlert onClose={handleCloseSnackbar} severity={isTokenEnabled ? "success" : "warning"} sx={{ width: '100%' }}>
+          {isTokenEnabled ? "Autenticación de dos factores activada." : "Autenticación de dos factores desactivada."}
+        </MuiAlert>
+      </Snackbar>
+
+      {error && (
+        <Snackbar open={true} autoHideDuration={6000} onClose={() => setError(null)}>
+          <MuiAlert elevation={6} variant="filled" onClose={() => setError(null)} severity="error">
+            {error}
+          </MuiAlert>
+        </Snackbar>
+      )}
+
+      {successMessage && (
+        <Snackbar open={true} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
+          <MuiAlert elevation={6} variant="filled" onClose={() => setOpenSnackbar(false)} severity="success">
+            {successMessage}
+          </MuiAlert>
+        </Snackbar>
+      )}
     </Paper>
   );
 };
