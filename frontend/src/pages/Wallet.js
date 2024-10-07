@@ -15,8 +15,8 @@ import {
     MenuItem,
     InputLabel,
     FormControl,
-    useTheme,
-    Card
+    useTheme
+    
 } from '@mui/material';
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import CopyIcon from "../assets/receiveCopyIcon.svg";
