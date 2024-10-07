@@ -145,195 +145,178 @@ export default function CoinTransactions({ transactions, coin, chainId }) {
                         ? selectedTransaction.nature === 1 ? 'Depósito' : 'Retirada' : 'Transacción'}`}
                 </DialogTitle>
                 <DialogContent>
-                    {
-                        selectedTransaction ?
-                            <Box>
-                                <Box mb={2}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="body2" color="text.secondary" mb={1}>
-                                                Estado
-                                            </Typography>
-                                            <Typography variant="body2"
-                                                color={selectedTransaction.status === 1 ? '#ffc107'
-                                                    : selectedTransaction.status === 2 ? '#17a2b8'
-                                                        : selectedTransaction.status === 3 ? 'rgb(14, 203, 129)'
-                                                            : selectedTransaction.status === 4 ? '#dc3545' : 'black'}
+    {
+        selectedTransaction ? (
+            <Box>
+                <Box mb={2}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <Typography variant="body2" color="text.secondary" mb={1}>
+                                Estado
+                            </Typography>
+                            <Typography variant="body2" color={
+                                selectedTransaction.status === 1 ? '#ffc107'
+                                    : selectedTransaction.status === 2 ? '#17a2b8'
+                                        : selectedTransaction.status === 3 ? 'rgb(14, 203, 129)'
+                                            : selectedTransaction.status === 4 ? '#dc3545' : 'black'
+                            }>
+                                <span style={{ fontSize: '1.2rem' }}>●</span>
+                                {selectedTransaction.status === 2 ? selectedTransaction.confirmations > 0 ? `Confirmación ${selectedTransaction.confirmations}/12` : getStatusName(selectedTransaction.status)
+                                    : getStatusName(selectedTransaction.status)}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography variant="body2" color="text.secondary" mb={1}>
+                                Fecha
+                            </Typography>
+                            <Typography variant="body2" color='black'>
+                                {getRealDate(selectedTransaction.created_at)}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Box mb={2}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <Typography variant="body2" color="text.secondary" mb={1}>
+                                Moneda
+                            </Typography>
+                            <Grid container alignItems="center">
+                                <Grid item>
+                                    <img width={20} src={getCoinLogo(coin)} alt={`${coin.toUpperCase()} logo`} />
+                                </Grid>
+                                <Grid item>
+                                    <Typography variant="body2" color='black' style={{ marginLeft: 8 }}>
+                                        {coin.toUpperCase()}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Typography variant="body2" color="text.secondary" mb={1}>
+                                Cantidad
+                            </Typography>
+                            <Typography variant="body2" color='black'>
+                                {selectedTransaction.nature === 1 ? parseFloat(selectedTransaction.amount).toFixed(getCoinDecimalsPlace(coin))
+                                    : -1 * parseFloat(Math.abs(selectedTransaction.amount) - getCoinFee(coin)).toFixed(getCoinDecimalsPlace(coin))}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Box>
+                <Box mb={2}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={6}>
+                            <Typography variant="body2" color="text.secondary" mb={1}>
+                                Red
+                            </Typography>
+                            <Typography variant="body2" color='black'>
+                                {getNetworkName(chainId)}
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                </Box>
+                {selectedTransaction.nature === 2 && (
+                    <>
+                        <Box mb={2}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="body2" color="text.secondary" mb={1}>
+                                        Comisión de la red
+                                    </Typography>
+                                    <Typography variant="body2" color='black'>
+                                        {getCoinFee(coin)}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <Box mb={2}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography variant="body2" color="text.secondary" mb={1}>
+                                        Dirección to
+                                    </Typography>
+                                    <Typography variant="body2" color='black'>
+                                        {selectedTransaction.to}
+                                        <Link color='inherit' underline='none' target='_blank' href={`${getNetworkExplorerBase(chainId).replace('tx', 'address')}${selectedTransaction.to}`}>
+                                            <IconButton>
+                                                <img src={LinkIcon} alt="abrir" style={{ width: "100%", height: "100%" }} />
+                                            </IconButton>
+                                        </Link>
+                                        <CopyToClipboard
+                                            text={selectedTransaction.to}
+                                            onCopy={() => setCopied(true)}
+                                        >
+                                            <Tooltip
+                                                title={
+                                                    copied ? (
+                                                        <Typography variant="caption" color="text.success">
+                                                            Dirección copiada!
+                                                        </Typography>
+                                                    ) : (
+                                                        "Copiar"
+                                                    )
+                                                }
+                                                TransitionComponent={Zoom}
                                             >
-                                                <span style={{ fontSize: '1.2rem' }}>●</span>
-
-                                                {selectedTransaction.status === 2 ? selectedTransaction.confirmations > 0 ? `Confirmación ${selectedTransaction.confirmations}/12` : getStatusName(selectedTransaction.status)
-                                                    : getStatusName(selectedTransaction.status)}
-                                            </Typography>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="body2" color="text.secondary" mb={1}>
-                                                Fecha
-                                            </Typography>
-                                            <Typography variant="body2" color='black'>
-                                                {getRealDate(selectedTransaction.created_at)}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                                <Box mb={2}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="body2" color="text.secondary" mb={1}>
-                                                Moneda
-                                            </Typography>
-                                            <Grid container alignItems="center">
-                                                <Grid item>
-                                                    <img width={20} src={getCoinLogo(coin)} alt={`${coin.toUpperCase()} logo`} />
-                                                </Grid>
-                                                <Grid item>
-                                                    <Typography variant="body2" color='black'>
-                                                        {coin.toUpperCase()}
+                                                <IconButton>
+                                                    <img src={CopyIcon} alt="copiar" style={{ width: "100%", height: "100%" }} />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </CopyToClipboard>
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </>
+                )}
+                {selectedTransaction.status > 1 && (
+                    <Box mb={2}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <Typography variant="body2" color="text.secondary" mb={1}>
+                                    TxID
+                                </Typography>
+                                <Typography variant="body2" color='black'>
+                                    {`${selectedTransaction.txHash.slice(0, selectedTransaction.txHash.length - 18)}...`}
+                                    <Link color='inherit' underline='none' target='_blank' href={`${getNetworkExplorerBase(chainId)}${selectedTransaction.txHash}`}>
+                                        <IconButton>
+                                            <img src={LinkIcon} alt="abrir" style={{ width: "100%", height: "100%" }} />
+                                        </IconButton>
+                                    </Link>
+                                    <CopyToClipboard
+                                        text={selectedTransaction.txHash}
+                                        onCopy={() => setTxCopied(true)}
+                                    >
+                                        <Tooltip
+                                            title={
+                                                txCopied ? (
+                                                    <Typography variant="caption" color="text.success">
+                                                        TxID copiado!
                                                     </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="body2" color="text.secondary" mb={1}>
-                                                Cantidad
-                                            </Typography>
-                                            <Typography variant="body2" color='black'>
-                                                {selectedTransaction.nature === 1 ? parseFloat(selectedTransaction.amount).toFixed(getCoinDecimalsPlace(coin))
-                                                    : -1 * parseFloat(Math.abs(selectedTransaction.amount) - getCoinFee(coin)).toFixed(getCoinDecimalsPlace(coin))}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                                <Box mb={2}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={12} sm={6}>
-                                            <Typography variant="body2" color="text.secondary" mb={1}>
-                                            Red
-                                            </Typography>
-                                            <Typography variant="body2" color='black'>
-                                                {getNetworkName(chainId)}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Box>
-                                {selectedTransaction.nature === 2 &&
-                                    <>
-                                        <Box mb={2}>
-                                            <Grid container spacing={2}>
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography variant="body2" color="text.secondary" mb={1}>
-                                                        Comisión de la red
-                                                    </Typography>
-                                                    <Typography variant="body2" color='black'>
-                                                        {getCoinFee(coin)}
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                        <Box mb={2}>
-                                            <Grid container spacing={2}>
-                                                <Grid item xs={12} sm={6}>
-                                                    <Typography variant="body2" color="text.secondary" mb={1}>
-                                                        Dirección to
-                                                    </Typography>
-                                                    <Typography variant="body2" color='black'>
-                                                        {selectedTransaction.to}
-                                                        <Link color='inherit' underline='none' target='_blank' href={`${getNetworkExplorerBase(chainId).replace('tx', 'address')}${selectedTransaction.to}`}>
-                                                            <IconButton>
-                                                                <img
-                                                                    src={LinkIcon}
-                                                                    alt="abrir"
-                                                                    style={{ width: "100%", height: "100%" }}
-                                                                />
-                                                            </IconButton>
-                                                        </Link>
-                                                        <CopyToClipboard
-                                                            text={selectedTransaction.to}
-                                                            onCopy={() => setCopied(true)}
-                                                        >
-                                                            <Tooltip
-                                                                title={
-                                                                    copied ? (
-                                                                        <Typography variant="caption" color="text.success">
-                                                                            Dirección copiada!
-                                                                        </Typography>
-                                                                    ) : (
-                                                                        "Copiar"
-                                                                    )
-                                                                }
-                                                                TransitionComponent={Zoom}
-                                                            >
-                                                                <IconButton>
-                                                                    <img
-                                                                        src={CopyIcon}
-                                                                        alt="copiar"
-                                                                        style={{ width: "100%", height: "100%" }}
-                                                                    />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </CopyToClipboard>
-                                                    </Typography>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                    </>
-                                }
-                                {selectedTransaction.status > 1 &&
-                                    <Box mb={2}>
-                                        <Grid container spacing={2}>
-                                            <Grid item xs={12} sm={6}>
-                                                <Typography variant="body2" color="text.secondary" mb={1}>
-                                                    TxID
-                                                </Typography>
-                                                <Typography variant="body2" color='black'>
-                                                    {`${selectedTransaction.txHash.slice(0, selectedTransaction.txHash.length - 18)}...`}
-                                                    <Link color='inherit' underline='none' target='_blank' href={`${getNetworkExplorerBase(chainId)}${selectedTransaction.txHash}`}>
-                                                        <IconButton>
-                                                            <img
-                                                                src={LinkIcon}
-                                                                alt="abrir"
-                                                                style={{ width: "100%", height: "100%" }}
-                                                            />
-                                                        </IconButton>
-                                                    </Link>
-                                                    <CopyToClipboard
-                                                        text={selectedTransaction.txHash}
-                                                        onCopy={() => setTxCopied(true)}
-                                                    >
-                                                        <Tooltip
-                                                            title={
-                                                                txCopied ? (
-                                                                    <Typography variant="caption" color="text.success">
-                                                                        TxID copiado!
-                                                                    </Typography>
-                                                                ) : (
-                                                                    "Copiar"
-                                                                )
-                                                            }
-                                                            TransitionComponent={Zoom}
-                                                        >
-                                                            <IconButton>
-                                                                <img
-                                                                    src={CopyIcon}
-                                                                    alt="copiar"
-                                                                    style={{ width: "100%", height: "100%" }}
-                                                                />
-                                                            </IconButton>
-                                                        </Tooltip>
-                                                    </CopyToClipboard>
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Box>
-                                }
-                            </Box>
-                            : <></>
-                    }
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Ok</Button>
-                </DialogActions>
-            </Dialog>
-        </>
-    );
+                                                ) : (
+                                                    "Copiar"
+                                                )
+                                            }
+                                            TransitionComponent={Zoom}
+                                        >
+                                            <IconButton>
+                                                <img src={CopyIcon} alt="copiar" style={{ width: "100%", height: "100%" }} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </CopyToClipboard>
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                )}
+            </Box>
+        ) : <></>
+    }
+</DialogContent>
+<DialogActions>
+<Button onClick={handleClose}>Ok</Button>
+</DialogActions>
+</Dialog>
+    </>
+);
 }

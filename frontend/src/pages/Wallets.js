@@ -30,12 +30,13 @@ const Wallets = () => {
 
     const handleCoinChange = (e) => setSelectedCoin(e.target.value);
     const handleCreateWallet = () => history.push(`/wallet/${selectedCoin}`);
+    const handleBack = () => history.push('/');
 
     return (
         <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} md={8}>
-                <Paper sx={{ p: 3, mb: 2, borderRadius: 2, boxShadow: 3, border: '2px solid #FFFFFFFF' }}>
-                    <Box textAlign="center" mb={2}>
+            <Grid item xs={12} md={12}>
+                <Paper sx={{ p: 5, borderRadius: 2, boxShadow: 3, border: '2px solid #3f51b5', height: 'auto', minHeight: '700px', width: '100%' }}>
+                    <Box textAlign="center" mb={3}>
                         <Typography variant="body2" color="text.secondary">
                             Balance Total
                         </Typography>
@@ -44,8 +45,8 @@ const Wallets = () => {
                         </Typography>
                         <Divider sx={{ my: 2 }} />
                     </Box>
-                    <Box display="flex" justifyContent="center" mb={2}>
-                        <FormControl size="small" sx={{ maxWidth: 300 }}>
+                    <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
+                        <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}> {/* Ancho reducido */}
                             <InputLabel id="select-coin-label">Selecciona una moneda</InputLabel>
                             <Select
                                 labelId="select-coin-label"
@@ -53,12 +54,13 @@ const Wallets = () => {
                                 value={selectedCoin}
                                 onChange={handleCoinChange}
                                 label="Selecciona una moneda"
+                                sx={{ borderRadius: 2 }}
                             >
                                 {getCoinList().map((coin) => (
                                     <MenuItem key={coin} value={coin}>
                                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                             <img
-                                                width={20}
+                                                width={24}
                                                 src={getCoinLogo(coin)}
                                                 alt={`${coin} logo`}
                                                 style={{ marginRight: 8 }}
@@ -69,23 +71,34 @@ const Wallets = () => {
                                 ))}
                             </Select>
                         </FormControl>
+                        <Box display="flex" justifyContent="center" gap={2} mb={2}> {/* Contenedor flex para botones en horizontal */}
+                            <Button
+                                onClick={handleCreateWallet}
+                                color="primary"
+                                variant="contained"
+                                sx={{ width: '200px', height: 60, borderRadius: 2 }} // Ancho específico para este botón
+                            >
+                                RETIRAR DE ({selectedCoin.toUpperCase()})
+                            </Button>
+                            <Button
+                                onClick={handleBack}
+                                variant="outlined"
+                                color="primary"
+                                sx={{ width: '150px', height: 60, borderRadius: 2 }} // Ancho específico para este botón
+                            >
+                                REGRESAR
+                            </Button>
+                        </Box>
                     </Box>
-                    <Box textAlign="center">
-                        <Button
-                            onClick={handleCreateWallet}
-                            color="info"
-                            variant="contained"
-                            fullWidth
-                            sx={{ maxWidth: 300, mx: 'auto' }}
-                        >
-                            RETIRAR DE ({selectedCoin.toUpperCase()})
-                        </Button>
+                    <Divider sx={{ my: 3 }} />
+                    <Box>
+                        <Typography variant="h6" fontWeight={600} color="primary" align="center" mb={2}>
+                            Tus Billeteras
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <MyWallets />
+                        </Box>
                     </Box>
-                </Paper>
-            </Grid>
-            <Grid item xs={12}>
-                <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3, border: '2px solid #FFFFFFFF' }}>
-                    <MyWallets />
                 </Paper>
             </Grid>
             <Box m={3} />
