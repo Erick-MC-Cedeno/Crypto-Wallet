@@ -123,7 +123,7 @@ function Dashboard() {
                             }}
                         >
                             <Typography variant="h6" sx={{ mb: 1 }}>
-                                Total Balance
+                                Cuenta
                             </Typography>
                             <TotalBalance />
                         </Paper>

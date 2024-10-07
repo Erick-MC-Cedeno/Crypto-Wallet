@@ -46,7 +46,7 @@ const Wallets = () => {
                         <Divider sx={{ my: 2 }} />
                     </Box>
                     <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
-                        <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}> {/* Ancho reducido */}
+                        <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
                             <InputLabel id="select-coin-label">Selecciona una moneda</InputLabel>
                             <Select
                                 labelId="select-coin-label"
@@ -71,12 +71,12 @@ const Wallets = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                        <Box display="flex" justifyContent="center" gap={2} mb={2}> {/* Contenedor flex para botones en horizontal */}
+                        <Box display="flex" justifyContent="center" gap={2} mb={2}>
                             <Button
                                 onClick={handleCreateWallet}
                                 color="primary"
                                 variant="contained"
-                                sx={{ width: '200px', height: 60, borderRadius: 2 }} // Ancho específico para este botón
+                                sx={{ width: '200px', height: 60, borderRadius: 2 }}
                             >
                                 RETIRAR DE ({selectedCoin.toUpperCase()})
                             </Button>
@@ -84,7 +84,7 @@ const Wallets = () => {
                                 onClick={handleBack}
                                 variant="outlined"
                                 color="primary"
-                                sx={{ width: '150px', height: 60, borderRadius: 2 }} // Ancho específico para este botón
+                                sx={{ width: '150px', height: 60, borderRadius: 2 }}
                             >
                                 REGRESAR
                             </Button>
@@ -95,7 +95,7 @@ const Wallets = () => {
                         <Typography variant="h6" fontWeight={600} color="primary" align="center" mb={2}>
                             Tus Billeteras
                         </Typography>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: '300px' }}> {/* Asegúrate de que este contenedor tenga un tamaño mínimo */}
                             <MyWallets />
                         </Box>
                     </Box>
