@@ -9,7 +9,8 @@ import {
     verifyTokenApi,
     changePasswordApi,
     updateTokenStatusApi,
-    resendTokenApi
+    resendTokenApi,
+    updateUserProfileApi,
     
 } from '../api/http';
 
@@ -44,5 +45,9 @@ export default class User {
 
     static async resendToken(body) {
         return await post(resendTokenApi, body);
+    }
+
+    static async updateProfile(body) {
+        return await post(updateUserProfileApi, body);
     }
 }

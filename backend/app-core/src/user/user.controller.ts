@@ -17,6 +17,7 @@ import { VerifyTokenDto } from '../two-factor/dto/verification.dto';
 import { LocalAuthGuard } from '../guard/auth/local-auth.guard';
 import { AuthenticatedGuard } from '../guard/auth/authenticated.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UpdateProfileDto } from './dto/update-profile';
 
 @Controller('user')
 export class UserController {
@@ -130,5 +131,12 @@ export class UserController {
   async changePassword(@Request() req, @Body() changePasswordDto: ChangePasswordDto) {
     const userId = req.user._id;
     return this.userService.changePassword(userId, changePasswordDto);
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Post('update-profile')
+  async updateProfile(@Request() req, @Body() updateProfileDto: UpdateProfileDto) { 
+    const userId = req.user._id;
+    return this.userService.updateProfile(userId, updateProfileDto);
   }
 }

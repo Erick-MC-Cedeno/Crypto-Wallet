@@ -1,35 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Box, Typography, TextField, Button, Alert, Paper, Avatar } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import useAuth from '../hooks/useAuth'; // Asegúrate de importar tu hook correctamente
+import { AuthContext } from '../hooks/AuthContext';
 
 function UserProfileComponent() {
-    // Simulación de datos del usuario
-    const [user, setUser] = useState({
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-    });
+    const { updateUserProfile, error, successMessage } = useAuth();
+    const { auth } = useContext(AuthContext);
+    
+    const [firstName, setFirstName] = useState(auth.firstName || '');
+    const [lastName, setLastName] = useState(auth.lastName || '');
+    const [email, setEmail] = useState(auth.email || '');
+    const [localError, setLocalError] = useState('');
+    const [localSuccessMessage, setLocalSuccessMessage] = useState('');
 
-    const [firstName, setFirstName] = useState(user.firstName);
-    const [lastName, setLastName] = useState(user.lastName);
-    const [email, setEmail] = useState(user.email);
+    useEffect(() => {
+        if (auth) {
+            setFirstName(auth.firstName || '');
+            setLastName(auth.lastName || '');
+            setEmail(auth.email || '');
+        }
+    }, [auth]);
 
-    const [successMessage, setSuccessMessage] = useState('');
-    const [error, setError] = useState('');
+    const handleUpdateProfile = async () => {
+        setLocalError('');
+        setLocalSuccessMessage('');
 
-    const handleUpdateProfile = () => {
         if (!firstName || !lastName || !email) {
-            setError('Todos los campos son obligatorios.');
+            setLocalError('Todos los campos son obligatorios.');
             return;
         }
 
-        // Simulación de una llamada API para actualizar el perfil
-        setTimeout(() => {
-            setUser({ firstName, lastName, email });
-            setSuccessMessage('Perfil actualizado correctamente.');
-            setError('');
-        }, 500);
+        const body = { firstName, lastName, email };
+        await updateUserProfile(body);
     };
+    useEffect(() => {
+        if (successMessage) {
+            setLocalSuccessMessage(successMessage);
+        }
+        if (error) {
+            setLocalError(error);
+        }
+    }, [successMessage, error]);
 
     return (
         <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: 400, mx: 'auto' }}>
@@ -83,8 +95,16 @@ function UserProfileComponent() {
                 >
                     Actualizar Perfil
                 </Button>
-                {successMessage && <Alert severity="success" sx={{ mt: 2, borderRadius: 2 }}>{successMessage}</Alert>}
-                {error && <Alert severity="error" sx={{ mt: 2, borderRadius: 2 }}>{error}</Alert>}
+                {localSuccessMessage && (
+                    <Alert severity="success" sx={{ mt: 2, borderRadius: 2 }}>
+                        {localSuccessMessage}
+                    </Alert>
+                )}
+                {localError && (
+                    <Alert severity="error" sx={{ mt: 2, borderRadius: 2 }}>
+                        {localError}
+                    </Alert>
+                )}
             </Box>
         </Paper>
     );

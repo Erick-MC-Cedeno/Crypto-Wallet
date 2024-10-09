@@ -122,14 +122,32 @@ export default function useAuth() {
         }
     };
 
+    const updateUserProfile = async (body) => {
+        try {
+            const { data } = await User.updateProfile(body); 
+            if (data && data.message === 'Perfil actualizado con éxito') {
+                setSuccessMessage(data.message); 
+            } else {
+                console.log('Error:', data); 
+                setError(data.error || 'Error al actualizar el perfil.');
+            }
+        } catch (err) {
+            console.log('Error:', err.response ? err.response.data : err.message); 
+            setError(err.response?.data?.message || err.message); 
+        }
+    };
+    
+    
+    
     return {
         registerUser,
         loginUser,
         logoutUser,
         verifyToken,
-        resendToken,  // Añadido aquí
+        resendToken, 
         changePassword,
         updateTokenStatus,
+        updateUserProfile,
         error,
         successMessage
     };

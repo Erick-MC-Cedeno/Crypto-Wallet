@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { HashService } from './hash.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { TwoFactorAuthService } from '../two-factor/verification.service';
+import { UpdateProfileDto } from './dto/update-profile';
 
 @Injectable()
 export class UserService {
@@ -88,5 +89,26 @@ export class UserService {
     user.password = await this.hashService.hashPassword(changePasswordDto.newPassword);
     await user.save();
     return { message: 'Contraseña actualizada con éxito' };
+  }
+
+  async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
+    const user = await this.getUserById(userId);
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+  
+    user.firstName = updateProfileDto.firstName || user.firstName;
+    user.lastName = updateProfileDto.lastName || user.lastName;
+    
+    if (updateProfileDto.email) {
+      const existingUser = await this.userModel.findOne({ email: updateProfileDto.email });
+      if (existingUser && existingUser.id !== userId) {
+        throw new BadRequestException('El correo electrónico ya está en uso');
+      }
+      user.email = updateProfileDto.email;
+    }
+  
+    await user.save();
+    return { message: 'Perfil actualizado con éxito' };
   }
 }

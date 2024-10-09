@@ -9,6 +9,7 @@ const loginApi = `${baseApi}/user/login`
 const logoutApi = `${baseApi}/user/logout`
 const registerApi = `${baseApi}/user/register`
 const userInfoApi = `${baseApi}/user/info`
+const updateUserProfileApi = `${baseApi}/user/update-profile`
 const verifyTokenApi = `${baseApi}/user/verify-token`;
 const updateTokenStatusApi = `${baseApi}/user/update-token-status`;
 const resendTokenApi = `${baseApi}/user/resend-token`
@@ -72,6 +73,6 @@ export {
     verifyTokenApi,
     changePasswordApi,
     updateTokenStatusApi,
-    resendTokenApi
-
+    resendTokenApi,
+    updateUserProfileApi
 }

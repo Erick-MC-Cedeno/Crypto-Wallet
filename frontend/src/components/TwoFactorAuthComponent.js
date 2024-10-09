@@ -9,11 +9,11 @@ import MuiAlert from '@mui/material/Alert';
 
 const TwoFactorAuthComponent = () => {
   const { auth } = useContext(AuthContext);
-  const { updateTokenStatus, error, setError, successMessage } = useAuth();
+  const { updateTokenStatus, error, setError } = useAuth();
   const [isTokenEnabled, setIsTokenEnabled] = useState(() => localStorage.getItem('isTokenEnabled') === 'true');
   const [showWarning, setShowWarning] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: '' });
 
   useEffect(() => {
     const fetchTokenStatus = async () => {
@@ -50,7 +50,7 @@ const TwoFactorAuthComponent = () => {
       await updateTokenStatus({ userId, isTokenEnabled: newStatus });
       setIsTokenEnabled(newStatus);
       localStorage.setItem('isTokenEnabled', newStatus);
-      setOpenSnackbar(true);
+      setSnackbar({ open: true, message: newStatus ? "Autenticación de dos factores activada." : "Autenticación de dos factores desactivada.", severity: "success" });
     } catch (err) {
       setError(err.message);
     }
@@ -64,8 +64,17 @@ const TwoFactorAuthComponent = () => {
   };
 
   const handleCloseSnackbar = () => {
-    setOpenSnackbar(false);
+    setSnackbar({ ...snackbar, open: false });
   };
+
+  useEffect(() => {
+    if (snackbar.open) {
+      const timer = setTimeout(() => {
+        handleCloseSnackbar();
+      }, 3000); // 3000 milisegundos = 3 segundos
+      return () => clearTimeout(timer);
+    }
+  }, );
 
   return (
     <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, maxWidth: 400, margin: 'auto' }}>
@@ -111,18 +120,32 @@ const TwoFactorAuthComponent = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handleConfirmDialogClose(false)} color="secondary">
+          <Button 
+            onClick={() => handleConfirmDialogClose(false)} 
+            color="error" 
+            variant="contained" 
+            sx={{ marginRight: 1 }} 
+          >
             Cancelar
           </Button>
-          <Button onClick={() => handleConfirmDialogClose(true)} color="primary">
+          <Button 
+            onClick={() => handleConfirmDialogClose(true)} 
+            color="primary" 
+            variant="contained" 
+          >
             Desactivar
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-        <MuiAlert onClose={handleCloseSnackbar} severity={isTokenEnabled ? "success" : "warning"} sx={{ width: '100%' }}>
-          {isTokenEnabled ? "Autenticación de dos factores activada." : "Autenticación de dos factores desactivada."}
+      <Snackbar 
+        open={snackbar.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      >
+        <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
         </MuiAlert>
       </Snackbar>
 
@@ -130,14 +153,6 @@ const TwoFactorAuthComponent = () => {
         <Snackbar open={true} autoHideDuration={6000} onClose={() => setError(null)}>
           <MuiAlert elevation={6} variant="filled" onClose={() => setError(null)} severity="error">
             {error}
-          </MuiAlert>
-        </Snackbar>
-      )}
-
-      {successMessage && (
-        <Snackbar open={true} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-          <MuiAlert elevation={6} variant="filled" onClose={() => setOpenSnackbar(false)} severity="success">
-            {successMessage}
           </MuiAlert>
         </Snackbar>
       )}
