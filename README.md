@@ -1,5 +1,8 @@
 # NicBlockVault
 
+## SETUP NODE ENV 
+set NODE_OPTIONS=--openssl-legacy-provider
+
 ## START FRONTEND
 cd frontend  
 npm install  
