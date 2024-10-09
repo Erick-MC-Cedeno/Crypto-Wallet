@@ -86,8 +86,6 @@ El uso de este repositorio es bajo tu propio riesgo. No nos hacemos responsables
 # Wallets
 ![Wallets](frontend/src/assets/screenshots/Wallets.png)
 
-# Home2
-![Home (2)](frontend/src/assets/screenshots/Home2.png)
 
 # Home3 
 ![Home (2)](frontend/src/assets/screenshots/Home3.png)
