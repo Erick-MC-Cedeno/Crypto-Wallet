@@ -10,6 +10,7 @@ const logoutApi = `${baseApi}/user/logout`
 const registerApi = `${baseApi}/user/register`
 const userInfoApi = `${baseApi}/user/info`
 const updateUserProfileApi = `${baseApi}/user/update-profile`
+const changePasswordApi = `${baseApi}/user/change-password`;
 const verifyTokenApi = `${baseApi}/user/verify-token`;
 const updateTokenStatusApi = `${baseApi}/user/update-token-status`;
 const resendTokenApi = `${baseApi}/user/resend-token`
@@ -32,9 +33,6 @@ const transactionApi = `${baseApi}/transaction/info`
 const providerApi = `${baseApi}/provider`;
 const createapi = `${baseApi}/create`;
 
-
-// Endpoints change password
-const changePasswordApi = `${baseApi}/user/change-password`;
 
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
