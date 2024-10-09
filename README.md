@@ -96,9 +96,6 @@ El uso de este repositorio es bajo tu propio riesgo. No nos hacemos responsables
 ![Settings](frontend/src/assets/screenshots/Settings.png)
 
 # Transactions
-![Transa](frontend/src/assets/screenshots/Transa.png)
-
-# Transactions
 ![Transa](frontend/src/assets/screenshots/trans.png)
 
 # Transactions History
