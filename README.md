@@ -101,4 +101,7 @@ El uso de este repositorio es bajo tu propio riesgo. No nos hacemos responsables
 # Transactions
 ![Transa](frontend/src/assets/screenshots/trans.png)
 
+# Transactions History
+![Transa](frontend/src/assets/screenshots/history.png)
+
 
