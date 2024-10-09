@@ -16,7 +16,6 @@ const updateTokenStatusApi = `${baseApi}/user/update-token-status`;
 const resendTokenApi = `${baseApi}/user/resend-token`
 
 
-
 // Endpoints wallet
 const walletInfoApi = `${baseApi}/wallet/info`
 const allWalletInfoApi = `${baseApi}/wallet/all`
@@ -32,7 +31,6 @@ const transactionApi = `${baseApi}/transaction/info`
 // Endpoints provider
 const providerApi = `${baseApi}/provider`;
 const createapi = `${baseApi}/create`;
-
 
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
