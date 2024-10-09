@@ -11,12 +11,9 @@ import {
     Tooltip,
     Zoom,
     Button,
-    Select,
-    MenuItem,
-    InputLabel,
     FormControl,
-    useTheme
-    
+    useTheme,
+    useMediaQuery
 } from '@mui/material';
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import CopyIcon from "../assets/receiveCopyIcon.svg";
@@ -28,7 +25,6 @@ import {
     getCoinDecimalsPlace,
     getCoinFee,
     getDefaultNetworkId,
-    getNetWorkList,
     getNetworkName
 } from '../components/utils/Chains';
 import useWithdraw from '../hooks/useWithdraw';
@@ -51,6 +47,7 @@ export default function Wallet() {
     const { transactions, getTransactions } = useTransitions(walletId);
 
     const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleWithdraw = async () => {
         if (parseFloat(withdrawAmount) > parseFloat(walletInfo.balance)) {
@@ -97,8 +94,8 @@ export default function Wallet() {
     };
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3, mb: 3 }}>
+        <Box sx={{ p: 3, bgcolor: '#e0f7fa' }}> 
+            <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3, mb: 3, bgcolor: '#ffffff' }}>
                 <Box>
                     {!isWalletLoading ? (
                         walletInfo ? (
@@ -106,7 +103,7 @@ export default function Wallet() {
                                 <Typography variant="body2" color="text.secondary" mb={1}>
                                     Balance
                                 </Typography>
-                                <Typography variant="h4" fontWeight={700} mb={1} sx={{ color: theme.palette.primary.main }}>
+                                <Typography variant="h4" fontWeight={700} mb={1} sx={{ color: '#0000FF' }}> {/* Color azul puro */}
                                     {truncateToDecimals(walletInfo.balance, getCoinDecimalsPlace(walletInfo.coin))}
                                     <Typography component="span" variant="h4" fontWeight={700}>
                                         {` ${walletInfo.coin}`}
@@ -117,29 +114,15 @@ export default function Wallet() {
                                 </Typography>
                                 <Divider sx={{ mb: 2 }} />
                                 <FormControl fullWidth disabled sx={{ mb: 2 }}>
-                                    <InputLabel id="select-network-label" sx={{ color: theme.palette.text.primary }}>
-                                        {`Selecciona la red para ${walletId.toUpperCase()}`}
-                                    </InputLabel>
-                                    <Select
-                                        labelId="select-network-label"
-                                        id="select-network"
-                                        value={defaultNetworkId}
-                                        label={`Selecciona la red para ${walletId.toUpperCase()}`}
-                                        sx={{ border: '1px solid #ccc', borderRadius: 2 }}
-                                    >
-                                        {getNetWorkList(walletId).map((network) => (
-                                            <MenuItem key={network.id} value={network.id}>{network.name}</MenuItem>
-                                        ))}
-                                    </Select>
                                 </FormControl>
                                 <Typography variant="caption" color="text.secondary" mb={2}>
-                                    Tu dirección de {walletInfo.coin} ({getNetworkName(walletInfo.chainId)})
+                                    {`Tu dirección de ${walletInfo.coin} (${getNetworkName(walletInfo.chainId)})`}
                                 </Typography>
                                 <Grid container spacing={2}>
                                     <Grid item xs={12} sm={6}>
                                         <Stack spacing={2}>
                                             <Stack direction="row" alignItems="center" spacing={1}>
-                                                <Box sx={{ p: 1, bgcolor: "#F5F5F5", borderRadius: "8px", border: '1px solid #ccc', flexGrow: 1 }}>
+                                                <Box sx={{ p: 1, bgcolor: "#e0f7fa", borderRadius: "8px", border: '1px solid #0000FF', flexGrow: 1 }}> 
                                                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                                                         <TextField
                                                             variant="outlined"
@@ -167,56 +150,64 @@ export default function Wallet() {
                                                     </Stack>
                                                 </Box>
                                             </Stack>
-                                            <QRCode value={walletInfo.address} size={200} />
-                                            <Stack direction="row" spacing={1}>
-                                                <TextField
-                                                    value={withdrawAddress}
-                                                    onChange={handleInputAddress}
-                                                    placeholder={`Dirección ${getNetworkName(walletInfo.chainId)}...`}
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    sx={{ border: '1px solid #ccc', borderRadius: 2 }}
-                                                />
-                                                <TextField
-                                                    type='number'
-                                                    onChange={handleInputAmount}
-                                                    value={withdrawAmount || ''}
-                                                    placeholder={`Monto a retirar...`}
-                                                    fullWidth
-                                                    variant="outlined"
-                                                    sx={{ border: '1px solid #ccc', borderRadius: 2 }}
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <Button variant="outlined" onClick={setMaxAmount} sx={{ height: '100%' }}>
-                                                                Max
-                                                            </Button>
-                                                        ),
-                                                    }}
-                                                />
+                                            <Stack direction={isSmallScreen ? "column" : "row"} spacing={1} sx={{ mt: 2 }}>
+                                                <Grid item xs={12} sm={6} sx={{ textAlign: isSmallScreen ? 'center' : 'right' }}>
+                                                    <QRCode value={walletInfo.address} size={200} />
+                                                </Grid>
                                             </Stack>
-                                            <Button
-                                                disabled={!(withdrawAmount > 0 && withdrawAddress && parseFloat(withdrawAmount) <= parseFloat(walletInfo.balance))}
-                                                onClick={handleWithdraw}
-                                                variant="contained"
-                                                color="error"
-                                                fullWidth
-                                                sx={{
-                                                    borderRadius: 2,
-                                                    padding: '8px',
-                                                    fontSize: '14px',
-                                                    border: '1px solid transparent',
-                                                }}
-                                            >
-                                                RETIRAR
-                                            </Button>
-                                            {error && <Typography variant="caption" color="error">{error}</Typography>}
-                                            <Typography variant="caption" color="text.secondary" mt={1}>
-                                                Comisión: {getCoinFee(walletInfo.coin)} {walletInfo.coin}
-                                            </Typography>
+
+                                            <Stack spacing={2}>
+                                                <Stack direction={isSmallScreen ? "column" : "row"} spacing={1}>
+                                                    <TextField
+                                                        value={withdrawAddress}
+                                                        onChange={handleInputAddress}
+                                                        placeholder={`Dirección ${getNetworkName(walletInfo.chainId)}...`}
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        sx={{ border: '1px solid #0000FF', borderRadius: 2 }} 
+                                                    />
+                                                    <TextField
+                                                        type='number'
+                                                        onChange={handleInputAmount}
+                                                        value={withdrawAmount || ''}
+                                                        placeholder="Monto a retirar..."
+                                                        fullWidth
+                                                        variant="outlined"
+                                                        sx={{ border: '1px solid #0000FF', borderRadius: 2 }} 
+                                                        InputProps={{
+                                                            endAdornment: (
+                                                                <Button variant="outlined" onClick={setMaxAmount} sx={{ height: '40%', color: '#0000FF' }}>
+                                                                    Max
+                                                                </Button>
+                                                            ),
+                                                        }}
+                                                    />
+                                                </Stack>
+                                                <Button
+                                                    disabled={!(withdrawAmount > 0 && withdrawAddress && parseFloat(withdrawAmount) <= parseFloat(walletInfo.balance))}
+                                                    onClick={handleWithdraw}
+                                                    variant="contained"
+                                                    color="primary" 
+                                                    fullWidth
+                                                    sx={{
+                                                        borderRadius: 2,
+                                                        padding: '8px',
+                                                        fontSize: '14px',
+                                                        border: '1px solid transparent',
+                                                        bgcolor: '#0000FF', // Color azul puro
+                                                        '&:hover': {
+                                                            bgcolor: '#0033CC', // Azul más oscuro al pasar el ratón
+                                                        },
+                                                    }}
+                                                >
+                                                    RETIRAR
+                                                </Button>
+                                                {error && <Typography variant="caption" color="error">{error}</Typography>}
+                                                <Typography variant="caption" color="text.secondary" mt={1}>
+                                                    Comisión: {getCoinFee(walletInfo.coin)} {walletInfo.coin}
+                                                </Typography>
+                                            </Stack>
                                         </Stack>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} textAlign="center" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', mt: 1 }}>
-                                        {/* Puedes agregar información adicional aquí si es necesario */}
                                     </Grid>
                                 </Grid>
                             </>
@@ -225,9 +216,9 @@ export default function Wallet() {
                                 onClick={handleCreateWallet}
                                 color="info"
                                 fullWidth
-                                sx={{ borderRadius: 2, padding: '10px', fontSize: '16px', border: '1px solid #ccc' }}
+                                sx={{ borderRadius: 2, padding: '10px', fontSize: '16px', border: '1px solid #0000FF' }} // Color azul puro en el borde
                             >
-                                CREAR BILLETERA PARA {walletId.toUpperCase()} AHORA
+                                {`CREAR BILLETERA PARA ${walletId.toUpperCase()} AHORA`}
                             </Button>
                         )
                     ) : (

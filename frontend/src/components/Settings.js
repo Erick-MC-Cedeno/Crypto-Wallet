@@ -3,37 +3,50 @@ import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
 import UserProfileComponent from './Userprofile';
-import { Container, Typography, Box, Divider, Paper, IconButton } from '@mui/material';
+import { Container, Typography, Box, Divider, Paper, IconButton, useMediaQuery } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import SecurityIcon from '@mui/icons-material/Security';
 import LanguageIcon from '@mui/icons-material/Language';
 import PersonIcon from '@mui/icons-material/Person';
 
 function Settings() {
+    // Define el punto de ruptura para pantallas pequeñas
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
     return (
         <Container maxWidth="md">
             <Box
                 sx={{
                     mt: 4,
                     p: 3,
-                    bgcolor: '#FFFFFF', 
-                    color: '#1C1E21', 
+                    bgcolor: '#FFFFFF',
+                    color: '#1C1E21',
                     borderRadius: 2,
                     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
                 }}
             >
-                <Typography variant="h4" component="h1" gutterBottom sx={{ textAlign: 'center', fontWeight: 'bold' }}>
+                <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    sx={{
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                        fontSize: isSmallScreen ? '1.5rem' : '2rem', // Ajusta el tamaño del texto
+                    }}
+                >
                     Configuración de la Cuenta
                 </Typography>
 
+                {/** Cambiar Contraseña */}
                 <Paper
-                    elevation={3} 
+                    elevation={3}
                     sx={{
                         mb: 4,
                         p: 3,
-                        bgcolor: '#F5F5F5', 
+                        bgcolor: '#F5F5F5',
                         borderRadius: 2,
-                        border: '1px solid #E0E0E0', 
+                        border: '1px solid #E0E0E0',
                     }}
                 >
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -49,6 +62,7 @@ function Settings() {
 
                 <Divider sx={{ mb: 4, borderColor: '#E0E0E0' }} />
 
+                {/** Perfil de Usuario */}
                 <Paper
                     elevation={3}
                     sx={{
@@ -72,6 +86,7 @@ function Settings() {
 
                 <Divider sx={{ mb: 4, borderColor: '#E0E0E0' }} />
 
+                {/** Seguridad de la cuenta */}
                 <Paper
                     elevation={3}
                     sx={{
@@ -95,6 +110,7 @@ function Settings() {
 
                 <Divider sx={{ mb: 4, borderColor: '#E0E0E0' }} />
 
+                {/** Selección de Idioma */}
                 <Paper
                     elevation={3}
                     sx={{

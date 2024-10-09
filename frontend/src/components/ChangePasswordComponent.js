@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Alert, Box, Typography, InputAdornment, IconButton, Paper, Avatar } from '@mui/material';
+import { TextField, Button, Alert, Box, Typography, InputAdornment, IconButton, Paper, Avatar, useMediaQuery } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
@@ -7,7 +7,7 @@ import useAuth from '../hooks/useAuth';
 
 function ChangePasswordComponent() {
     const { changePassword, successMessage, error } = useAuth();
-    
+
     const [passwords, setPasswords] = useState({
         currentPassword: '',
         newPassword: '',
@@ -36,8 +36,11 @@ function ChangePasswordComponent() {
         await changePassword(passwords);
     };
 
+    // Usar useMediaQuery para obtener el tamaño de la pantalla
+    const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+
     return (
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: 400, mx: 'auto' }}>
+        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: isSmallScreen ? '90%' : 400, mx: 'auto' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
                 <Avatar sx={{ bgcolor: '#1976D2', width: 48, height: 48 }}>
                     <LockIcon />
@@ -69,6 +72,10 @@ function ChangePasswordComponent() {
                         ),
                         sx: { borderRadius: 2, borderColor: '#ddd' },
                     }}
+                    // Cambiar el tamaño de la tipografía del label según el tamaño de la pantalla
+                    InputLabelProps={{
+                        sx: { fontSize: isSmallScreen ? '0.875rem' : '1rem' } // Ajuste del tamaño del label
+                    }}
                 />
                 <TextField
                     name="newPassword"
@@ -92,6 +99,9 @@ function ChangePasswordComponent() {
                         ),
                         sx: { borderRadius: 2, borderColor: '#ddd' },
                     }}
+                    InputLabelProps={{
+                        sx: { fontSize: isSmallScreen ? '0.875rem' : '1rem' } // Ajuste del tamaño del label
+                    }}
                 />
                 <TextField
                     name="confirmNewPassword"
@@ -114,6 +124,9 @@ function ChangePasswordComponent() {
                             </InputAdornment>
                         ),
                         sx: { borderRadius: 2, borderColor: '#ddd' },
+                    }}
+                    InputLabelProps={{
+                        sx: { fontSize: isSmallScreen ? '0.875rem' : '1rem' } // Ajuste del tamaño del label
                     }}
                 />
                 <Button 
