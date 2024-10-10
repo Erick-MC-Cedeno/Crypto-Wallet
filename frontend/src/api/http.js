@@ -26,6 +26,8 @@ const withdrawApi = `${baseApi}/wallet/withdraw`
 // Endpoints transacción
 const transactionsApi = `${baseApi}/transaction/all`
 const transactionApi = `${baseApi}/transaction/info`
+const totalTransactionsApi = `${baseApi}/transaction/total`;
+
 
 
 // Endpoints provider
@@ -70,5 +72,6 @@ export {
     changePasswordApi,
     updateTokenStatusApi,
     resendTokenApi,
-    updateUserProfileApi
+    updateUserProfileApi,
+    totalTransactionsApi
 }

@@ -23,7 +23,13 @@ export default function MyWallets() {
                 <Grid container spacing={1}>
                     {allWalletInfo.map((wallet) => (
                         <Grid item xs={12} key={wallet.walletId}>
-                            <Paper sx={{ padding: 1, marginBottom: 1 }}>
+                            <Paper sx={{
+                                padding: 2, 
+                                marginBottom: 1,
+                                borderRadius: 2, 
+                                boxShadow: 3, 
+                                backgroundColor: theme.palette.background.paper 
+                            }}>
                                 <Grid container spacing={1} direction='column'>
                                     <Grid item>
                                         <Typography variant='body2' fontWeight='bold'>
@@ -64,7 +70,12 @@ export default function MyWallets() {
                     <Grid container spacing={1}>
                         {allWalletInfo.map((wallet) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={wallet.walletId}>
-                                <Paper sx={{ padding: 1 }}>
+                                <Paper sx={{
+                                    padding: 2, 
+                                    borderRadius: 2, 
+                                    boxShadow: 3, 
+                                    backgroundColor: theme.palette.background.paper 
+                                }}>
                                     <Grid container spacing={1} alignItems='center'>
                                         <Grid item>
                                             <img width={20} src={getCoinLogo(wallet.coin)} alt={wallet.coin} />

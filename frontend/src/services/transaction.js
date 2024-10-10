@@ -1,4 +1,4 @@
-import { get, transactionsApi, transactionApi } from '../api/http'
+import { get, transactionsApi, transactionApi, totalTransactionsApi } from '../api/http'
 
 export default class Transaction {
     static async getCoinTransactions(coin) {
@@ -14,4 +14,9 @@ export default class Transaction {
                 transactionId
             })
     }
+
+    static async getTotalTransactions() {
+        return await get(totalTransactionsApi);
+    }
+
 }

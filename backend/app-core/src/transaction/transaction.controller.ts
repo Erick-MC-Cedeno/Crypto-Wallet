@@ -16,13 +16,19 @@ export class TransactionController {
     return this.transactionService.getTransactions(
       req.user.email,
       queryDto
-    )
+    );
   }
 
   @UseGuards(AuthenticatedGuard)
   @Get('info')
   transaction(@Query() queryDto: QueryDto) {
-    return this.transactionService.getTransaction(queryDto)
+    return this.transactionService.getTransaction(queryDto);
   }
 
+  @UseGuards(AuthenticatedGuard)
+    @Get('total')
+    async totalTransactions(@Request() req, @Query() queryDto: QueryDto) {
+        const totalCount = await this.transactionService.countTotalTransactions(req.user.email, queryDto);
+        return { totalCount }; 
+    }
 }
