@@ -115,6 +115,9 @@ export default function Wallet() {
                                 <Divider sx={{ mb: 2 }} />
                                 <FormControl fullWidth disabled sx={{ mb: 2 }}>
                                 </FormControl>
+
+                                <Typography>Puedes hacer un deposito a esta dirección</Typography>
+
                                 <Typography variant="caption" color="text.secondary" mb={2}>
                                     {`Tu dirección de ${walletInfo.coin} (${getNetworkName(walletInfo.chainId)})`}
                                 </Typography>

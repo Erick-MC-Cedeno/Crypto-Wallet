@@ -1,20 +1,33 @@
-import React, { useContext } from 'react';
-import { Grid, Paper, Typography, Avatar } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Grid, Paper, Typography, Button } from '@mui/material';
+import { Link } from 'react-router-dom'; // Asegúrate de importar Link
 import TotalBalance from './TotalBalance';
 import MyWallets from './MyWallets';
-import useTransactions from '../hooks/useTransactions'; 
-import { AuthContext } from '../hooks/AuthContext'; 
 
+const Dashboard = () => {
+    // Estado para el texto que se va a mostrar con efecto de escritura
+    const [displayText, setDisplayText] = useState('');
+    const fullText = "La seguridad de tu cuenta es nuestra prioridad. Asegúrate de habilitar la autenticación de dos factores para proteger tus activos.";
 
-function Dashboard() {
-    const { user } = useContext(AuthContext); 
-    const { totalTransactions, loading } = useTransactions(user?.coin);
+    useEffect(() => {
+        let index = 0;
+
+        const interval = setInterval(() => {
+            if (index < fullText.length) {
+                setDisplayText((prev) => prev + fullText.charAt(index));
+                index++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 50); // Cambia la velocidad del efecto de escritura ajustando el valor
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <Grid container spacing={3} sx={{ padding: 2 }}> 
             <Grid item xs={12}>
                 <Grid container spacing={2}>
-                    
                     <Grid item xs={12} md={5} lg={4}>
                         <Paper
                             sx={{
@@ -51,26 +64,26 @@ function Dashboard() {
                             <Typography variant="h6" sx={{ mb: 2 }}>
                                 Resumen de Actividades
                             </Typography>
-                            {loading ? (
-                                <Typography variant="body1">Cargando...</Typography>
-                            ) : (
-                                <div style={{ display: 'flex', alignItems: 'center' }}> 
-                                    <Avatar 
-                                        sx={{
-                                            bgcolor: '#1976d2', 
-                                            color: '#fff', 
-                                            width: 40, 
-                                            height: 40, 
-                                            marginLeft: 1 
-                                        }}
-                                    >
-                                        {totalTransactions} 
-                                    </Avatar>
-                                    <Typography variant="body1" sx={{ marginLeft: 1 }}> 
-                                        Transacciones en Total
-                                    </Typography>
-                                </div>
-                            )}
+                            <Typography variant="body1" sx={{ mb: 2 }}>
+                                {displayText} {/* Mostrar el texto con efecto de escritura */}
+                            </Typography>
+                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 'auto' }}>
+                                <Link to="/wallets" style={{ textDecoration: 'none' }}>
+                                    <Button variant="contained" color="primary" sx={{ mr: 1, bgcolor: 'blue', '&:hover': { bgcolor: 'darkblue' } }}>
+                                        Depositar
+                                    </Button>
+                                </Link>
+                                <Link to="/wallets" style={{ textDecoration: 'none' }}>
+                                    <Button variant="contained" color="primary" sx={{ mr: 1, bgcolor: 'blue', '&:hover': { bgcolor: 'darkblue' } }}>
+                                        Retirar
+                                    </Button>
+                                </Link>
+                                <Link to="/settings" style={{ textDecoration: 'none' }}>
+                                    <Button variant="contained" color="primary" sx={{ bgcolor: 'blue', '&:hover': { bgcolor: 'darkblue' } }}>
+                                        2FA auth
+                                    </Button>
+                                </Link>
+                            </div>
                         </Paper>
                     </Grid>
                 </Grid>

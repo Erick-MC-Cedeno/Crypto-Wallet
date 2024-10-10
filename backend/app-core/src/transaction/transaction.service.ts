@@ -80,33 +80,4 @@ export class TransactionService {
     }
   }
 
-  async countTotalTransactions(email: string, queryDto: QueryDto): Promise<number> {
-    const data = await this.userModel.aggregate([
-        { $match: { email } },
-        { $unwind: '$wallets' },
-        { $project: { _id: 0 } },
-        {
-            $lookup: {
-                from: 'wallets',
-                localField: 'wallets',
-                foreignField: '_id',
-                as: 'walletsData',
-            }
-        }
-    ]).exec();
-
-    if (data && data.length > 0) {
-        const wallets = data.flatMap(w => w.walletsData); 
-
-        if (wallets.length === 0) {
-            return 0; 
-        }
-        const walletIds = wallets.map(wallet => wallet._id); 
-        const totalCount = await this.transactionModel.countDocuments({
-            walletId: { $in: walletIds } 
-        }).exec();
-        return totalCount;
-    }
-    return 0;
-}
 }

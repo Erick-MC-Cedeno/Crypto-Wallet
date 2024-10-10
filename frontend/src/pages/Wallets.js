@@ -51,13 +51,13 @@ const Wallets = () => {
                     </Box>
                     <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
                         <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
-                            <InputLabel id="select-coin-label">Selecciona una moneda</InputLabel>
+                            <InputLabel id="select-coin-label">Selecciona una wallet</InputLabel>
                             <Select
                                 labelId="select-coin-label"
                                 id="select-coin"
                                 value={selectedCoin}
                                 onChange={handleCoinChange}
-                                label="Selecciona una moneda"
+                                label="Selecciona una wallet"
                                 sx={{ borderRadius: 2 }}
                             >
                                 {getCoinList().map((coin) => (
