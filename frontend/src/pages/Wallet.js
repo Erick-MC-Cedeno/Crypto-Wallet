@@ -1,9 +1,7 @@
-import * as React from 'react';
+import React from 'react';
 import {
     Typography,
     Box,
-    Paper,
-    Grid,
     IconButton,
     Divider,
     Stack,
@@ -11,13 +9,15 @@ import {
     Tooltip,
     Zoom,
     Button,
-    FormControl,
     useTheme,
-    useMediaQuery
+    useMediaQuery,
+    Card,
+    CardContent,
+    CardHeader,
 } from '@mui/material';
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import CopyIcon from "../assets/receiveCopyIcon.svg";
-import QRCode from "react-qr-code";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import CopyIcon from '../assets/receiveCopyIcon.svg';
+import QRCode from 'react-qr-code';
 import useWalletInfo from '../hooks/useWalletInfo';
 import useCoinPrice from '../hooks/useCoinPrice';
 import { useParams } from 'react-router-dom';
@@ -40,7 +40,6 @@ export default function Wallet() {
 
     const { walletId } = useParams();
     const defaultNetworkId = getDefaultNetworkId(walletId);
-
     const { walletInfo, isWalletLoading, setWalletInfo } = useWalletInfo(walletId);
     const { coinPrice } = useCoinPrice(walletId);
     const { withdraw } = useWithdraw(walletId);
@@ -57,10 +56,14 @@ export default function Wallet() {
         const result = await withdraw(withdrawAmount, withdrawAddress);
         if (result === 'success') {
             getTransactions();
-            setError('');
-            setWithdrawAmount('');
-            setWithdrawAddress('');
+            resetWithdrawFields();
         }
+    };
+
+    const resetWithdrawFields = () => {
+        setWithdrawAmount('');
+        setWithdrawAddress('');
+        setError('');
     };
 
     const handleInputAddress = (e) => {
@@ -86,7 +89,7 @@ export default function Wallet() {
     const handleCreateWallet = async () => {
         const wallet = await createWallet({
             coin: walletId,
-            chainId: defaultNetworkId
+            chainId: defaultNetworkId,
         });
         if (wallet) {
             setWalletInfo(wallet);
@@ -94,141 +97,129 @@ export default function Wallet() {
     };
 
     return (
-        <Box sx={{ p: 3, bgcolor: '#e0f7fa' }}> 
-            <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 3, mb: 3, bgcolor: '#ffffff' }}>
-                <Box>
-                    {!isWalletLoading ? (
-                        walletInfo ? (
-                            <>
-                                <Typography variant="body2" color="text.secondary" mb={1}>
-                                    Balance
-                                </Typography>
-                                <Typography variant="h4" fontWeight={700} mb={1} sx={{ color: '#0000FF' }}> {/* Color azul puro */}
+        <Box sx={{ p: 2, maxWidth: '800px', margin: '0 auto' }}>
+            {!isWalletLoading ? (
+                walletInfo ? (
+                    <>
+                        <Card sx={{ mb: 2 }}>
+                            <CardHeader title="Balance" />
+                            <CardContent>
+                                <Typography variant="h4" fontWeight={700}>
                                     {truncateToDecimals(walletInfo.balance, getCoinDecimalsPlace(walletInfo.coin))}
                                     <Typography component="span" variant="h4" fontWeight={700}>
                                         {` ${walletInfo.coin}`}
                                     </Typography>
                                 </Typography>
-                                <Typography variant="body1" color="text.secondary" mb={2}>
+                                <Typography variant="body1" color="text.secondary">
                                     {coinPrice ? `$${(parseFloat(walletInfo.balance) * parseFloat(coinPrice)).toFixed(2)}` : ''}
                                 </Typography>
-                                <Divider sx={{ mb: 2 }} />
-                                <FormControl fullWidth disabled sx={{ mb: 2 }}>
-                                </FormControl>
+                            </CardContent>
+                        </Card>
 
-                                <Typography>Puedes hacer un deposito a esta dirección</Typography>
+                        <Divider sx={{ mb: 2 }} />
 
-                                <Typography variant="caption" color="text.secondary" mb={2}>
-                                    {`Tu dirección de ${walletInfo.coin} (${getNetworkName(walletInfo.chainId)})`}
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={12} sm={6}>
-                                        <Stack spacing={2}>
-                                            <Stack direction="row" alignItems="center" spacing={1}>
-                                                <Box sx={{ p: 1, bgcolor: "#e0f7fa", borderRadius: "8px", border: '1px solid #0000FF', flexGrow: 1 }}> 
-                                                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                                                        <TextField
-                                                            variant="outlined"
-                                                            value={walletInfo.address}
-                                                            InputProps={{ readOnly: true }}
-                                                            fullWidth
-                                                            sx={{ fontSize: '14px', fontWeight: 500 }}
-                                                        />
-                                                        <CopyToClipboard
-                                                            text={walletInfo.address}
-                                                            onCopy={() => {
-                                                                setCopied(true);
-                                                                setTimeout(() => setCopied(false), 2000);
-                                                            }}
-                                                        >
-                                                            <Tooltip
-                                                                title={copied ? <Typography variant="caption" color="success">Dirección copiada!</Typography> : "Copiar"}
-                                                                TransitionComponent={Zoom}
-                                                            >
-                                                                <IconButton>
-                                                                    <img src={CopyIcon} alt="Copiar" style={{ width: "24px", height: "24px" }} />
-                                                                </IconButton>
-                                                            </Tooltip>
-                                                        </CopyToClipboard>
-                                                    </Stack>
-                                                </Box>
-                                            </Stack>
-                                            <Stack direction={isSmallScreen ? "column" : "row"} spacing={1} sx={{ mt: 2 }}>
-                                                <Grid item xs={12} sm={6} sx={{ textAlign: isSmallScreen ? 'center' : 'right' }}>
-                                                    <QRCode value={walletInfo.address} size={200} />
-                                                </Grid>
-                                            </Stack>
-
-                                            <Stack spacing={2}>
-                                                <Stack direction={isSmallScreen ? "column" : "row"} spacing={1}>
-                                                    <TextField
-                                                        value={withdrawAddress}
-                                                        onChange={handleInputAddress}
-                                                        placeholder={`Dirección ${getNetworkName(walletInfo.chainId)}...`}
-                                                        fullWidth
-                                                        variant="outlined"
-                                                        sx={{ border: '1px solid #0000FF', borderRadius: 2 }} 
-                                                    />
-                                                    <TextField
-                                                        type='number'
-                                                        onChange={handleInputAmount}
-                                                        value={withdrawAmount || ''}
-                                                        placeholder="Monto a retirar..."
-                                                        fullWidth
-                                                        variant="outlined"
-                                                        sx={{ border: '1px solid #0000FF', borderRadius: 2 }} 
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <Button variant="outlined" onClick={setMaxAmount} sx={{ height: '40%', color: '#0000FF' }}>
-                                                                    Max
-                                                                </Button>
-                                                            ),
-                                                        }}
-                                                    />
-                                                </Stack>
-                                                <Button
-                                                    disabled={!(withdrawAmount > 0 && withdrawAddress && parseFloat(withdrawAmount) <= parseFloat(walletInfo.balance))}
-                                                    onClick={handleWithdraw}
-                                                    variant="contained"
-                                                    color="primary" 
-                                                    fullWidth
-                                                    sx={{
-                                                        borderRadius: 2,
-                                                        padding: '8px',
-                                                        fontSize: '14px',
-                                                        border: '1px solid transparent',
-                                                        bgcolor: '#0000FF', // Color azul puro
-                                                        '&:hover': {
-                                                            bgcolor: '#0033CC', // Azul más oscuro al pasar el ratón
-                                                        },
-                                                    }}
+                        <Typography variant="h6" color="text.primary" mb={1}>Depósitos</Typography>
+                        <Typography variant="caption" color="text.secondary" mb={1}>
+                            {`Tu dirección de ${walletInfo.coin} (${getNetworkName(walletInfo.chainId)})`}
+                        </Typography>
+                        <Stack spacing={2}>
+                            <Stack direction="row" alignItems="center" spacing={1} sx={{ maxWidth: '470px' }}>
+                                <TextField
+                                    variant="outlined"
+                                    value={walletInfo.address}
+                                    InputProps={{
+                                        readOnly: true,
+                                        endAdornment: (
+                                            <CopyToClipboard
+                                                text={walletInfo.address}
+                                                onCopy={() => {
+                                                    setCopied(true);
+                                                    setTimeout(() => setCopied(false), 2000);
+                                                }}
+                                            >
+                                                <Tooltip
+                                                    title={copied ? <Typography variant="caption" color="success">Dirección copiada!</Typography> : "Copiar"}
+                                                    TransitionComponent={Zoom}
                                                 >
-                                                    RETIRAR
-                                                </Button>
-                                                {error && <Typography variant="caption" color="error">{error}</Typography>}
-                                                <Typography variant="caption" color="text.secondary" mt={1}>
-                                                    Comisión: {getCoinFee(walletInfo.coin)} {walletInfo.coin}
-                                                </Typography>
-                                            </Stack>
-                                        </Stack>
-                                    </Grid>
-                                </Grid>
-                            </>
-                        ) : (
+                                                    <IconButton sx={{ padding: 0 }}>
+                                                        <img src={CopyIcon} alt="Copiar" style={{ width: "24px", height: "24px" }} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </CopyToClipboard>
+                                        ),
+                                    }}
+                                    fullWidth
+                                    sx={{ fontSize: '14px', fontWeight: 500 }}
+                                />
+                            </Stack>
+                            <QRCode value={walletInfo.address} size={200} />
+                        </Stack>
+
+                        <Divider sx={{ my: 3 }} />
+                        
+                        <Typography variant="h6" color="text.primary" mb={1}>Retiros</Typography>
+                        <Stack spacing={2}>
+                            <Stack direction={isSmallScreen ? "column" : "row"} spacing={1}>
+                                <TextField
+                                    value={withdrawAddress}
+                                    onChange={handleInputAddress}
+                                    placeholder={`Dirección ${getNetworkName(walletInfo.chainId)}...`}
+                                    variant="outlined"
+                                    sx={{ flexGrow: 7 }}
+                                />
+                                <TextField 
+                                    type='number'
+                                    onChange={handleInputAmount}
+                                    value={withdrawAmount || ''}
+                                    placeholder="Monto a retirar..."
+                                    variant="outlined"
+                                    sx={{ flexGrow: 2}}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <Button
+                                                variant="outlined"
+                                                onClick={setMaxAmount}
+                                                sx={{ height: '40%', color: '#000' }}
+                                            >
+                                                Max
+                                            </Button>
+                                        ),
+                                    }}
+                                />
+                            </Stack>
                             <Button
-                                onClick={handleCreateWallet}
-                                color="info"
-                                fullWidth
-                                sx={{ borderRadius: 2, padding: '10px', fontSize: '16px', border: '1px solid #0000FF' }} // Color azul puro en el borde
+                                disabled={!(withdrawAmount > 0 && withdrawAddress && parseFloat(withdrawAmount) <= parseFloat(walletInfo.balance))}
+                                onClick={handleWithdraw}
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    borderRadius: 2,
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                    width: '150px',
+                                }}
                             >
-                                {`CREAR BILLETERA PARA ${walletId.toUpperCase()} AHORA`}
+                                RETIRAR
                             </Button>
-                        )
-                    ) : (
-                        <Typography variant="body1" color="text.secondary">Cargando...</Typography>
-                    )}
-                </Box>
-            </Paper>
+                            {error && <Typography variant="caption" color="error">{error}</Typography>}
+                            <Typography variant="caption" color="text.secondary" mt={1}>
+                                Comisión: {getCoinFee(walletInfo.coin)} {walletInfo.coin}
+                            </Typography>
+                        </Stack>
+                    </>
+                ) : (
+                    <Button
+                        onClick={handleCreateWallet}
+                        color="info"
+                        fullWidth
+                        sx={{ borderRadius: 2, padding: '10px', fontSize: '16px' }}
+                    >
+                        {`CREAR BILLETERA PARA ${walletId.toUpperCase()} AHORA`}
+                    </Button>
+                )
+            ) : (
+                <Typography variant="body1" color="text.secondary">Cargando...</Typography>
+            )}
             <CoinTransactions transactions={transactions} chainId={defaultNetworkId} coin={walletId} />
         </Box>
     );
