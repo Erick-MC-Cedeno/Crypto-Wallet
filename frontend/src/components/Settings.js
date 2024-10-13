@@ -3,27 +3,29 @@ import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
 import UserProfileComponent from './Userprofile';
-import {
-    Box,
-    Paper,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-    Divider,
-    useTheme,
-    useMediaQuery,
+import { 
+    Box, 
+    Paper, 
+    List, 
+    ListItem, 
+    ListItemIcon, 
+    ListItemText, 
+    Typography, 
+    Divider, 
+    useTheme, 
+    useMediaQuery 
 } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import SecurityIcon from '@mui/icons-material/Security';
 import LanguageIcon from '@mui/icons-material/Language';
 import PersonIcon from '@mui/icons-material/Person';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
+import { Link } from 'react-router-dom';
 
 function Settings() {
     const [selectedSection, setSelectedSection] = useState('userProfile');
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm')); 
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
     const renderSection = () => {
         switch (selectedSection) {
@@ -73,22 +75,51 @@ function Settings() {
                                     {section === 'twoFactorAuth' && <SecurityIcon />}
                                     {section === 'languageSelector' && <LanguageIcon />}
                                 </ListItemIcon>
-                                {!isMobile && ( 
-                                    <ListItemText 
-                                        primary={section === 'userProfile' ? 'Perfil' :
-                                                 section === 'changePassword' ? 'Contraseña' :
-                                                 section === 'twoFactorAuth' ? 'Seguridad' :
-                                                 'Idioma'}
-                                        sx={{ 
-                                            overflow: 'hidden', 
-                                            textOverflow: 'ellipsis', 
+                                {!isMobile && (
+                                    <ListItemText
+                                        primary={
+                                            section === 'userProfile' ? 'Perfil' :
+                                            section === 'changePassword' ? 'Contraseña' :
+                                            section === 'twoFactorAuth' ? 'Seguridad' :
+                                            'Idioma'
+                                        }
+                                        sx={{
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
                                             whiteSpace: 'nowrap',
                                             typography: isMobile ? 'body2' : 'body1',
-                                        }} 
+                                        }}
                                     />
                                 )}
                             </ListItem>
                         ))}
+                        <ListItem
+                            button
+                            component={Link}
+                            to="/"
+                            sx={{
+                                marginTop: 'auto', // Alineación del botón en la parte inferior
+                                '&:hover': {
+                                    bgcolor: theme.palette.primary.main,
+                                    color: '#FFFFFF',
+                                },
+                            }}
+                        >
+                            <ListItemIcon>
+                                <ArrowBackIcon /> {/* Ícono de flecha hacia la izquierda */}
+                            </ListItemIcon>
+                            {!isMobile && (
+                                <ListItemText
+                                    primary="Regresar"
+                                    sx={{
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        typography: isMobile ? 'body2' : 'body1',
+                                    }}
+                                />
+                            )}
+                        </ListItem>
                     </List>
                 </Box>
                 <Box sx={{ flexGrow: 1, p: 3 }}>

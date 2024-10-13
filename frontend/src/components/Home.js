@@ -68,7 +68,7 @@ const Dashboard = () => {
                                     mb: 2, 
                                     fontSize: '1.1rem', 
                                     fontWeight: 'bold', 
-                                    color: 'black', 
+                                    color: 'blue', 
                                     transition: 'opacity 0.5s ease', 
                                     opacity: fadeOut ? 0 : 1 
                                 }}>
@@ -88,7 +88,7 @@ const Dashboard = () => {
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                             }}
                                         >
-                                            {index === 0 ? 'Depositar' : index === 1 ? 'Retirar' : '2FA auth'}
+                                            {index === 0 ? 'Depositar' : index === 1 ? 'Retirar' : 'seguridad'}
                                         </Button>
                                     </Link>
                                 ))}
