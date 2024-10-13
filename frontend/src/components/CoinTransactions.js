@@ -142,7 +142,7 @@ export default function CoinTransactions({ transactions, coin, chainId }) {
             >
                 <DialogTitle id="alert-dialog-title">
                     {`Detalles de ${selectedTransaction
-                        ? selectedTransaction.nature === 1 ? 'Depósito' : 'Retirada' : 'Transacción'}`}
+                        ? selectedTransaction.nature === 1 ? 'Depósito' : 'Retiro' : 'Transacción'}`}
                 </DialogTitle>
                 <DialogContent>
     {
