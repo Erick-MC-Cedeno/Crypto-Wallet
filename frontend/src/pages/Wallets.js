@@ -92,6 +92,22 @@ const Wallets = () => {
                                 RETIRAR DE ({selectedCoin.toUpperCase()})
                             </Button>
                             <Button
+                                onClick={handleCreateWallet} 
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    width: isMobile ? '100%' : '180px',
+                                    height: 50,
+                                    borderRadius: '12px',
+                                    bgcolor: '#3F51B5',
+                                    '&:hover': { bgcolor: '#303F9F' },
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                    mb: isMobile ? 1 : 0,
+                                }}
+                            >
+                                DEPOSITAR ({selectedCoin.toUpperCase()})
+                            </Button>
+                            <Button
                                 onClick={handleBack}
                                 variant="outlined"
                                 color="primary"
@@ -108,7 +124,7 @@ const Wallets = () => {
                     </Box>
                     <Divider sx={{ my: 3 }} />
                     <Box>
-                        <Typography variant="h6" fontWeight={600} color="black" align="center" mb={2}> {/* Cambiado a negro */}
+                        <Typography variant="h6" fontWeight={600} color="black" align="center" mb={2}>
                             Tus Billeteras
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: '300px' }}>

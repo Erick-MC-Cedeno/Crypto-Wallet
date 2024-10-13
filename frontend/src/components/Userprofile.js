@@ -1,7 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Typography, TextField, Button, Alert, Paper, Avatar } from '@mui/material';
+import {
+    Box,
+    Typography,
+    TextField,
+    Button,
+    Alert,
+    Paper,
+    Avatar
+} from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import useAuth from '../hooks/useAuth'; // Asegúrate de importar tu hook correctamente
+import useAuth from '../hooks/useAuth';
 import { AuthContext } from '../hooks/AuthContext';
 
 function UserProfileComponent() {
@@ -34,6 +42,7 @@ function UserProfileComponent() {
         const body = { firstName, lastName, email };
         await updateUserProfile(body);
     };
+
     useEffect(() => {
         if (successMessage) {
             setLocalSuccessMessage(successMessage);
@@ -44,21 +53,16 @@ function UserProfileComponent() {
     }, [successMessage, error]);
 
     return (
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: 400, mx: 'auto' }}>
+        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: 400, width: '100%', mx: 'auto' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
                 <Avatar sx={{ bgcolor: '#1976D2', width: 48, height: 48 }}>
                     <PersonIcon />
                 </Avatar>
-                <Typography variant="h6" component="h2" sx={{ mt: 1, fontWeight: 'bold', textAlign: 'center' }}>
+                <Typography variant="h6" component="h2" sx={{ mt: 1, fontWeight: 'bold' }}>
                     Perfil de Usuario
                 </Typography>
             </Box>
-            <Box
-                component="form"
-                noValidate
-                autoComplete="off"
-                sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-            >
+            <Box component="form" noValidate autoComplete="off" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <TextField
                     label="Primer Nombre"
                     variant="outlined"
