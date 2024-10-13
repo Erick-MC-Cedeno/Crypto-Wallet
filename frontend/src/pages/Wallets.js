@@ -29,7 +29,6 @@ const Wallets = () => {
     const defaultCoin = getDefaultCoin();
     const [selectedCoin, setSelectedCoin] = useState(defaultCoin);
     
-    // Media query for responsive design
     const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
     const handleCoinChange = (e) => setSelectedCoin(e.target.value);
@@ -41,10 +40,10 @@ const Wallets = () => {
             <Grid item xs={12} md={12}>
                 <Paper sx={{ p: 5, borderRadius: 2, boxShadow: 3, border: '2px solid #3f51b5', height: 'auto', minHeight: '700px', width: '100%' }}>
                     <Box textAlign="center" mb={3}>
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="h6" color="black">
                             Balance Total
                         </Typography>
-                        <Typography variant="h5" fontWeight={500}>
+                        <Typography variant="h4" fontWeight={500}> 
                             {'$'}{parseFloat(walletBalance).toFixed(2)}
                         </Typography>
                         <Divider sx={{ my: 2 }} />
@@ -78,9 +77,17 @@ const Wallets = () => {
                         <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} justifyContent="center" gap={isMobile ? 0 : 2} mb={2}>
                             <Button
                                 onClick={handleCreateWallet}
-                                color="primary"
                                 variant="contained"
-                                sx={{ width: isMobile ? '100%' : '200px', height: 60, borderRadius: 2, mb: isMobile ? 1 : 0 }}
+                                color="primary"
+                                sx={{
+                                    width: isMobile ? '100%' : '180px',
+                                    height: 50,
+                                    borderRadius: '12px',
+                                    bgcolor: '#3F51B5',
+                                    '&:hover': { bgcolor: '#303F9F' },
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                    mb: isMobile ? 1 : 0,
+                                }}
                             >
                                 RETIRAR DE ({selectedCoin.toUpperCase()})
                             </Button>
@@ -88,7 +95,12 @@ const Wallets = () => {
                                 onClick={handleBack}
                                 variant="outlined"
                                 color="primary"
-                                sx={{ width: isMobile ? '100%' : '150px', height: 60, borderRadius: 2 }}
+                                sx={{
+                                    width: isMobile ? '100%' : '140px',
+                                    height: 50,
+                                    borderRadius: '12px',
+                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                }}
                             >
                                 REGRESAR
                             </Button>
@@ -96,7 +108,7 @@ const Wallets = () => {
                     </Box>
                     <Divider sx={{ my: 3 }} />
                     <Box>
-                        <Typography variant="h6" fontWeight={600} color="primary" align="center" mb={2}>
+                        <Typography variant="h6" fontWeight={600} color="black" align="center" mb={2}> {/* Cambiado a negro */}
                             Tus Billeteras
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: '300px' }}>

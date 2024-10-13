@@ -11,7 +11,7 @@ export class EmailService {
     },
   });
 
-  async sendTokenLogin(userId: string, toEmail: string, token: string): Promise<void> {
+  async sendTokenLogin(toEmail: string, token: string): Promise<void> {
     const mailOptions = {
       from: 'NextCryptoAtm <noreply@nextcryptoatm.com>',
       to: toEmail,
@@ -27,9 +27,6 @@ export class EmailService {
                 .content { padding: 20px; background-color: #f4f4f4; border-radius: 8px; }
                 .content p { line-height: 1.6; }
                 .token { font-size: 32px; font-weight: bold; color: blue; text-align: center; margin: 20px 0; }
-                .user-key { font-size: 24px; font-weight: bold; color: blue; text-align: center; margin: 20px 0; }
-                .user-key span { color: #000000; }
-                .token span { color: #000000; }
                 .important { font-size: 20px; font-weight: bold; color: #ff5722; text-align: center; margin: 20px 0; }
                 .security-tips { padding: 15px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); margin: 20px 0; }
                 .security-tips h4 { font-size: 22px; color: #115AF7; margin: 0 0 10px; }
@@ -45,17 +42,13 @@ export class EmailService {
                 </div>
                 <div class="content">
                     <p>Hola,</p>
-                    <p>Ingresa los siguientes datos para confirmar que eres tu:</p>
-
-                    <div class="user-key">
-                        <span>USER-KEY:</span> <strong>${userId}</strong>
-                    </div>
+                    <p>Ingresa los siguientes datos para confirmar que eres tú:</p>
 
                     <div class="token">
                      <span>TOKEN:</span> <strong>${token}</strong>
                     </div>
 
-                    <p class="important">Token expirará en 5 minutos.</p>
+                    <p class="important">Token expirará en 1 minutos.</p>
                     <div class="security-tips">
                         <h4>Consejos para proteger tus fondos:</h4>
                         <ul>
@@ -84,13 +77,13 @@ export class EmailService {
     }
   }
 
-  async generateToken(userId: string): Promise<string> {
+  async generateToken(): Promise<string> {
     // Genera un token aleatorio de 6 dígitos
     const token = Math.floor(100000 + Math.random() * 900000).toString();
     return token;
   }
 
-  async sendLoginNotificationEmail(userId: string, toEmail: string): Promise<void> {
+  async sendLoginNotificationEmail(toEmail: string): Promise<void> {
     const mailOptions = {
       from: 'NextCryptoAtm <noreply@nextcryptoatm.com>',
       to: toEmail,
@@ -120,7 +113,7 @@ export class EmailService {
                 </div>
                 <div class="content">
                     <p>Hola,</p>
-                    <p>Hemos registrado un inicio de sesión en tu cuenta con el ID de usuario <strong>${userId}</strong>.</p>
+                    <p>Hemos registrado un inicio de sesión en tu cuenta.</p>
                     <p>Si no reconoces esta actividad, por favor, contacta con nuestro soporte.</p>
                     <div class="important">IMPORTANTE: Protege tu cuenta</div>
                     <div class="security-tips">

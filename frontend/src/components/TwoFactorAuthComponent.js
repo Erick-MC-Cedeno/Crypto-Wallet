@@ -2,7 +2,19 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../hooks/AuthContext';
 import User from '../services/user';
 import useAuth from '../hooks/useAuth';
-import { Switch, FormControlLabel, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, Paper, Snackbar } from '@mui/material';
+import {
+  Switch,
+  FormControlLabel,
+  Typography,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  Paper,
+  Snackbar
+} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import MuiAlert from '@mui/material/Alert';
@@ -46,8 +58,7 @@ const TwoFactorAuthComponent = () => {
 
   const updateTokenStatusAndLocalStorage = async (newStatus) => {
     try {
-      const userId = auth._id;
-      await updateTokenStatus({ userId, isTokenEnabled: newStatus });
+      await updateTokenStatus({ email: auth.email, isTokenEnabled: newStatus }); // Usamos el email en vez de userId
       setIsTokenEnabled(newStatus);
       localStorage.setItem('isTokenEnabled', newStatus);
       setSnackbar({ open: true, message: newStatus ? "Autenticación de dos factores activada." : "Autenticación de dos factores desactivada.", severity: "success" });
@@ -74,7 +85,7 @@ const TwoFactorAuthComponent = () => {
       }, 3000); // 3000 milisegundos = 3 segundos
       return () => clearTimeout(timer);
     }
-  }, );
+  });
 
   return (
     <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, maxWidth: 400, margin: 'auto' }}>
@@ -120,27 +131,27 @@ const TwoFactorAuthComponent = () => {
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button 
-            onClick={() => handleConfirmDialogClose(false)} 
-            color="error" 
-            variant="contained" 
-            sx={{ marginRight: 1 }} 
+          <Button
+            onClick={() => handleConfirmDialogClose(false)}
+            color="error"
+            variant="contained"
+            sx={{ marginRight: 1 }}
           >
             Cancelar
           </Button>
-          <Button 
-            onClick={() => handleConfirmDialogClose(true)} 
-            color="primary" 
-            variant="contained" 
+          <Button
+            onClick={() => handleConfirmDialogClose(true)}
+            color="primary"
+            variant="contained"
           >
             Desactivar
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Snackbar 
-        open={snackbar.open} 
-        autoHideDuration={6000} 
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       >

@@ -19,38 +19,38 @@ export class AuthService {
     return null;
   }
 
-  async sendVerificationToken(userId: string, email: string): Promise<void> {
-    const user = await this.userService.getUserById(userId);
-    if (user.isTokenEnabled) {
+  async sendVerificationToken(email: string): Promise<void> {
+    const user = await this.userService.getUserByEmail(email);
+    if (user?.isTokenEnabled) {
       try {
-        await this.twoFactorAuthService.sendToken(userId, email);
+        await this.twoFactorAuthService.sendToken(email);
       } catch (error) {
-        throw new Error('Failed to send verification token.');
+        throw new InternalServerErrorException('Failed to send verification token.');
       }
     }
   }
 
-  async resendVerificationToken(userId: string, email: string): Promise<void> {
-    const user = await this.userService.getUserById(userId);
-    if (user.isTokenEnabled) {
+  async resendVerificationToken(email: string): Promise<void> {
+    const user = await this.userService.getUserByEmail(email);
+    if (user?.isTokenEnabled) {
       try {
-        await this.twoFactorAuthService.resendToken(userId, email);
+        await this.twoFactorAuthService.resendToken(email);
       } catch (error) {
-        throw new Error('Failed to resend verification token.');
+        throw new InternalServerErrorException('Failed to resend verification token.');
       }
     }
   }
 
-  async validateToken(userId: string, token: string): Promise<any> {
-    const user = await this.userService.getUserById(userId);
-    if (!user.isTokenEnabled) {
-      return { isValid: true, userId };
+  async validateToken(email: string, token: string): Promise<any> {
+    const user = await this.userService.getUserByEmail(email);
+    if (!user?.isTokenEnabled) {
+      return { isValid: true, email };
     }
 
     try {
-      const { isValid, message } = await this.twoFactorAuthService.verifyToken(userId, token);
+      const { isValid, message } = await this.twoFactorAuthService.verifyToken(email, token);
       if (isValid) {
-        return { isValid: true, userId };
+        return { isValid: true, email };
       } else {
         return { isValid: false, message };
       }

@@ -54,7 +54,6 @@ export default function useAuth() {
                     history.push('/verifytoken');
                 } else if (data.msg === 'Logged in!') {
                     await setUserContext();
-                    history.push('/');
                 } else {
                     setError(data.error);
                 }
@@ -71,15 +70,13 @@ export default function useAuth() {
             const { data } = await User.verifyToken(body);
             if (data && data.msg === 'Logged in!') {
                 await setUserContext();
-                history.push('/');
             } else if (data && data.msg === 'Código de verificación enviado a tu correo electrónico.') {
                 return data;
             } else {
                 setError(data.error || 'Código de verificación inválido.');
             }
         } catch (err) {
-            setError('Token o User-Key incorrectos.');
-            throw err;
+            setError('Token o correo electrónico incorrectos.');
         }
     };
 
@@ -112,8 +109,8 @@ export default function useAuth() {
     const updateTokenStatus = async (body) => {
         try {
             const { data } = await User.updateTokenStatus(body);
-            if (data && data.msg === 'seguridad de la cuenta actualizada con éxito.') {
-                setSuccessMessage('seguridad de la cuenta actualizada con éxito.');
+            if (data && data.msg === 'Seguridad de la cuenta actualizada con éxito.') {
+                setSuccessMessage('Seguridad de la cuenta actualizada con éxito.');
             } else {
                 setError(data.error || 'Error al actualizar el estado de seguridad.');
             }
@@ -124,21 +121,17 @@ export default function useAuth() {
 
     const updateUserProfile = async (body) => {
         try {
-            const { data } = await User.updateProfile(body); 
+            const { data } = await User.updateProfile(body);
             if (data && data.message === 'Perfil actualizado con éxito') {
-                setSuccessMessage(data.message); 
+                setSuccessMessage(data.message);
             } else {
-                console.log('Error:', data); 
                 setError(data.error || 'Error al actualizar el perfil.');
             }
         } catch (err) {
-            console.log('Error:', err.response ? err.response.data : err.message); 
-            setError(err.response?.data?.message || err.message); 
+            setError(err.response?.data?.message || err.message);
         }
     };
-    
-    
-    
+
     return {
         registerUser,
         loginUser,

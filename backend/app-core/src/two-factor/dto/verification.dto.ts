@@ -7,5 +7,5 @@ export class VerifyTokenDto {
 
   @IsString()
   @IsNotEmpty()
-  userId: string;
+  email: string; 
 }

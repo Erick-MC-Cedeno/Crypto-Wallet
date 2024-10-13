@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Box, Grid, Alert } from '@mui/material';
 import AtmIcon from '@mui/icons-material/Atm';
-import useAuth from '../hooks/useAuth'; // Asegúrate de que la ruta sea correcta
+import useAuth from '../hooks/useAuth'; 
 import { useHistory } from 'react-router-dom';
 
 const ResendTokenForm = () => {
     const { resendToken, error, successMessage } = useAuth();
-    const [userId, setUserId] = useState('');
     const [email, setEmail] = useState('');
     const history = useHistory();
 
@@ -19,7 +18,7 @@ const ResendTokenForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await resendToken({ userId, email });
+            await resendToken({ email });
         } catch (err) {
             console.error(err);
         }
@@ -64,21 +63,9 @@ const ResendTokenForm = () => {
                     NextCryptoATM
                 </Typography>
                 <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
-                    Ingresa tu KEY de usuario y correo electrónico para reenviar el código de verificación
+                    Ingresa tu correo electrónico para reenviar el código de verificación
                 </Typography>
                 <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="User ID"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            value={userId}
-                            onChange={(e) => setUserId(e.target.value)}
-                            required
-                            InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
-                        />
-                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             label="Correo Electrónico"
@@ -93,10 +80,10 @@ const ResendTokenForm = () => {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <Button 
-                            type="submit" 
-                            variant="contained" 
-                            color="primary" 
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
                             fullWidth
                             sx={{ borderRadius: 2 }}
                         >

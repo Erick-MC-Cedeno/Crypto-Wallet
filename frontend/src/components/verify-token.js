@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
-    const [formValues, setFormValues] = useState({ userId: '', token: '' });
+    const [formValues, setFormValues] = useState({ email: '', token: '' }); // Cambiado userId a email
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
     const [timeLeft, setTimeLeft] = useState(60); 
@@ -57,7 +57,7 @@ const VerifyToken = () => {
 
         setLoading(true);
         try {
-            const response = await verifyToken(formValues);
+            const response = await verifyToken(formValues); 
             if (isMounted.current && response?.msg === 'Logged in!') {
                 history.push('/');
             }
@@ -110,7 +110,7 @@ const VerifyToken = () => {
                     NextCryptoATM
                 </Typography>
                 <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
-                    Por favor, ingresa tu KEY de usuario y el token que recibiste en el correo electrónico
+                    Por favor, ingresa tu correo electrónico y el token que recibiste en el correo electrónico
                 </Typography>
                 <Typography variant="body2" align="center" sx={{ mb: 4, color: 'red', fontWeight: 600 }}>
                     {tokenExpired 
@@ -118,18 +118,18 @@ const VerifyToken = () => {
                         : `Token expira en ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')} minutos`}
                 </Typography>
                 <Grid container spacing={2}>
-                    {['userId', 'token'].map((field, index) => (
+                    {['email', 'token'].map((field, index) => (
                         <Grid item xs={12} key={index}>
                             <TextField
                                 fullWidth
-                                label={field === 'userId' ? 'User Key' : 'Token'}
+                                label={field === 'email' ? 'Correo Electrónico' : 'Token'}
                                 variant="outlined"
                                 name={field}
                                 value={formValues[field]}
                                 onChange={handleChange}
                                 required
                                 margin="normal"
-                                autoFocus={field === 'userId'}
+                                autoFocus={field === 'email'}
                                 InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
                                 disabled={field === 'token' && tokenExpired}
                             />

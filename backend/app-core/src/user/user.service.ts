@@ -20,10 +20,6 @@ export class UserService {
     return this.userModel.findOne({ email }).exec();
   }
 
-  async getUserById(userId: string) {
-    return this.userModel.findById(userId).exec();
-  }
-
   async register(createUserDto: CreateUserDto) {
     const createUser = new this.userModel(createUserDto);
     const user = await this.getUserByEmail(createUserDto.email);
@@ -35,12 +31,12 @@ export class UserService {
     return createUser.save();
   }
 
-  async updateUserToken(userId: string, token: string) {
-    return this.userModel.findByIdAndUpdate(userId, { token, isValid: false }).exec();
+  async updateUserToken(email: string, token: string) {
+    return this.userModel.findOneAndUpdate({ email }, { token, isValid: false }).exec();
   }
 
-  async validateUserToken(userId: string, token: string) {
-    const user = await this.getUserById(userId);
+  async validateUserToken(email: string, token: string) {
+    const user = await this.getUserByEmail(email);
     if (user && user.token === token && !user.isValid) {
       user.isValid = true;
       await user.save();
@@ -49,30 +45,30 @@ export class UserService {
     return false;
   }
 
-  async sendVerificationToken(userId: string, email: string): Promise<void> {
-    const user = await this.getUserById(userId);
-    if (user.isTokenEnabled) {
+  async sendVerificationToken(email: string): Promise<void> {
+    const user = await this.getUserByEmail(email);
+    if (user?.isTokenEnabled) {
       try {
-        await this.twoFactorAuthService.sendToken(userId, email);
+        await this.twoFactorAuthService.sendToken(email);
       } catch (error) {
         throw new InternalServerErrorException('Failed to send verification token.');
       }
     }
   }
 
-  async resendVerificationToken(userId: string, email: string): Promise<void> {
-    const user = await this.getUserById(userId);
-    if (user.isTokenEnabled) {
+  async resendVerificationToken(email: string): Promise<void> {
+    const user = await this.getUserByEmail(email);
+    if (user?.isTokenEnabled) {
       try {
-        await this.twoFactorAuthService.resendToken(userId, email);
+        await this.twoFactorAuthService.resendToken(email);
       } catch (error) {
         throw new InternalServerErrorException('Failed to resend verification token.');
       }
     }
   }
 
-  async changePassword(userId: string, changePasswordDto: ChangePasswordDto) {
-    const user = await this.getUserById(userId);
+  async changePassword(email: string, changePasswordDto: ChangePasswordDto) {
+    const user = await this.getUserByEmail(email);
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
@@ -91,8 +87,8 @@ export class UserService {
     return { message: 'Contraseña actualizada con éxito' };
   }
 
-  async updateProfile(userId: string, updateProfileDto: UpdateProfileDto) {
-    const user = await this.getUserById(userId);
+  async updateProfile(email: string, updateProfileDto: UpdateProfileDto) {
+    const user = await this.getUserByEmail(email);
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
@@ -102,7 +98,7 @@ export class UserService {
     
     if (updateProfileDto.email) {
       const existingUser = await this.userModel.findOne({ email: updateProfileDto.email });
-      if (existingUser && existingUser.id !== userId) {
+      if (existingUser && existingUser.email !== email) {
         throw new BadRequestException('El correo electrónico ya está en uso');
       }
       user.email = updateProfileDto.email;

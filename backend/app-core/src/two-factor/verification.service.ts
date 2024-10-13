@@ -13,54 +13,55 @@ export class TwoFactorAuthService {
     @InjectModel('Token') private readonly tokenModel: Model<Token>,
   ) {}
 
-  async sendToken(userId: string, toEmail: string): Promise<{ message: string }> {
-    return this.createAndSendToken(userId, toEmail);
+  async sendToken(toEmail: string): Promise<{ message: string }> {
+    return this.createAndSendToken(toEmail);
   }
 
-  async verifyToken(userId: string, token: string): Promise<{ isValid: boolean; message: string }> {
+  async verifyToken(toEmail: string, token: string): Promise<{ isValid: boolean; message: string }> {
     try {
-      const tokenEntry = await this.tokenModel.findOne({ token, userId }).exec();
+      const tokenEntry = await this.tokenModel.findOne({ token, email: toEmail }).exec();
       if (!tokenEntry) {
-        return { isValid: false, message: 'Token incorrecto o userId incorrecto' };
+        return { isValid: false, message: 'Token incorrecto o correo electrónico incorrecto' };
       }
+
       const currentTime = Date.now();
       const tokenAge = currentTime - tokenEntry.timestamp;
-
       if (tokenAge > this.TOKEN_EXPIRY_MS) {
         await this.tokenModel.deleteOne({ token }).exec();
-        return { isValid: false, message: 'Token expired' };
+        return { isValid: false, message: 'Token expirado' };
       }
+
       if (tokenEntry.isValid) {
-        return { isValid: false, message: 'Token already validated' };
+        return { isValid: false, message: 'Token ya validado' };
       }
+
       tokenEntry.isValid = true;
       await tokenEntry.save();
-      return { isValid: true, message: 'Token validated successfully' };
+      return { isValid: true, message: 'Token validado correctamente' };
     } catch (error) {
-      console.error('Token verification failed', error);
-      throw new InternalServerErrorException('Token verification failed.');
+      console.error('Error en la verificación del token', error);
+      throw new InternalServerErrorException('Error en la verificación del token.');
     }
   }
 
-  async resendToken(userId: string, toEmail: string): Promise<{ message: string }> {
-    return this.createAndSendToken(userId, toEmail);
+  async resendToken(toEmail: string): Promise<{ message: string }> {
+    return this.createAndSendToken(toEmail);
   }
 
-  private async createAndSendToken(userId: string, toEmail: string): Promise<{ message: string }> {
+  private async createAndSendToken(toEmail: string): Promise<{ message: string }> {
     try {
-      const token = await this.emailService.generateToken(userId);
+      const token = await this.emailService.generateToken(); // Llamar sin toEmail
       const timestamp = Date.now();
       await this.tokenModel.create({
-        userId,
         email: toEmail,
         token,
         timestamp,
         isValid: false,
       });
-      await this.emailService.sendTokenLogin(userId, toEmail, token);
-      return { message: `Token sent to email ${toEmail}` };
+      await this.emailService.sendTokenLogin(toEmail, token);
+      return { message: `Token enviado a ${toEmail}` };
     } catch (error) {
-      throw new InternalServerErrorException('Failed to send token.');
+      throw new InternalServerErrorException('Error al enviar el token.');
     }
   }
 }
