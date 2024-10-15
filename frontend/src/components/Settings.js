@@ -98,7 +98,7 @@ function Settings() {
                             component={Link}
                             to="/"
                             sx={{
-                                marginTop: 'auto', // Alineación del botón en la parte inferior
+                                marginTop: 'auto', 
                                 '&:hover': {
                                     bgcolor: theme.palette.primary.main,
                                     color: '#FFFFFF',
@@ -106,7 +106,7 @@ function Settings() {
                             }}
                         >
                             <ListItemIcon>
-                                <ArrowBackIcon /> {/* Ícono de flecha hacia la izquierda */}
+                                <ArrowBackIcon /> 
                             </ListItemIcon>
                             {!isMobile && (
                                 <ListItemText
