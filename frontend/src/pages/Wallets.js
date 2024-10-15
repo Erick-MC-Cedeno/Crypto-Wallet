@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useAllWallets from '../hooks/useAllWallets';
 import {
     Typography,
@@ -22,25 +22,62 @@ import {
 } from '../components/utils/Chains';
 import { useHistory } from 'react-router-dom';
 import MyWallets from '../components/MyWallets';
+import robotImage from '../assets/robot.png'; // Importa la imagen
 
 const Wallets = () => {
     const history = useHistory();
     const { walletBalance } = useAllWallets();
     const defaultCoin = getDefaultCoin();
     const [selectedCoin, setSelectedCoin] = useState(defaultCoin);
-    
     const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
     const handleCoinChange = (e) => setSelectedCoin(e.target.value);
     const handleCreateWallet = () => history.push(`/wallet/${selectedCoin}`);
     const handleBack = () => history.push('/');
 
+    // Text rotation logic
+    const texts = [
+        "La seguridad de tu cuenta es nuestra prioridad. Asegúrate de habilitar la autenticación de dos factores para proteger tus activos.",
+        "Con las criptomonedas, puedes ahorrar y obtener más rendimientos. ¡Descubre el potencial de tu dinero!",
+        "Utiliza nuestro servicio P2P para vender tus tokens por fiat de manera rápida y segura.",
+        "La blockchain es una tecnología revolucionaria que permite transacciones seguras y transparentes. Aprende cómo aprovecharla para tus inversiones.",
+        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental. No compartas tu información personal para evitar fraudes.",
+        "Nuestros servicios de crypto wallet están diseñados para ofrecerte la máxima seguridad y facilidad de uso. Almacena tus criptomonedas con confianza.",
+        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios, eliminando intermediarios y aumentando la seguridad de tus transacciones."
+    ];
+
+    const [textIndex, setTextIndex] = useState(0);
+    const [visibleText, setVisibleText] = useState(texts[0]);
+    const [fadeOut, setFadeOut] = useState(false);
+
+    useEffect(() => {
+        const fadeOutDuration = 1000;
+        const displayDuration = textIndex === 1 ? 8000 : 5000;
+
+        const timeout1 = setTimeout(() => {
+            setFadeOut(true);
+        }, displayDuration);
+
+        const timeout2 = setTimeout(() => {
+            setTextIndex((prev) => (prev + 1) % texts.length);
+            setFadeOut(false);
+        }, displayDuration + fadeOutDuration);
+
+        return () => {
+            clearTimeout(timeout1);
+            clearTimeout(timeout2);
+        };
+    }, [textIndex, texts]);
+
+    useEffect(() => {
+        setVisibleText(texts[textIndex]);
+    }, [textIndex, texts]);
+
     return (
         <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} md={12}>
                 <Paper sx={{ p: 5, borderRadius: 2, boxShadow: 3, border: '2px solid #3f51b5', height: 'auto', minHeight: '700px', width: '100%' }}>
                     <Grid container spacing={4}>
-                        {/* Contenedor para Balance */}
                         <Grid item xs={12} md={6}>
                             <Box textAlign={isMobile ? 'center' : 'left'} p={3} border="1px solid #ddd" borderRadius={2}>
                                 <Typography variant="h6" color="black">
@@ -50,12 +87,35 @@ const Wallets = () => {
                                     {'$'}{parseFloat(walletBalance).toFixed(2)}
                                 </Typography>
                             </Box>
-                        </Grid>
+                            <Box textAlign={isMobile ? 'center' : 'left'} mt={3} p={3} border="1px solid #ddd" borderRadius={2}>
+                            <Box
+                            display="flex"
+                            alignItems="center"
+                            sx={{
+                                backgroundColor: '#3F51B5',
+                                padding: '8px 16px',
+                                borderRadius: 2,
+                            }}
+                        >
+                            <img
+                            src={robotImage}
+                            alt="Robot"
+                            width={110}
+                            style={{ marginRight: 16 }}
+                        />
+                        <Typography
+                        variant="body1"
+                        color="white"
+                        style={{ transition: 'opacity 1s', opacity: fadeOut ? 0 : 1 }}
+                        >
+                        {visibleText}
+                        </Typography>
+                         </Box>
+                    </Box>
 
-                        {/* Contenedor para Select y Botones */}
+                   </Grid>
                         <Grid item xs={12} md={6}>
                             <Box display="flex" flexDirection="column" alignItems={isMobile ? 'center' : 'flex-start'} p={3} border="1px solid #ddd" borderRadius={2}>
-                                {/* Selector de monedas */}
                                 <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
                                     <InputLabel id="select-coin-label">Selecciona una wallet</InputLabel>
                                     <Select
@@ -82,7 +142,6 @@ const Wallets = () => {
                                     </Select>
                                 </FormControl>
 
-                                {/* Botones: Ajustados hacia la izquierda y reordenados */}
                                 <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} justifyContent="flex-start" gap={1} width="100%" ml={isMobile ? 0 : 1}>
                                     <Button
                                         onClick={handleCreateWallet} 
