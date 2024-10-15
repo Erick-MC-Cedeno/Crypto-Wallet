@@ -39,89 +39,102 @@ const Wallets = () => {
         <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} md={12}>
                 <Paper sx={{ p: 5, borderRadius: 2, boxShadow: 3, border: '2px solid #3f51b5', height: 'auto', minHeight: '700px', width: '100%' }}>
-                    <Box textAlign="center" mb={3}>
-                        <Typography variant="h6" color="black">
-                            Balance Total
-                        </Typography>
-                        <Typography variant="h4" fontWeight={500}> 
-                            {'$'}{parseFloat(walletBalance).toFixed(2)}
-                        </Typography>
-                        <Divider sx={{ my: 2 }} />
-                    </Box>
-                    <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
-                        <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
-                            <InputLabel id="select-coin-label">Selecciona una wallet</InputLabel>
-                            <Select
-                                labelId="select-coin-label"
-                                id="select-coin"
-                                value={selectedCoin}
-                                onChange={handleCoinChange}
-                                label="Selecciona una wallet"
-                                sx={{ borderRadius: 2 }}
-                            >
-                                {getCoinList().map((coin) => (
-                                    <MenuItem key={coin} value={coin}>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <img
-                                                width={24}
-                                                src={getCoinLogo(coin)}
-                                                alt={`${coin} logo`}
-                                                style={{ marginRight: 8 }}
-                                            />
-                                            <span>{coin.toUpperCase()} • {getNetworkName(getDefaultNetworkId(coin))}</span>
-                                        </Box>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} justifyContent="center" gap={isMobile ? 0 : 2} mb={2}>
-                            <Button
-                                onClick={handleCreateWallet}
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    width: isMobile ? '100%' : '180px',
-                                    height: 50,
-                                    borderRadius: '12px',
-                                    bgcolor: '#3F51B5',
-                                    '&:hover': { bgcolor: '#303F9F' },
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                    mb: isMobile ? 1 : 0,
-                                }}
-                            >
-                                RETIRAR DE ({selectedCoin.toUpperCase()})
-                            </Button>
-                            <Button
-                                onClick={handleCreateWallet} 
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    width: isMobile ? '100%' : '180px',
-                                    height: 50,
-                                    borderRadius: '12px',
-                                    bgcolor: '#3F51B5',
-                                    '&:hover': { bgcolor: '#303F9F' },
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                    mb: isMobile ? 1 : 0,
-                                }}
-                            >
-                                DEPOSITAR ({selectedCoin.toUpperCase()})
-                            </Button>
-                            <Button
-                                onClick={handleBack}
-                                variant="outlined"
-                                color="primary"
-                                sx={{
-                                    width: isMobile ? '100%' : '140px',
-                                    height: 50,
-                                    borderRadius: '12px',
-                                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                }}
-                            >
-                                REGRESAR
-                            </Button>
-                        </Box>
-                    </Box>
+                    <Grid container spacing={4}>
+                        {/* Contenedor para Balance */}
+                        <Grid item xs={12} md={6}>
+                            <Box textAlign={isMobile ? 'center' : 'left'} p={3} border="1px solid #ddd" borderRadius={2}>
+                                <Typography variant="h6" color="black">
+                                    Balance Total
+                                </Typography>
+                                <Typography variant="h4" fontWeight={500}> 
+                                    {'$'}{parseFloat(walletBalance).toFixed(2)}
+                                </Typography>
+                            </Box>
+                        </Grid>
+
+                        {/* Contenedor para Select y Botones */}
+                        <Grid item xs={12} md={6}>
+                            <Box display="flex" flexDirection="column" alignItems={isMobile ? 'center' : 'flex-start'} p={3} border="1px solid #ddd" borderRadius={2}>
+                                {/* Selector de monedas */}
+                                <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
+                                    <InputLabel id="select-coin-label">Selecciona una wallet</InputLabel>
+                                    <Select
+                                        labelId="select-coin-label"
+                                        id="select-coin"
+                                        value={selectedCoin}
+                                        onChange={handleCoinChange}
+                                        label="Selecciona una wallet"
+                                        sx={{ borderRadius: 2 }}
+                                    >
+                                        {getCoinList().map((coin) => (
+                                            <MenuItem key={coin} value={coin}>
+                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                    <img
+                                                        width={24}
+                                                        src={getCoinLogo(coin)}
+                                                        alt={`${coin} logo`}
+                                                        style={{ marginRight: 8 }}
+                                                    />
+                                                    <span>{coin.toUpperCase()} • {getNetworkName(getDefaultNetworkId(coin))}</span>
+                                                </Box>
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                {/* Botones: Ajustados hacia la izquierda y reordenados */}
+                                <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} justifyContent="flex-start" gap={1} width="100%" ml={isMobile ? 0 : 1}>
+                                    <Button
+                                        onClick={handleCreateWallet} 
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{
+                                            width: isMobile ? '100%' : '120px',
+                                            height: 40,
+                                            fontSize: '0.8rem',
+                                            borderRadius: '8px',
+                                            bgcolor: '#3F51B5',
+                                            '&:hover': { bgcolor: '#303F9F' },
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                    >
+                                        DEPOSITAR
+                                    </Button>
+                                    <Button
+                                        onClick={handleCreateWallet}
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{
+                                            width: isMobile ? '100%' : '120px',
+                                            height: 40,
+                                            fontSize: '0.8rem',
+                                            borderRadius: '8px',
+                                            bgcolor: '#3F51B5',
+                                            '&:hover': { bgcolor: '#303F9F' },
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                    >
+                                        RETIRAR
+                                    </Button>
+                                    <Button
+                                        onClick={handleBack}
+                                        variant="outlined"
+                                        color="primary"
+                                        sx={{
+                                            width: isMobile ? '100%' : '100px',
+                                            height: 40,
+                                            fontSize: '0.8rem',
+                                            borderRadius: '8px',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                        }}
+                                    >
+                                        REGRESAR
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Grid>
+                    </Grid>
+
                     <Divider sx={{ my: 3 }} />
                     <Box>
                         <Typography variant="h6" fontWeight={600} color="black" align="center" mb={2}>
