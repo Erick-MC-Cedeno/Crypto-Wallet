@@ -18,7 +18,7 @@ export default function MyWallets() {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Box sx={{ width: '100%', padding: 1 }}>
+        <Box sx={{ width: '100%', padding: 1, marginBottom: 4 }}>
             {isSmallScreen ? (
                 <Grid container spacing={1}>
                     {allWalletInfo.map((wallet) => (
@@ -28,7 +28,8 @@ export default function MyWallets() {
                                 marginBottom: 1,
                                 borderRadius: 2, 
                                 boxShadow: 3, 
-                                backgroundColor: theme.palette.background.paper 
+                                backgroundColor: theme.palette.background.paper,
+                                
                             }}>
                                 <Grid container spacing={1} direction='column'>
                                     <Grid item>
@@ -73,8 +74,10 @@ export default function MyWallets() {
                                 <Paper sx={{
                                     padding: 2, 
                                     borderRadius: 2, 
-                                    boxShadow: 3, 
-                                    backgroundColor: theme.palette.background.paper 
+                                    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.2)',
+                                    backgroundColor: theme.palette.background.paper,
+                                    border: '1px solid rgba(0, 0, 0, 0.1)',
+                                    minHeight: '100px',
                                 }}>
                                     <Grid container spacing={1} alignItems='center'>
                                         <Grid item>
