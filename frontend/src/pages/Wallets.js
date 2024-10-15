@@ -22,7 +22,7 @@ import {
 } from '../components/utils/Chains';
 import { useHistory } from 'react-router-dom';
 import MyWallets from '../components/MyWallets';
-import robotImage from '../assets/robot.png'; // Importa la imagen
+import robotImage from '../assets/robot.png';
 
 const Wallets = () => {
     const history = useHistory();
@@ -35,16 +35,16 @@ const Wallets = () => {
     const handleCreateWallet = () => history.push(`/wallet/${selectedCoin}`);
     const handleBack = () => history.push('/');
 
-    // Text rotation logic
+    
     const texts = [
-        "La seguridad de tu cuenta es nuestra prioridad. Asegúrate de habilitar la autenticación de dos factores para proteger tus activos.",
-        "Con las criptomonedas, puedes ahorrar y obtener más rendimientos. ¡Descubre el potencial de tu dinero!",
-        "Utiliza nuestro servicio P2P para vender tus tokens por fiat de manera rápida y segura.",
-        "La blockchain es una tecnología revolucionaria que permite transacciones seguras y transparentes. Aprende cómo aprovecharla para tus inversiones.",
+        "Utiliza nuestro servicio P2P para comprar y vender tokens directamente entre usuarios de manera rápida, segura y sin intermediarios.",
+        "Una wallet on-chain basada en EVM te permite interactuar directamente con la blockchain, lo que garantiza que tengas el control absoluto sobre tus activos en todo momento.",
+        "El RPC (Remote Procedure Call) es el canal de comunicación entre tu wallet y la blockchain, permitiendo que realices transacciones, consultes saldos y accedas a contratos inteligentes de manera eficiente.",
         "Recuerda que mantener tus contraseñas seguras y únicas es fundamental. No compartas tu información personal para evitar fraudes.",
-        "Nuestros servicios de crypto wallet están diseñados para ofrecerte la máxima seguridad y facilidad de uso. Almacena tus criptomonedas con confianza.",
-        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios, eliminando intermediarios y aumentando la seguridad de tus transacciones."
+        "Nuestra crypto wallet basada en tecnología EVM está diseñada para brindarte seguridad, facilidad de uso y compatibilidad con múltiples blockchains.",
+        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios, eliminando intermediarios y garantizando una experiencia segura y eficiente."
     ];
+    
 
     const [textIndex, setTextIndex] = useState(0);
     const [visibleText, setVisibleText] = useState(texts[0]);
