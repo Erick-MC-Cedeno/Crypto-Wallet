@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ProviderModule } from './providers/provider.module';
 import { TwoFactorAuthModule  } from './two-factor/verification.module';
+import { AdminAuthModule } from './auth/admin.auth.module';
 
 
 @Module({
@@ -38,7 +39,8 @@ import { TwoFactorAuthModule  } from './two-factor/verification.module';
     AuthModule,
     TransactionModule,
     ProviderModule,
-    TwoFactorAuthModule 
+    TwoFactorAuthModule,
+    AdminAuthModule
   ],
   providers: [AppService],
 })

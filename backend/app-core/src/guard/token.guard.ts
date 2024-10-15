@@ -10,18 +10,18 @@ export class TokenVerificationGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const { userId, token } = request.body;
 
-    // Verifica que el token esté presente
+   
     if (!userId || !token) {
       throw new UnauthorizedException('Faltan credenciales.');
     }
 
-    // Verifica el token usando el AuthService
+    
     const isValid = await this.authService.validateToken(userId, token);
     if (!isValid) {
       throw new UnauthorizedException('Código de verificación inválido.');
     }
 
-    // Si el token es válido, permite el acceso
+    
     return true;
   }
 }
