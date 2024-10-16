@@ -6,6 +6,7 @@ import {
     Grid,
     Paper,
     Box,
+    Button,
     useMediaQuery,
     useTheme
 } from '@mui/material';
@@ -18,18 +19,17 @@ export default function MyWallets() {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Box sx={{ width: '100%', padding: 1, marginBottom: 4 }}>
+        <Box sx={{ width: '100%', padding: isSmallScreen ? 0.5 : 2, marginBottom: isSmallScreen ? 2 : 4 }}>
             {isSmallScreen ? (
                 <Grid container spacing={1}>
                     {allWalletInfo.map((wallet) => (
                         <Grid item xs={12} key={wallet.walletId}>
                             <Paper sx={{
-                                padding: 2, 
+                                padding: 1.5, 
                                 marginBottom: 1,
                                 borderRadius: 2, 
                                 boxShadow: 3, 
                                 backgroundColor: theme.palette.background.paper,
-                                
                             }}>
                                 <Grid container spacing={1} direction='column'>
                                     <Grid item>
@@ -61,6 +61,29 @@ export default function MyWallets() {
                                         </Typography>
                                         <Typography variant='body2'>{wallet.balance}</Typography>
                                     </Grid>
+
+        
+                                    <Grid item>
+                                        <Link 
+                                            href={`/wallet/${wallet.coin.toLowerCase()}`} 
+                                            underline='none' 
+                                            style={{ width: '100%' }}
+                                        >
+                                            <Button
+                                                variant="contained"
+                                                color="primary"
+                                                fullWidth 
+                                                sx={{
+                                                    marginTop: 1,
+                                                    padding: isSmallScreen ? '6px 12px' : '8px 16px', 
+                                                    fontSize: isSmallScreen ? '0.75rem' : '0.875rem', 
+                                                    borderRadius: '16px', 
+                                                }}
+                                            >
+                                                Ver detalles
+                                            </Button>
+                                        </Link>
+                                    </Grid>
                                 </Grid>
                             </Paper>
                         </Grid>
@@ -68,7 +91,7 @@ export default function MyWallets() {
                 </Grid>
             ) : (
                 <Box sx={{ overflowX: 'auto' }}>
-                    <Grid container spacing={1}>
+                    <Grid container spacing={2}>
                         {allWalletInfo.map((wallet) => (
                             <Grid item xs={12} sm={6} md={4} lg={3} key={wallet.walletId}>
                                 <Paper sx={{
@@ -105,6 +128,29 @@ export default function MyWallets() {
                                                 Balance:
                                             </Typography>
                                             <Typography variant='body2'>{wallet.balance}</Typography>
+                                        </Grid>
+
+                                       
+                                        <Grid item>
+                                            <Link 
+                                                href={`/wallet/${wallet.coin.toLowerCase()}`} 
+                                                underline='none' 
+                                                style={{ width: '100%' }}
+                                            >
+                                                <Button
+                                                    variant="contained"
+                                                    color="primary"
+                                                    fullWidth 
+                                                    sx={{
+                                                        marginTop: 1,
+                                                        padding: isSmallScreen ? '6px 12px' : '8px 16px', 
+                                                        fontSize: isSmallScreen ? '0.75rem' : '0.875rem', 
+                                                        borderRadius: '16px'
+                                                    }}
+                                                >
+                                                    Ver detalles
+                                                </Button>
+                                            </Link>
                                         </Grid>
                                     </Grid>
                                 </Paper>

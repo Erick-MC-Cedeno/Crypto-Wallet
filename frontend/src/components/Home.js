@@ -8,13 +8,13 @@ import { AuthContext } from '../hooks/AuthContext';
 const Dashboard = () => {
     const { auth } = useContext(AuthContext);
     const texts = [
-        "La seguridad de tu cuenta es nuestra prioridad. Asegúrate de habilitar la autenticación de dos factores para proteger tus activos.",
+        "La seguridad de tu cuenta es nuestra prioridad. Asegúrate de habilitar la autenticación de dos factores.",
         "Con las criptomonedas, puedes ahorrar y obtener más rendimientos. ¡Descubre el potencial de tu dinero!",
         "Utiliza nuestro servicio P2P para vender tus tokens por fiat de manera rápida y segura.",
-        "La blockchain es una tecnología revolucionaria que permite transacciones seguras y transparentes. Aprende cómo aprovecharla para tus inversiones.",
-        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental. No compartas tu información personal para evitar fraudes.",
-        "Nuestros servicios de crypto wallet están diseñados para ofrecerte la máxima seguridad y facilidad de uso. Almacena tus criptomonedas con confianza.",
-        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios, eliminando intermediarios y aumentando la seguridad de tus transacciones."
+        "La blockchain es una tecnología revolucionaria que permite transacciones seguras y transparentes.",
+        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental.",
+        "Nuestros servicios de crypto wallet están diseñados para ofrecerte la máxima seguridad y facilidad de uso. ",
+        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios."
     ];
 
     const [textIndex, setTextIndex] = useState(0);
@@ -74,9 +74,9 @@ const Dashboard = () => {
                                 }}>
                                 {visibleText}
                             </Typography>
-                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 'auto' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: 'auto', flexWrap: 'wrap' }}>
                                 {['/wallets', '/wallets', '/settings'].map((link, index) => (
-                                    <Link key={index} to={link} style={{ textDecoration: 'none' }}>
+                                    <Link key={index} to={link} style={{ textDecoration: 'none', marginBottom: '8px' }}>
                                         <Button
                                             variant="contained"
                                             color="primary"
@@ -86,9 +86,12 @@ const Dashboard = () => {
                                                 borderRadius: '12px',
                                                 '&:hover': { bgcolor: '#303F9F' },
                                                 boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                                minWidth: '100px',
+                                                fontSize: { xs: '0.8rem', sm: '1rem' },
+                                                padding: { xs: '8px', sm: '10px' } 
                                             }}
                                         >
-                                            {index === 0 ? 'Depositar' : index === 1 ? 'Retirar' : 'seguridad'}
+                                            {index === 0 ? 'Depositar' : index === 1 ? 'Retirar' : 'Seguridad'}
                                         </Button>
                                     </Link>
                                 ))}

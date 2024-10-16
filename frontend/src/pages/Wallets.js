@@ -37,12 +37,10 @@ const Wallets = () => {
 
     
     const texts = [
-        "Utiliza nuestro servicio P2P para comprar y vender tokens directamente entre usuarios de manera rápida, segura y sin intermediarios.",
-        "Una wallet on-chain basada en EVM te permite interactuar directamente con la blockchain, lo que garantiza que tengas el control absoluto sobre tus activos en todo momento.",
-        "El RPC (Remote Procedure Call) es el canal de comunicación entre tu wallet y la blockchain, permitiendo que realices transacciones",
-        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental. No compartas tu información personal para evitar fraudes.",
-        "Nuestra crypto wallet basada en tecnología EVM está diseñada para brindarte seguridad, facilidad de uso y compatibilidad con múltiples blockchains.",
-        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios, eliminando intermediarios y garantizando una experiencia segura y eficiente."
+        "Utiliza nuestro servicio P2P para comprar y vender tokens directamente entre usuarios.",
+        "El RPC (Remote Procedure Call) es el canal de comunicación entre tu wallet y la blockchain.",
+        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental.",
+        "Nuestra crypto wallet basada en tecnología EVM está diseñada para brindarte seguridad, facilidad de uso."
     ];
     
 
