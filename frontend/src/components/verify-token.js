@@ -5,66 +5,35 @@ import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
-    const [formValues, setFormValues] = useState({ email: '', token: '' }); // Cambiado userId a email
+    const [formValues, setFormValues] = useState({ email: '', token: '' });
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [timeLeft, setTimeLeft] = useState(60); 
-    const [tokenExpired, setTokenExpired] = useState(false);
     const history = useHistory();
     const isMounted = useRef(true);
 
     useEffect(() => {
-        const savedTime = localStorage.getItem('tokenExpireTime');
-        const currentTime = Math.floor(Date.now() / 1000);
-
-        if (savedTime) {
-            const expireTime = parseInt(savedTime, 10);
-            const remainingTime = expireTime - currentTime;
-
-            remainingTime > 0 ? setTimeLeft(remainingTime) : handleTokenExpiration();
-        } else {
-            localStorage.setItem('tokenExpireTime', Math.floor(Date.now() / 1000) + 60); 
-        }
-
-        const timer = setInterval(() => {
-            setTimeLeft(prev => {
-                if (prev <= 1) {
-                    handleTokenExpiration();
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-
         return () => {
-            clearInterval(timer);
             isMounted.current = false;
         };
     }, []);
-
-    const handleTokenExpiration = () => {
-        localStorage.removeItem('tokenExpireTime');
-        setTokenExpired(true);
-    };
-
     const handleChange = (e) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
     };
-
     const handleSubmit = async (event) => {
         event.preventDefault();
-        if (tokenExpired) return;
 
         setLoading(true);
-        try {
-            const response = await verifyToken(formValues); 
-            if (isMounted.current && response?.msg === 'Logged in!') {
-                history.push('/');
+        setTimeout(async () => {
+            try {
+                const response = await verifyToken(formValues);
+                if (isMounted.current && response?.msg === 'Logged in!') {
+                    history.push('/');
+                }
+            } catch (err) {
+            } finally {
+                if (isMounted.current) setLoading(false);
             }
-        } catch (err) {
-        } finally {
-            if (isMounted.current) setLoading(false);
-        }
+        }, 2000);
     };
 
     const handleResend = () => {
@@ -112,11 +81,6 @@ const VerifyToken = () => {
                 <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
                     Por favor, ingresa tu correo electrónico y el token que recibiste en el correo electrónico
                 </Typography>
-                <Typography variant="body2" align="center" sx={{ mb: 4, color: 'red', fontWeight: 600 }}>
-                    {tokenExpired 
-                        ? 'Token expirado, intenta de nuevo.' 
-                        : `Token expira en ${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')} minutos`}
-                </Typography>
                 <Grid container spacing={2}>
                     {['email', 'token'].map((field, index) => (
                         <Grid item xs={12} key={index}>
@@ -131,7 +95,6 @@ const VerifyToken = () => {
                                 margin="normal"
                                 autoFocus={field === 'email'}
                                 InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
-                                disabled={field === 'token' && tokenExpired}
                             />
                         </Grid>
                     ))}
@@ -142,7 +105,7 @@ const VerifyToken = () => {
                             color="primary" 
                             fullWidth
                             sx={{ borderRadius: 2 }} 
-                            disabled={loading || tokenExpired} 
+                            disabled={loading} 
                         >
                             {loading ? (
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -152,19 +115,17 @@ const VerifyToken = () => {
                             ) : 'Verificar'}
                         </Button>
                     </Grid>
-                    {tokenExpired && (
-                        <Grid item xs={12}>
-                            <Button
-                                onClick={handleResend}
-                                variant="contained"
-                                color="secondary"
-                                fullWidth
-                                sx={{ mt: 2, borderRadius: 2 }}
-                            >
-                                Reenviar Token
-                            </Button>
-                        </Grid>
-                    )}
+                    <Grid item xs={12}>
+                        <Button
+                            onClick={handleResend}
+                            variant="contained"
+                            color="primary" 
+                            fullWidth
+                            sx={{ mt: 2, borderRadius: 2 }}
+                        >
+                            Reenviar Token
+                        </Button>
+                    </Grid>
                     {error && (
                         <Grid item xs={12}>
                             <Alert severity="error" sx={{ mt: 2 }}>
