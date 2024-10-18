@@ -3,7 +3,7 @@ import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
 import UserProfileComponent from './Userprofile';
-import VerifyEmailComponent from './VerifyEmailComponent'; // Importa el componente aquí
+import VerifyEmailComponent from './VerifyEmailComponent'; 
 import { 
     Box, 
     Paper, 
@@ -38,8 +38,8 @@ function Settings() {
                 return <TwoFactorAuthComponent />;
             case 'languageSelector':
                 return <LanguageSelectorComponent />;
-            case 'verifyEmail': // Agrega esta opción
-                return <VerifyEmailComponent />; // Renderiza el componente aquí
+            case 'verifyEmail': 
+                return <VerifyEmailComponent />; 
             default:
                 return null;
         }
@@ -77,7 +77,7 @@ function Settings() {
                                     {section === 'changePassword' && <LockIcon />}
                                     {section === 'twoFactorAuth' && <SecurityIcon />}
                                     {section === 'languageSelector' && <LanguageIcon />}
-                                    {section === 'verifyEmail' && <SecurityIcon />} {/* Puedes cambiar el icono según prefieras */}
+                                    {section === 'verifyEmail' && <SecurityIcon />} 
                                 </ListItemIcon>
                                 {!isMobile && (
                                     <ListItemText
@@ -86,7 +86,7 @@ function Settings() {
                                             section === 'changePassword' ? 'Contraseña' :
                                             section === 'twoFactorAuth' ? 'Seguridad' :
                                             section === 'languageSelector' ? 'Idioma' :
-                                            'Verificar Correo' // Texto para 'verifyEmail'
+                                            'Verificar Correo' 
                                         }
                                         sx={{
                                             overflow: 'hidden',

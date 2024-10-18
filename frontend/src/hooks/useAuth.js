@@ -157,7 +157,6 @@ const sendVerificationEmail = async (email) => {
     }
 };
 
-
 const isEmailVerified = async () => {
     try {
         const { data } = await User.isEmailVerified(); 
@@ -171,9 +170,6 @@ const isEmailVerified = async () => {
         return false; 
     }
 };
-
-
-
 
     return {
         registerUser,
