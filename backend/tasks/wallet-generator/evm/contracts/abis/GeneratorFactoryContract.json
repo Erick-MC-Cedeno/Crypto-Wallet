@@ -797,8 +797,8 @@
     "43113": {
       "events": {},
       "links": {},
-      "address": "0xB6E419A080397d616134A309adB60AbDC5614C79",
-      "transactionHash": "0xe29d8feb182fea5a768c3f311d45d83a02f2cde7abaa3159187a2c457c4b5a1f"
+      "address": "0x39d938aeA57b0E50C6BaeBb63b1e3Fed37EC42B5",
+      "transactionHash": "0x33a29f32826365acc899c0da454ec23a19e98a92c396e1e7996318f17823d4d2"
     },
     "80002": {
       "events": {
@@ -828,7 +828,7 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-10-14T16:32:45.698Z",
+  "updatedAt": "2024-10-18T22:52:22.033Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},

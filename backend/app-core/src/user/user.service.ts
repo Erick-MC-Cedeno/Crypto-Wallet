@@ -46,45 +46,43 @@ export class UserService {
     }
 }
 
-
-
 async verifyEmail(email: string): Promise<boolean> {
-    const user = await this.getUserByEmail(email);
-    if (!user) {
-        throw new BadRequestException('El usuario con el correo proporcionado no existe.');
-    }
-    
-    // Verificar si el correo ya está verificado
-    if (user.isValid) {
-        throw new BadRequestException('El correo electrónico ya está verificado.');
-    }
-    
-    try {
-        user.isValid = true;
-        await user.save();
-        return true;
-    } catch (error) {
-        throw new BadRequestException('Error al verificar el correo electrónico.');
-    }
+  const user = await this.getUserByEmail(email);
+  
+  if (!user) {
+      throw new BadRequestException('Usuario no existe.');
+  }
+  
+  if (user.isValid) {
+      throw new BadRequestException('Correo ya verificado.');
+  }
+  
+  try {
+      user.isValid = true;
+      await user.save();
+      return true;
+  } catch {
+      throw new BadRequestException('Error al verificar correo.');
+  }
 }
 
 async sendVerificationEmail(email: string): Promise<boolean> {
-    const user = await this.getUserByEmail(email);
-    if (!user) {
-        throw new BadRequestException('El usuario con el correo proporcionado no existe.');
-    }
+  const user = await this.getUserByEmail(email);
+  
+  if (!user) {
+      throw new BadRequestException('Usuario no existe.');
+  }
 
-    // Verificar si el correo ya está verificado
-    if (user.isValid) {
-        throw new BadRequestException('El correo electrónico ya está verificado. No se puede enviar otro correo de verificación.');
-    }
-    
-    try {
-        await this.emailService.sendVerificationEmail(user.email);
-        return true;
-    } catch (error) {
-        throw new BadRequestException('Error al enviar el correo de verificación.');
-    }
+  if (user.isValid) {
+      throw new BadRequestException('Correo ya verificado. No se puede reenviar.');
+  }
+  
+  try {
+      await this.emailService.sendVerificationEmail(user.email);
+      return true;
+  } catch {
+      throw new BadRequestException('Error al enviar correo.');
+  }
 }
 
 

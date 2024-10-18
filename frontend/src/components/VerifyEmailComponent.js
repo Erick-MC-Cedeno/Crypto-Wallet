@@ -11,6 +11,8 @@ const VerifyEmailComponent = () => {
     const [loading, setLoading] = useState(true); 
     const [localError, setLocalError] = useState(null);
     const [emailVerified, setEmailVerified] = useState(false);
+    const [hasCheckedVerification, setHasCheckedVerification] = useState(false);
+    const [sending, setSending] = useState(false); 
 
     useEffect(() => {
         const checkEmailVerification = async () => {
@@ -36,20 +38,28 @@ const VerifyEmailComponent = () => {
                 setVerificationStatus(null); 
             } finally {
                 setLoading(false); 
+                setHasCheckedVerification(true); 
             }
         };
 
-        if (auth && auth.email) {
+        if (auth && auth.email && !hasCheckedVerification) {
             checkEmailVerification(); 
-        } else {
+        } else if (!auth || !auth.email) {
             setLocalError('No se ha encontrado un correo electrónico autenticado.');
             setLoading(false); 
         }
-    }, [auth, isEmailVerified]); 
+    }, [auth, isEmailVerified, hasCheckedVerification]); 
 
     const handleSendVerificationEmail = async () => {
         if (auth && auth.email) {
-            await sendVerificationEmail(auth.email);
+            setSending(true); 
+            try {
+                await sendVerificationEmail(auth.email);
+            } catch (error) {
+                setLocalError(error.message || 'Error al enviar el correo de verificación.');
+            } finally {
+                setSending(false); 
+            }
         }
     };
 
@@ -91,10 +101,10 @@ const VerifyEmailComponent = () => {
                             variant="contained"
                             color="primary"
                             onClick={handleSendVerificationEmail}
-                            disabled={emailVerified}
+                            disabled={emailVerified || sending} 
                             sx={{ mt: 3, padding: '10px 20px', fontSize: '16px', borderRadius: '20px' }}
                         >
-                            {emailVerified ? 'Correo Verificado' : 'Enviar Correo de Verificación'}
+                            {sending ? <CircularProgress size={24} color="inherit" /> : (emailVerified ? 'Correo Verificado' : 'Enviar Correo de Verificación')}
                         </Button>
                     </>
                 )}
