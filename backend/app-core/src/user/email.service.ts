@@ -85,7 +85,7 @@ export class EmailService {
 
 
   async sendVerificationEmail(email: string): Promise<void> {
-    const verificationUrl = `http://localhost:3000/verify?email=${email}`;
+    const verificationUrl = `http://localhost:3000/verifyemail`;
 
     await this.transporter.sendMail({
       from: '"Your App" <your-email@example.com>',

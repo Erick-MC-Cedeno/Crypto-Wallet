@@ -15,7 +15,7 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private hashService: HashService,
     private twoFactorAuthService: TwoFactorAuthService,
-    private emailService: EmailService,
+    private emailService: EmailService
   ) {}
 
   async getUserByEmail(email: string) {
@@ -26,24 +26,66 @@ export class UserService {
     const createUser = new this.userModel(createUserDto);
     const user = await this.getUserByEmail(createUserDto.email);
     if (user) {
-      throw new BadRequestException('El correo ya está registrado');
+      throw new BadRequestException();
     }
 
     createUser.password = await this.hashService.hashPassword(createUser.password);
-    const savedUser = await createUser.save();
-    await this.emailService.sendVerificationEmail(savedUser.email);
-    return savedUser;
+    return createUser.save();
   }
 
-  async verifyEmail(email: string): Promise<boolean> {
+  async isEmailVerified(email: string): Promise<{ isVerified: boolean; message: string }> {
     const user = await this.getUserByEmail(email);
-    if (user) {
-      user.isValid = true;
-      await user.save();
-      return true;
+    if (!user) {
+        throw new BadRequestException('El usuario con el correo proporcionado no existe.');
     }
-    return false;
-  }
+    
+    if (user.isValid) {
+        return { isVerified: true, message: 'Correo verificado con éxito.' };
+    } else {
+        return { isVerified: false, message: 'El correo aún no está verificado.' };
+    }
+}
+
+
+
+async verifyEmail(email: string): Promise<boolean> {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+        throw new BadRequestException('El usuario con el correo proporcionado no existe.');
+    }
+    
+    // Verificar si el correo ya está verificado
+    if (user.isValid) {
+        throw new BadRequestException('El correo electrónico ya está verificado.');
+    }
+    
+    try {
+        user.isValid = true;
+        await user.save();
+        return true;
+    } catch (error) {
+        throw new BadRequestException('Error al verificar el correo electrónico.');
+    }
+}
+
+async sendVerificationEmail(email: string): Promise<boolean> {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+        throw new BadRequestException('El usuario con el correo proporcionado no existe.');
+    }
+
+    // Verificar si el correo ya está verificado
+    if (user.isValid) {
+        throw new BadRequestException('El correo electrónico ya está verificado. No se puede enviar otro correo de verificación.');
+    }
+    
+    try {
+        await this.emailService.sendVerificationEmail(user.email);
+        return true;
+    } catch (error) {
+        throw new BadRequestException('Error al enviar el correo de verificación.');
+    }
+}
 
 
   async updateUserToken(email: string, token: string) {

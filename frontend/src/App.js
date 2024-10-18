@@ -20,6 +20,8 @@ import Nextmain from './pages/Nextmain'
 import VerifyToken from './components/verify-token'
 import Settings from './components/Settings'
 import ResendTokenForm from './components/ResendTokenForm'
+import EmailVerificationComponent from './components/verify'
+import EmailVerificationStatus from './components/email'
 
 
 
@@ -56,6 +58,8 @@ export default function App() {
                                     <PrivateRoute exact path="/create" component={CreateProvider} />
                                     <PrivateRoute exact path='/welcome' component={WelcomeTemplate}/>
                                     <PrivateRoute exact path='/settings' component={Settings}/>
+                                    <PrivateRoute exact path='/verifyemail' component={EmailVerificationComponent}/>
+                                    <PrivateRoute exact path='/emailverified' component={EmailVerificationStatus}/>
                                     <PublicRoute exact path='/login' component={Login} />
                                     <PublicRoute exact path='/register' component={Register} />
                                     <PublicRoute exact path='/nextmain' component={Nextmain}/>

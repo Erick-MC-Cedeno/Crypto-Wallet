@@ -11,6 +11,9 @@ import {
     updateTokenStatusApi,
     resendTokenApi,
     updateUserProfileApi,
+    sendVerificationEmailApi,
+    verifyEmailApi,
+    isEmailVerifiedApi
     
 } from '../api/http';
 
@@ -50,4 +53,17 @@ export default class User {
     static async updateProfile(body) {
         return await post(updateUserProfileApi, body);
     }
+
+    static async verifyEmail(body) {
+        return await post(verifyEmailApi, body);
+    }
+
+    static async sendVerificationEmail(body) {
+        return await post(sendVerificationEmailApi, body);
+    }
+
+    static async isEmailVerified(body) {
+        return await get(isEmailVerifiedApi, body);
+    }
+    
 }

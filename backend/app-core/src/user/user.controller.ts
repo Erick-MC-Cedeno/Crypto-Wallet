@@ -139,11 +139,28 @@ export class UserController {
 
   @UseGuards(AuthenticatedGuard)
   @Post('verify-email')
-  async verifyEmail(@Body() { email }: { email: string }) {
+  async verifyEmail(@Body() { email }: { email: string }): Promise<{ message: string }> {
     const result = await this.userService.verifyEmail(email);
     if (!result) {
-      throw new BadRequestException('Verificación de correo fallida.');
+      throw new BadRequestException('El correo electrónico no pudo ser verificado.');
     }
-    return { message: 'Correo verificado exitosamente.' };
+    return { message: 'Correo electrónico verificado con éxito.' };
   }
+  
+  @UseGuards(AuthenticatedGuard)
+  @Post('send-verification-email')
+  async sendVerificationEmail(@Body() { email }: { email: string }): Promise<{ message: string }> {
+    const result = await this.userService.sendVerificationEmail(email);
+    if (!result) {
+      throw new BadRequestException('No se pudo enviar el correo de verificación.');
+    }
+    return { message: 'Correo de verificación enviado con éxito.' };
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('is-email-verified')
+async isEmailVerified(@Request() req): Promise<{ isVerified: boolean; message: string }> {
+    const email = req.user.email; 
+    return this.userService.isEmailVerified(email); 
+}
 }

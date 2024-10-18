@@ -3,6 +3,7 @@ import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
 import UserProfileComponent from './Userprofile';
+import VerifyEmailComponent from './VerifyEmailComponent'; // Importa el componente aquí
 import { 
     Box, 
     Paper, 
@@ -37,6 +38,8 @@ function Settings() {
                 return <TwoFactorAuthComponent />;
             case 'languageSelector':
                 return <LanguageSelectorComponent />;
+            case 'verifyEmail': // Agrega esta opción
+                return <VerifyEmailComponent />; // Renderiza el componente aquí
             default:
                 return null;
         }
@@ -55,7 +58,7 @@ function Settings() {
             <Paper elevation={6} sx={{ borderRadius: 2, overflow: 'hidden', display: 'flex', width: '100%' }}>
                 <Box sx={{ width: isMobile ? '100%' : '20%', bgcolor: theme.palette.grey[200] }}>
                     <List>
-                        {['userProfile', 'changePassword', 'twoFactorAuth', 'languageSelector'].map((section) => (
+                        {['userProfile', 'changePassword', 'twoFactorAuth', 'languageSelector', 'verifyEmail'].map((section) => ( // Agrega 'verifyEmail' aquí
                             <ListItem
                                 button
                                 key={section}
@@ -74,6 +77,7 @@ function Settings() {
                                     {section === 'changePassword' && <LockIcon />}
                                     {section === 'twoFactorAuth' && <SecurityIcon />}
                                     {section === 'languageSelector' && <LanguageIcon />}
+                                    {section === 'verifyEmail' && <SecurityIcon />} {/* Puedes cambiar el icono según prefieras */}
                                 </ListItemIcon>
                                 {!isMobile && (
                                     <ListItemText
@@ -81,7 +85,8 @@ function Settings() {
                                             section === 'userProfile' ? 'Perfil' :
                                             section === 'changePassword' ? 'Contraseña' :
                                             section === 'twoFactorAuth' ? 'Seguridad' :
-                                            'Idioma'
+                                            section === 'languageSelector' ? 'Idioma' :
+                                            'Verificar Correo' // Texto para 'verifyEmail'
                                         }
                                         sx={{
                                             overflow: 'hidden',

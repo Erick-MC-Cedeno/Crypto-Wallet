@@ -8,7 +8,6 @@ export default function useAuth() {
     const { setAuth } = useContext(AuthContext);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
-
     const setUserContext = async () => {
         try {
             const { data } = await User.getInfo();
@@ -132,6 +131,50 @@ export default function useAuth() {
         }
     };
 
+    const verifyEmail = async (email) => {
+    try {
+        const { data } = await User.verifyEmail({ email });
+        if (data && data.message === 'Correo electrónico verificado con éxito.') {
+            setSuccessMessage(data.message);
+        } else {
+            setError(data.error || 'Error al verificar el correo electrónico.');
+        }
+    } catch (err) {
+        setError(err.message);
+    }
+};
+
+const sendVerificationEmail = async (email) => {
+    try {
+        const { data } = await User.sendVerificationEmail({ email });
+        if (data && data.message === 'Correo de verificación enviado con éxito.') {
+            setSuccessMessage(data.message);
+        } else {
+            setError(data.error || 'Error al enviar el correo de verificación.');
+        }
+    } catch (err) {
+        setError(err.message);
+    }
+};
+
+
+const isEmailVerified = async () => {
+    try {
+        const { data } = await User.isEmailVerified(); 
+        if (data && data.isVerified) {
+            return true; 
+        } else {
+            return false; 
+        }
+    } catch (err) {
+        setError(err.message);
+        return false; 
+    }
+};
+
+
+
+
     return {
         registerUser,
         loginUser,
@@ -141,6 +184,9 @@ export default function useAuth() {
         changePassword,
         updateTokenStatus,
         updateUserProfile,
+        verifyEmail,          
+        sendVerificationEmail,
+        isEmailVerified,
         error,
         successMessage
     };
