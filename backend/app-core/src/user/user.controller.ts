@@ -137,6 +137,7 @@ export class UserController {
     return this.userService.updateProfile(email, updateProfileDto);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('verify-email')
   async verifyEmail(@Body() { email }: { email: string }) {
     const result = await this.userService.verifyEmail(email);
