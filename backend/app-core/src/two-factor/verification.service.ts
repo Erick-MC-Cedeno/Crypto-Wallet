@@ -50,7 +50,7 @@ export class TwoFactorAuthService {
 
   private async createAndSendToken(toEmail: string): Promise<{ message: string }> {
     try {
-      const token = await this.emailService.generateToken(); // Llamar sin toEmail
+      const token = await this.emailService.generateToken(); 
       const timestamp = Date.now();
       await this.tokenModel.create({
         email: toEmail,

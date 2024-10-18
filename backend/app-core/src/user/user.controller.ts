@@ -136,4 +136,13 @@ export class UserController {
     const email = req.user.email; // Cambié userId por email
     return this.userService.updateProfile(email, updateProfileDto);
   }
+
+  @Post('verify-email')
+  async verifyEmail(@Body() { email }: { email: string }) {
+    const result = await this.userService.verifyEmail(email);
+    if (!result) {
+      throw new BadRequestException('Verificación de correo fallida.');
+    }
+    return { message: 'Correo verificado exitosamente.' };
+  }
 }

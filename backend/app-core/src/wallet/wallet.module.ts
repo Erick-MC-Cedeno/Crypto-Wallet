@@ -1,3 +1,4 @@
+import { EmailModule } from './../user/email.module';
 import { Module } from '@nestjs/common';
 import { WalletService } from './wallet.service';
 import { WalletController } from './wallet.controller';
@@ -18,6 +19,7 @@ import { TwoFactorAuthModule } from 'src/two-factor/verification.module';
   imports: [
     UserModule,
     TwoFactorAuthModule,
+    EmailModule,
     MongooseModule.forFeature([
       { name: Wallet.name, schema: WalletSchema },
       { name: User.name, schema: UserSchema },

@@ -83,6 +83,20 @@ export class EmailService {
     return token;
   }
 
+
+  async sendVerificationEmail(email: string): Promise<void> {
+    const verificationUrl = `http://localhost:3000/verify?email=${email}`;
+
+    await this.transporter.sendMail({
+      from: '"Your App" <your-email@example.com>',
+      to: email,
+      subject: 'Email Verification',
+      text: `Please verify your email by clicking on the following link: ${verificationUrl}`,
+      html: `<p>Please verify your email by clicking on the following link: <a href="${verificationUrl}">Verify Email</a></p>`,
+    });
+  }
+
+
   async sendLoginNotificationEmail(toEmail: string): Promise<void> {
     const mailOptions = {
       from: 'NextCryptoAtm <noreply@nextcryptoatm.com>',
@@ -136,6 +150,9 @@ export class EmailService {
         </html>
       `,
     };
+
+
+    
 
     try {
       await this.transporter.sendMail(mailOptions);

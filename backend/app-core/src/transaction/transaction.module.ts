@@ -10,11 +10,13 @@ import { AuthService } from '../auth/auth.service';
 import { UserService } from '../user/user.service';
 import { HashService } from '../user/hash.service';
 import { TwoFactorAuthModule } from 'src/two-factor/verification.module';
+import { EmailModule } from 'src/user/email.module';
 
 @Module({
   imports: [
     TwoFactorAuthModule,
     UserModule,
+    EmailModule,
     MongooseModule.forFeature([
       { name: Transaction.name, schema: TransactionSchema },
       { name: User.name, schema: UserSchema },

@@ -7,13 +7,15 @@ import { HashService } from './hash.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { TwoFactorAuthService } from '../two-factor/verification.service';
 import { UpdateProfileDto } from './dto/update-profile';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private hashService: HashService,
-    private twoFactorAuthService: TwoFactorAuthService
+    private twoFactorAuthService: TwoFactorAuthService,
+    private emailService: EmailService,
   ) {}
 
   async getUserByEmail(email: string) {
@@ -24,12 +26,25 @@ export class UserService {
     const createUser = new this.userModel(createUserDto);
     const user = await this.getUserByEmail(createUserDto.email);
     if (user) {
-      throw new BadRequestException();
+      throw new BadRequestException('El correo ya está registrado');
     }
 
     createUser.password = await this.hashService.hashPassword(createUser.password);
-    return createUser.save();
+    const savedUser = await createUser.save();
+    await this.emailService.sendVerificationEmail(savedUser.email);
+    return savedUser;
   }
+
+  async verifyEmail(email: string): Promise<boolean> {
+    const user = await this.getUserByEmail(email);
+    if (user) {
+      user.isValid = true;
+      await user.save();
+      return true;
+    }
+    return false;
+  }
+
 
   async updateUserToken(email: string, token: string) {
     return this.userModel.findOneAndUpdate({ email }, { token, isValid: false }).exec();
