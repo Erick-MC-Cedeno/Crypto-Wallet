@@ -26,11 +26,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 
 const sections = [
-    { id: 'userProfile', label: 'Perfil', icon: <PersonIcon /> },
-    { id: 'changePassword', label: 'Contraseña', icon: <LockIcon /> },
-    { id: 'twoFactorAuth', label: 'Seguridad', icon: <SecurityIcon /> },
-    { id: 'languageSelector', label: 'Idioma', icon: <LanguageIcon /> },
-    { id: 'verifyEmail', label: 'Email', icon: <SecurityIcon /> },
+    { id: 'userProfile', label: 'user_profile', icon: <PersonIcon /> },
+    { id: 'changePassword', label: 'change_password', icon: <LockIcon /> },
+    { id: 'twoFactorAuth', label: 'two_factor_auth', icon: <SecurityIcon /> },
+    { id: 'languageSelector', label: 'language_selector', icon: <LanguageIcon /> },
+    { id: 'verifyEmail', label: 'verify_email', icon: <SecurityIcon /> },
 ];
 
 const renderSection = (selectedSection) => {
@@ -45,7 +45,7 @@ const renderSection = (selectedSection) => {
 };
 
 function Settings() {
-    const { t } = useTranslation(); 
+    const { t } = useTranslation(); // Inicializar useTranslation
     const [selectedSection, setSelectedSection] = useState('userProfile');
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -79,7 +79,7 @@ function Settings() {
                             >
                                 <ListItemIcon sx={{ fontSize: isMobile ? 20 : 24 }}>{icon}</ListItemIcon>
                                 <ListItemText
-                                    primary={label}
+                                    primary={t(label)} // Traducción aquí
                                     sx={{
                                         display: isMobile ? 'none' : 'block',
                                         overflow: 'hidden',
@@ -105,7 +105,7 @@ function Settings() {
                         >
                             <ListItemIcon sx={{ fontSize: isMobile ? 20 : 24 }}><ArrowBackIcon /></ListItemIcon>
                             <ListItemText
-                                primary={t('back_button')} 
+                                primary={t('go_back')} // Traducción para "Regresar"
                                 sx={{
                                     display: isMobile ? 'none' : 'block',
                                     overflow: 'hidden',
@@ -127,7 +127,7 @@ function Settings() {
                             gutterBottom 
                             sx={{ lineHeight: '40px', fontSize: isMobile ? '1.5rem' : '2rem' }} 
                         >
-                            {t('settings_title')} 
+                            {t('settings_title')} {/* Traducción para "Configuración" */}
                         </Typography>
                     </Box>
                     <Divider sx={{ mb: 2 }} />

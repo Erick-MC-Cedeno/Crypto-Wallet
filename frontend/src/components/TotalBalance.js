@@ -49,7 +49,7 @@ const TotalBalance = () => {
                     }}
                 >
                     <Typography variant="body1" sx={{ mr: 1 }}>
-                    {t('wallets_link_text')}
+                    {t('my_wallets')}
                     </Typography>
                     <WalletIcon
                         sx={{
