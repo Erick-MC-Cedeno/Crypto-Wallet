@@ -3,11 +3,9 @@ import {
     TextField,
     Button,
     Alert,
-    Box,
     Typography,
     InputAdornment,
     IconButton,
-    Paper,
     Avatar
 } from '@mui/material';
 import Visibility from '@mui/icons-material/Visibility';
@@ -48,17 +46,17 @@ function ChangePasswordComponent() {
     };
 
     return (
-        <Paper elevation={3} sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', maxWidth: 400, width: '100%', mx: 'auto' }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ bgcolor: '#1976D2', width: 48, height: 48 }}>
+        <>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '16px' }}>
+                <Avatar style={{ backgroundColor: '#1976D2', width: '48px', height: '48px' }}>
                     <LockIcon />
                 </Avatar>
-                <Typography variant="h6" component="h2" sx={{ mt: 1, fontWeight: 'bold' }}>
+                <Typography variant="h6" component="h2" style={{ marginTop: '8px', fontWeight: 'bold' }}>
                     Cambiar Contraseña
                 </Typography>
-            </Box>
-            <Box component="form" noValidate autoComplete="off" sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                {['currentPassword', 'newPassword', 'confirmNewPassword'].map((field, index) => (
+            </div>
+            <form noValidate autoComplete="off" style={{ display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '420px', margin: '0 auto' }}>
+                {['currentPassword', 'newPassword', 'confirmNewPassword'].map((field) => (
                     <TextField
                         key={field}
                         name={field}
@@ -67,7 +65,6 @@ function ChangePasswordComponent() {
                         variant="outlined"
                         value={passwords[field]}
                         onChange={handleChange}
-                        fullWidth
                         required
                         InputProps={{
                             endAdornment: (
@@ -80,7 +77,6 @@ function ChangePasswordComponent() {
                                     </IconButton>
                                 </InputAdornment>
                             ),
-                            sx: { borderRadius: 2, borderColor: '#ddd' },
                         }}
                     />
                 ))}
@@ -88,14 +84,14 @@ function ChangePasswordComponent() {
                     variant="contained"
                     color="primary"
                     onClick={handleChangePassword}
-                    sx={{ mt: 2, borderRadius: 2 }}
+                    style={{ marginTop: '16px' }}
                 >
                     Cambiar Contraseña
                 </Button>
-                {successMessage && <Alert severity="success" sx={{ mt: 2, borderRadius: 2 }}>{successMessage}</Alert>}
-                {error && <Alert severity="error" sx={{ mt: 2, borderRadius: 2 }}>{error}</Alert>}
-            </Box>
-        </Paper>
+                {successMessage && <Alert severity="success" style={{ marginTop: '16px' }}>{successMessage}</Alert>}
+                {error && <Alert severity="error" style={{ marginTop: '16px' }}>{error}</Alert>}
+            </form>
+        </>
     );
 }
 

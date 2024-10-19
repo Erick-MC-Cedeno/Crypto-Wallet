@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
-import UserProfileComponent from './Userprofile';
+import UserProfileComponent from './UserProfileComponent'; 
 import VerifyEmailComponent from './VerifyEmailComponent'; 
 import { 
     Box, 
@@ -21,29 +21,32 @@ import SecurityIcon from '@mui/icons-material/Security';
 import LanguageIcon from '@mui/icons-material/Language';
 import PersonIcon from '@mui/icons-material/Person';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
+import SettingsIcon from '@mui/icons-material/Settings'; 
 import { Link } from 'react-router-dom';
+
+const sections = [
+    { id: 'userProfile', label: 'Perfil', icon: <PersonIcon /> },
+    { id: 'changePassword', label: 'Contraseña', icon: <LockIcon /> },
+    { id: 'twoFactorAuth', label: 'Seguridad', icon: <SecurityIcon /> },
+    { id: 'languageSelector', label: 'Idioma', icon: <LanguageIcon /> },
+    { id: 'verifyEmail', label: 'Email', icon: <SecurityIcon /> },
+];
+
+const renderSection = (selectedSection) => {
+    switch (selectedSection) {
+        case 'userProfile': return <UserProfileComponent />;
+        case 'changePassword': return <ChangePasswordComponent />;
+        case 'twoFactorAuth': return <TwoFactorAuthComponent />;
+        case 'languageSelector': return <LanguageSelectorComponent />;
+        case 'verifyEmail': return <VerifyEmailComponent />;
+        default: return null;
+    }
+};
 
 function Settings() {
     const [selectedSection, setSelectedSection] = useState('userProfile');
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const renderSection = () => {
-        switch (selectedSection) {
-            case 'userProfile':
-                return <UserProfileComponent />;
-            case 'changePassword':
-                return <ChangePasswordComponent />;
-            case 'twoFactorAuth':
-                return <TwoFactorAuthComponent />;
-            case 'languageSelector':
-                return <LanguageSelectorComponent />;
-            case 'verifyEmail': 
-                return <VerifyEmailComponent />; 
-            default:
-                return null;
-        }
-    };
 
     return (
         <Box 
@@ -56,46 +59,34 @@ function Settings() {
             }}
         >
             <Paper elevation={6} sx={{ borderRadius: 2, overflow: 'hidden', display: 'flex', width: '100%' }}>
-                <Box sx={{ width: isMobile ? '100%' : '20%', bgcolor: theme.palette.grey[200] }}>
+                <Box sx={{ width: isMobile ? '17%' : '20%', bgcolor: theme.palette.grey[200] }}>
                     <List>
-                        {['userProfile', 'changePassword', 'twoFactorAuth', 'languageSelector', 'verifyEmail'].map((section) => ( // Agrega 'verifyEmail' aquí
+                        {sections.map(({ id, label, icon }) => (
                             <ListItem
                                 button
-                                key={section}
-                                onClick={() => setSelectedSection(section)}
-                                selected={selectedSection === section}
+                                key={id}
+                                onClick={() => setSelectedSection(id)}
+                                selected={selectedSection === id}
                                 sx={{
-                                    bgcolor: selectedSection === section ? theme.palette.primary.light : 'transparent',
+                                    bgcolor: selectedSection === id ? theme.palette.primary.light : 'transparent',
                                     '&:hover': {
                                         bgcolor: theme.palette.primary.main,
                                         color: '#FFFFFF',
                                     },
                                 }}
                             >
-                                <ListItemIcon>
-                                    {section === 'userProfile' && <PersonIcon />}
-                                    {section === 'changePassword' && <LockIcon />}
-                                    {section === 'twoFactorAuth' && <SecurityIcon />}
-                                    {section === 'languageSelector' && <LanguageIcon />}
-                                    {section === 'verifyEmail' && <SecurityIcon />} 
-                                </ListItemIcon>
-                                {!isMobile && (
-                                    <ListItemText
-                                        primary={
-                                            section === 'userProfile' ? 'Perfil' :
-                                            section === 'changePassword' ? 'Contraseña' :
-                                            section === 'twoFactorAuth' ? 'Seguridad' :
-                                            section === 'languageSelector' ? 'Idioma' :
-                                            'Verificar Correo' 
-                                        }
-                                        sx={{
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                            typography: isMobile ? 'body2' : 'body1',
-                                        }}
-                                    />
-                                )}
+                                <ListItemIcon sx={{ fontSize: isMobile ? 20 : 24 }}>{icon}</ListItemIcon>
+                                <ListItemText
+                                    primary={label}
+                                    sx={{
+                                        display: isMobile ? 'none' : 'block',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        typography: 'body2',
+                                        fontSize: isMobile ? '0.875rem' : '1rem',
+                                    }}
+                                />
                             </ListItem>
                         ))}
                         <ListItem
@@ -110,29 +101,35 @@ function Settings() {
                                 },
                             }}
                         >
-                            <ListItemIcon>
-                                <ArrowBackIcon /> 
-                            </ListItemIcon>
-                            {!isMobile && (
-                                <ListItemText
-                                    primary="Regresar"
-                                    sx={{
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        typography: isMobile ? 'body2' : 'body1',
-                                    }}
-                                />
-                            )}
+                            <ListItemIcon sx={{ fontSize: isMobile ? 20 : 24 }}><ArrowBackIcon /></ListItemIcon>
+                            <ListItemText
+                                primary="Regresar"
+                                sx={{
+                                    display: isMobile ? 'none' : 'block',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    typography: 'body2',
+                                    fontSize: isMobile ? '0.875rem' : '1rem',
+                                }}
+                            />
                         </ListItem>
                     </List>
                 </Box>
-                <Box sx={{ flexGrow: 1, p: 3 }}>
-                    <Typography variant="h4" component="h1" gutterBottom>
-                        Configuración
-                    </Typography>
+                <Box sx={{ flexGrow: 1, p: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <SettingsIcon sx={{ fontSize: isMobile ? 30 : 40, mr: 1, mb: 0.5 }} />
+                        <Typography 
+                            variant={isMobile ? 'h5' : 'h4'} 
+                            component="h1" 
+                            gutterBottom 
+                            sx={{ lineHeight: '40px', fontSize: isMobile ? '1.5rem' : '2rem' }} 
+                        >
+                            Configuración
+                        </Typography>
+                    </Box>
                     <Divider sx={{ mb: 2 }} />
-                    {renderSection()}
+                    {renderSection(selectedSection)}
                 </Box>
             </Paper>
         </Box>
