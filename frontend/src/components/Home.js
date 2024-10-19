@@ -4,17 +4,19 @@ import { Link } from 'react-router-dom';
 import TotalBalance from './TotalBalance';
 import MyWallets from './MyWallets';
 import { AuthContext } from '../hooks/AuthContext';
+import { useTranslation } from 'react-i18next';
 
 const Dashboard = () => {
+    const { t } = useTranslation(); 
     const { auth } = useContext(AuthContext);
-    const texts = [
-        "La seguridad de tu cuenta es nuestra prioridad. Asegúrate de habilitar la autenticación de dos factores.",
-        "Con las criptomonedas, puedes ahorrar y obtener más rendimientos. ¡Descubre el potencial de tu dinero!",
-        "Utiliza nuestro servicio P2P para vender tus tokens por fiat de manera rápida y segura.",
-        "La blockchain es una tecnología revolucionaria que permite transacciones seguras y transparentes.",
-        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental.",
-        "Nuestros servicios de crypto wallet están diseñados para ofrecerte la máxima seguridad y facilidad de uso. ",
-        "Nuestro servicio de intercambio P2P te permite realizar transacciones directamente con otros usuarios."
+   const texts = [
+        t('account_security_message'),
+        t('crypto_potential_message'),
+        t('p2p_service_message'),
+        t('blockchain_revolution_message'),
+        t('password_security_message'),
+        t('crypto_wallet_services_message'),
+        t('p2p_exchange_service_message')
     ];
 
     const [textIndex, setTextIndex] = useState(0);
@@ -51,7 +53,7 @@ const Dashboard = () => {
                     <Grid item xs={12} md={5} lg={4}>
                         <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', height: 300, borderRadius: 2, boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0', bgcolor: '#ffffff' }}>
                             <Typography variant="h6" sx={{ mb: 2, color: 'black', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
-                                Cuenta
+                                 {t('account')}
                             </Typography>
                             <TotalBalance />
                         </Paper>
@@ -60,7 +62,7 @@ const Dashboard = () => {
                     <Grid item xs={12} md={7} lg={8}>
                         <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', height: 300, borderRadius: 2, boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0', bgcolor: '#ffffff' }}>
                             <Typography variant="h6" sx={{ mb: 2, color: 'black', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
-                                Bienvenido, {auth?.firstName} {auth?.lastName}
+                            {t('welcome', { firstName: auth?.firstName, lastName: auth?.lastName })}
                             </Typography>
                             <Typography 
                                 variant="body1" 
@@ -91,7 +93,7 @@ const Dashboard = () => {
                                                 padding: { xs: '8px', sm: '10px' } 
                                             }}
                                         >
-                                            {index === 0 ? 'Depositar' : index === 1 ? 'Retirar' : 'Seguridad'}
+                                            {index === 0 ? t('deposit') : index === 1 ? t('withdraw') : t('security')}
                                         </Button>
                                     </Link>
                                 ))}
@@ -104,7 +106,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0', bgcolor: '#ffffff' }}>
                     <Typography variant="h6" sx={{ mb: 2, color: 'black', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
-                        Mis Wallets
+                    {t('my_wallets')}
                     </Typography>
                     <MyWallets />
                 </Paper>

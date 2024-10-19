@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next'; // Importar useTranslation
 import ChangePasswordComponent from './ChangePasswordComponent';
 import TwoFactorAuthComponent from './TwoFactorAuthComponent';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
@@ -44,6 +45,7 @@ const renderSection = (selectedSection) => {
 };
 
 function Settings() {
+    const { t } = useTranslation(); 
     const [selectedSection, setSelectedSection] = useState('userProfile');
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -103,7 +105,7 @@ function Settings() {
                         >
                             <ListItemIcon sx={{ fontSize: isMobile ? 20 : 24 }}><ArrowBackIcon /></ListItemIcon>
                             <ListItemText
-                                primary="Regresar"
+                                primary={t('back_button')} 
                                 sx={{
                                     display: isMobile ? 'none' : 'block',
                                     overflow: 'hidden',
@@ -125,7 +127,7 @@ function Settings() {
                             gutterBottom 
                             sx={{ lineHeight: '40px', fontSize: isMobile ? '1.5rem' : '2rem' }} 
                         >
-                            Configuración
+                            {t('settings_title')} 
                         </Typography>
                     </Box>
                     <Divider sx={{ mb: 2 }} />

@@ -5,22 +5,25 @@ import WalletIcon from '@mui/icons-material/Wallet';
 import Title from './utils/Title';
 import useAllWallets from '../hooks/useAllWallets';
 import { Box } from '@mui/material'; 
+import { useTranslation } from 'react-i18next';
+
 
 const TotalBalance = () => {
     const { walletBalance } = useAllWallets();
+    const { t } = useTranslation();
 
     return (
         <React.Fragment>
-            <Title>Balance Total</Title>
+             <Title>{t('total_balance_title')}</Title>
             <Typography component="p" variant="h4" sx={{ mb: 1 }}>
                 ${parseFloat(walletBalance).toFixed(2)}
             </Typography>
             <Typography color="text.secondary" sx={{ mb: 3 }}>
-                de todas tus criptomonedas
+            {t('total_balance_amount')}
             </Typography>
             <Box
                 sx={{
-                    mt: 2, // Ajustar el margen superior si es necesario
+                    mt: 2, 
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
@@ -46,7 +49,7 @@ const TotalBalance = () => {
                     }}
                 >
                     <Typography variant="body1" sx={{ mr: 1 }}>
-                        Tus billeteras
+                    {t('wallets_link_text')}
                     </Typography>
                     <WalletIcon
                         sx={{

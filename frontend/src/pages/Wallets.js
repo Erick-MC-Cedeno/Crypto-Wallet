@@ -23,8 +23,10 @@ import {
 import { useHistory } from 'react-router-dom';
 import MyWallets from '../components/MyWallets';
 import robotImage from '../assets/robot.png';
+import { useTranslation } from 'react-i18next';
 
 const Wallets = () => {
+    const { t } = useTranslation();
     const history = useHistory();
     const { walletBalance } = useAllWallets();
     const defaultCoin = getDefaultCoin();
@@ -37,12 +39,11 @@ const Wallets = () => {
 
     
     const texts = [
-        "Utiliza nuestro servicio P2P para comprar y vender tokens directamente entre usuarios.",
-        "El RPC (Remote Procedure Call) es el canal de comunicación entre tu wallet y la blockchain.",
-        "Recuerda que mantener tus contraseñas seguras y únicas es fundamental.",
-        "Nuestra crypto wallet basada en tecnología EVM está diseñada para brindarte seguridad, facilidad de uso."
+        t('p2p_service_wallets'),
+        t('rpc_description'),
+        t('password_security_wallets'),
+        t('evm_wallet_description')
     ];
-    
 
     const [textIndex, setTextIndex] = useState(0);
     const [visibleText, setVisibleText] = useState(texts[0]);
@@ -79,7 +80,7 @@ const Wallets = () => {
                         <Grid item xs={12} md={6}>
                             <Box textAlign={isMobile ? 'center' : 'left'} p={3} border="1px solid #ddd" borderRadius={2}>
                                 <Typography variant="h6" color="black">
-                                    Balance Total
+                                {t('total_balance_title')}
                                 </Typography>
                                 <Typography variant="h4" fontWeight={500}> 
                                     {'$'}{parseFloat(walletBalance).toFixed(2)}
@@ -115,7 +116,7 @@ const Wallets = () => {
                         <Grid item xs={12} md={6}>
                             <Box display="flex" flexDirection="column" alignItems={isMobile ? 'center' : 'flex-start'} p={3} border="1px solid #ddd" borderRadius={2}>
                                 <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
-                                    <InputLabel id="select-coin-label">Selecciona una wallet</InputLabel>
+                                <InputLabel id="select-coin-label">{t('wallets_link_text')}</InputLabel>
                                     <Select
                                         labelId="select-coin-label"
                                         id="select-coin"
@@ -155,7 +156,7 @@ const Wallets = () => {
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         }}
                                     >
-                                        DEPOSITAR
+                                        {t('deposit_button')}
                                     </Button>
                                     <Button
                                         onClick={handleCreateWallet}
@@ -171,7 +172,7 @@ const Wallets = () => {
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         }}
                                     >
-                                        RETIRAR
+                                        {t('withdraw_button')}
                                     </Button>
                                     <Button
                                         onClick={handleBack}
@@ -185,7 +186,7 @@ const Wallets = () => {
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
                                         }}
                                     >
-                                        REGRESAR
+                                         {t('back_button')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -195,7 +196,7 @@ const Wallets = () => {
                     <Divider sx={{ my: 3 }} />
                     <Box>
                         <Typography variant="h6" fontWeight={600} color="black" align="center" mb={2}>
-                            Tus Billeteras
+                        {t('your_wallets_title')}
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: '300px' }}>
                             <MyWallets />

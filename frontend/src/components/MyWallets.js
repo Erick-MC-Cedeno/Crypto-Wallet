@@ -1,5 +1,7 @@
 import * as React from 'react';
 import useAllWallets from '../hooks/useAllWallets';
+import { useTranslation } from 'react-i18next'; 
+
 import {
     Typography,
     Link,
@@ -14,6 +16,7 @@ import { getCoinLogo } from './utils/Chains';
 import { getDisplayableAddress } from './utils/Display';
 
 export default function MyWallets() {
+    const { t } = useTranslation();
     const { allWalletInfo } = useAllWallets();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -34,7 +37,7 @@ export default function MyWallets() {
                                 <Grid container spacing={1} direction='column'>
                                     <Grid item>
                                         <Typography variant='body2' fontWeight='bold'>
-                                            Moneda:
+                                        {t('currency')}: {/* Usar t para traducir */}
                                         </Typography>
                                         <Grid container spacing={0.5} alignItems='center'>
                                             <Grid item>
@@ -47,7 +50,7 @@ export default function MyWallets() {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant='body2' fontWeight='bold'>
-                                            Dirección:
+                                        {t('address')}: {/* Usar t para traducir */}
                                         </Typography>
                                         <Link underline='none' href={`/wallet/${wallet.coin.toLowerCase()}`}>
                                             <Typography variant='body2' color='primary'>
@@ -57,7 +60,7 @@ export default function MyWallets() {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant='body2' fontWeight='bold'>
-                                            Balance:
+                                        {t('balance')}: {/* Usar t para traducir */}
                                         </Typography>
                                         <Typography variant='body2'>{wallet.balance}</Typography>
                                     </Grid>
@@ -80,7 +83,7 @@ export default function MyWallets() {
                                                     borderRadius: '16px', 
                                                 }}
                                             >
-                                                Ver detalles
+                                                {t('view_details')} {/* Usar t para traducir */}
                                             </Button>
                                         </Link>
                                     </Grid>
@@ -115,7 +118,7 @@ export default function MyWallets() {
                                     <Grid container spacing={1} direction='column' sx={{ marginTop: 0.5 }}>
                                         <Grid item>
                                             <Typography variant='body2' fontWeight='bold'>
-                                                Dirección:
+                                            {t('address')}: {/* Usar t para traducir */}
                                             </Typography>
                                             <Link underline='none' href={`/wallet/${wallet.coin.toLowerCase()}`}>
                                                 <Typography variant='body2' color='primary'>
@@ -125,7 +128,7 @@ export default function MyWallets() {
                                         </Grid>
                                         <Grid item>
                                             <Typography variant='body2' fontWeight='bold'>
-                                                Balance:
+                                            {t('balance')}: {/* Usar t para traducir */}
                                             </Typography>
                                             <Typography variant='body2'>{wallet.balance}</Typography>
                                         </Grid>
@@ -148,7 +151,7 @@ export default function MyWallets() {
                                                         borderRadius: '16px'
                                                     }}
                                                 >
-                                                    Ver detalles
+                                                    {t('view_details')} {/* Usar t para traducir */}
                                                 </Button>
                                             </Link>
                                         </Grid>

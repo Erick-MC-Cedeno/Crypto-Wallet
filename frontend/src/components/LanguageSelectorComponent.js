@@ -1,44 +1,63 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Typography, FormControl, InputLabel, Select, MenuItem, Chip } from '@mui/material';
-import { useState } from 'react';
-
-const useLanguage = () => {
-    const [language, setLanguage] = useState('en'); // Idioma por defecto
-
-    const handleLanguageChange = (event) => {
-        setLanguage(event.target.value);
-        // Aquí puedes añadir lógica para guardar el idioma en la configuración del usuario, por ejemplo en un API.
-    };
-
-    return { language, handleLanguageChange };
-};
+import CheckIcon from '@mui/icons-material/Check'; 
+import { useLanguage } from '../hooks/LanguageContext';
+import { useTranslation } from 'react-i18next';
+import i18n from '../i18n';
 
 function LanguageSelectorComponent() {
     const { language, handleLanguageChange } = useLanguage();
+    const { t } = useTranslation();
+
     const languageOptions = {
-        en: 'Inglés',
         es: 'Español',
-        fr: 'Francés',
-        de: 'Alemán'
+        en: 'English',
+    };
+
+    useEffect(() => {
+        const savedLanguage = localStorage.getItem('language');
+        if (savedLanguage) {
+            handleLanguageChange(savedLanguage);
+            i18n.changeLanguage(savedLanguage);
+        }
+    }, [handleLanguageChange]);
+
+    const handleChange = (event) => {
+        const newLanguage = event.target.value;
+        handleLanguageChange(newLanguage);
+        i18n.changeLanguage(newLanguage);
+        localStorage.setItem('language', newLanguage);
     };
 
     return (
-        <Box sx={{ mt: 4, p: 3, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 1 }}>
+        <Box
+            sx={{
+                mt: 4,
+                p: 3,
+                bgcolor: 'white',
+                borderRadius: 1,
+                boxShadow: 3,
+                maxWidth: 320,
+                mx: 'auto',
+                border: '1px solid #e0e0e0',
+            }}
+        >
             <Typography variant="h6" component="h2" gutterBottom>
-                Selección de Idioma
+                {t('language_selection')}
             </Typography>
             <FormControl fullWidth variant="outlined">
-                <InputLabel id="language-select-label">Idioma</InputLabel>
+                <InputLabel id="language-select-label">{t('language')}</InputLabel>
                 <Select
                     labelId="language-select-label"
                     id="language-select"
                     value={language}
-                    onChange={handleLanguageChange}
-                    label="Idioma"
+                    onChange={handleChange}
+                    label={t('language')}
                 >
                     {Object.entries(languageOptions).map(([key, value]) => (
                         <MenuItem key={key} value={key}>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                {language === key && <CheckIcon sx={{ color: 'green', fontSize: 'medium' }} />} {/* Check más grande */}
                                 <Chip label={value} variant="outlined" size="small" />
                             </Box>
                         </MenuItem>

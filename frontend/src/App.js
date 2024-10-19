@@ -21,6 +21,8 @@ import VerifyToken from './components/verify-token'
 import Settings from './components/Settings'
 import ResendTokenForm from './components/ResendTokenForm'
 import EmailVerificationComponent from './components/verify'
+import { LanguageProvider } from './hooks/LanguageContext';
+import './i18n'; 
 
 
 export default function App() {
@@ -30,6 +32,7 @@ export default function App() {
     return (
         <Router>
             <AuthContext.Provider value={{ auth, setAuth, loading }}>
+                <LanguageProvider>
                 <ThemeProvider theme={mdTheme}>
                     <Box sx={{ display: 'flex' }}>
                         <CssBaseline />
@@ -68,6 +71,7 @@ export default function App() {
                         </Box>
                     </Box>
                 </ThemeProvider>
+                </LanguageProvider>
             </AuthContext.Provider>
         </Router>
     )
