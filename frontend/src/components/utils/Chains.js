@@ -52,7 +52,7 @@ const getNetWorkList = (coin) => {
             name: 'Ethereum',
             abbr: 'ethereum',
             coin: 'eth',
-            explorerBase: 'https://holesky.etherscan.io//tx/'
+            explorerBase: 'https://holesky.etherscan.io/tx/'
         },
         {
             id: 4002,
@@ -66,7 +66,7 @@ const getNetWorkList = (coin) => {
             name: 'Polygon',
             abbr: 'polygon',
             coin: 'matic',
-            explorerBase: 'https://amoy.polygonscan.com//tx/'
+            explorerBase: 'https://amoy.polygonscan.com/tx/'
         },
 
 
