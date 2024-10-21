@@ -83,7 +83,7 @@ export default function Register() {
                     <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                 </Box>
                 <Typography component="h1" variant="h5">
-                    NicaBlockVault
+                    BlockVault
                 </Typography>
                 <Box
                     sx={{

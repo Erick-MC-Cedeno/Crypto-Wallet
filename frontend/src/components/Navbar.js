@@ -153,7 +153,7 @@ function DashboardContent() {
                     <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', ml: 3 }}> 
                         <Link href='/' sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-                                NicBlockVault
+                                BlockVault
                                 <Box
                                     sx={{
                                         m: 1,
