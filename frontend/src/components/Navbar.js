@@ -100,9 +100,8 @@ function DashboardContent() {
             history.push('/settings');
         }
         setAnchorElUser(null);
+        setDrawerOpen(false); 
     };
-
-
 
     const getAvatarColor = (name) => {
         const colors = ['#F6851B', '#3C3C3B', '#E8E8E8'];
@@ -120,9 +119,8 @@ function DashboardContent() {
 
     const navItems = [
         { href: '/welcome', label: 'Crypto Soporte', Icon: SupportAgentIcon },
-        { href: '/providers', label: 'Vender P2P', Icon: QrCodeIcon  },
-        { href: '/create', label: 'Proveedor P2P', Icon: QrCodeIcon  },
-
+        { href: '/providers', label: 'Vender P2P', Icon: QrCodeIcon },
+        { href: '/create', label: 'Proveedor P2P', Icon: QrCodeIcon },
     ];
 
     const renderNavLinks = () => (
@@ -147,10 +145,15 @@ function DashboardContent() {
         <>
             <AppBar position="absolute">
                 <Toolbar sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pr: '24px' }}>
-                    <Box sx={{ flexGrow: 1 }}>
+                    {isMobile && (
+                        <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setDrawerOpen(true)} sx={{ position: 'absolute', left: 16 }}>
+                            <MenuIcon />
+                        </IconButton>
+                    )}
+                    <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', ml: 3 }}> 
                         <Link href='/' sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
                             <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-                                NicaBlockVault
+                                NicBlockVault
                                 <Box
                                     sx={{
                                         m: 1,
@@ -170,35 +173,52 @@ function DashboardContent() {
                     </Box>
 
                     {isMobile ? (
-                        <>
-                            <IconButton edge="start" color="inherit" aria-label="menu" onClick={() => setDrawerOpen(true)}>
-                                <MenuIcon />
-                            </IconButton>
-                            <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-                                <Box
-                                    sx={{ width: drawerWidth, paddingTop: 8 }}
-                                    role="presentation"
-                                    onClick={() => setDrawerOpen(false)}
-                                    onKeyDown={() => setDrawerOpen(false)}
-                                >
-                                    <List>
-                                        {navItems.map(({ href, label, Icon }) => (
-                                            <ListItem button component={Link} key={label} href={href} sx={navLinkItemStyle}>
-                                                <Icon sx={{ mr: 1 }} />
-                                                <ListItemText primary={label} />
-                                            </ListItem>
-                                        ))}
-                                        <Divider />
-                                        {settings.map(({ label, icon }) => (
-                                            <ListItem button key={label} onClick={handleClickUserMenu} sx={navLinkItemStyle}>
-                                                {icon}
-                                                <ListItemText primary={label} />
-                                            </ListItem>
-                                        ))}
-                                    </List>
-                                </Box>
-                            </Drawer>
-                        </>
+                        <Drawer
+                            anchor="left"
+                            open={drawerOpen}
+                            onClose={() => setDrawerOpen(false)}
+                            sx={{
+                                '& .MuiDrawer-paper': {
+                                    backgroundColor: '#2186EB', 
+                                    color: 'white', 
+                                },
+                            }}
+                        >
+                            <Box
+                                sx={{ width: drawerWidth, paddingTop: 8 }}
+                                role="presentation"
+                                onClick={() => setDrawerOpen(false)} 
+                                onKeyDown={() => setDrawerOpen(false)}
+                            >
+                                <List>
+                                    {navItems.map(({ href, label, Icon }) => (
+                                        <ListItem
+                                            button
+                                            component={Link}
+                                            key={label}
+                                            href={href}
+                                            sx={{ ...navLinkItemStyle, color: 'white' }}
+                                            onClick={() => setDrawerOpen(false)} 
+                                        >
+                                            <Icon sx={{ mr: 1, color: 'white' }} /> 
+                                            <ListItemText primary={label} sx={{ color: 'white' }} /> 
+                                        </ListItem>
+                                    ))}
+                                    <Divider />
+                                    {settings.map(({ label, icon }) => (
+                                        <ListItem
+                                            button
+                                            key={label}
+                                            onClick={handleClickUserMenu} 
+                                            sx={{ ...navLinkItemStyle, color: 'white' }}
+                                        >
+                                            {icon}
+                                            <ListItemText primary={label} sx={{ color: 'white' }} />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </Box>
+                        </Drawer>
                     ) : (
                         renderNavLinks()
                     )}
