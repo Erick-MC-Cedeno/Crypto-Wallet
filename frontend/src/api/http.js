@@ -1,7 +1,7 @@
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
-const baseApi = 'http://192.168.100.2:4000/secure/api'
+const baseApi = 'http://192.168.100.4:4000/secure/api'
 
 
 // Endpoints usuario
@@ -18,24 +18,19 @@ const verifyEmailApi = `${baseApi}/user/verify-email`;
 const sendVerificationEmailApi = `${baseApi}/user/send-verification-email`;
 const isEmailVerifiedApi = `${baseApi}/user/is-email-verified`;
 
-
 // Endpoints wallet
 const walletInfoApi = `${baseApi}/wallet/info`
 const allWalletInfoApi = `${baseApi}/wallet/all`
 const walletCreateApi = `${baseApi}/wallet/create`
 const withdrawApi = `${baseApi}/wallet/withdraw`
 
-
 // Endpoints transacción
 const transactionsApi = `${baseApi}/transaction/all`
 const transactionApi = `${baseApi}/transaction/info`
 
-
-
 // Endpoints provider
 const providerApi = `${baseApi}/provider`;
 const createapi = `${baseApi}/create`;
-
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 
