@@ -1,6 +1,6 @@
 const fs = require('fs')
 const appRoot = require('app-root-path')
-const Config = require('./networkconfig')
+const Config = require('./networkConfig')
 
 const buildNetworks = () => {
     const networks = {}
