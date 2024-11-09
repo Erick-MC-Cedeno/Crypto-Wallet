@@ -50,7 +50,7 @@ export default function MyWallets() {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant='body2' fontWeight='bold'>
-                                        {t('address')}: {/* Usar t para traducir */}
+                                        {t('address')}: 
                                         </Typography>
                                         <Link underline='none' href={`/wallet/${wallet.coin.toLowerCase()}`}>
                                             <Typography variant='body2' color='primary'>
@@ -60,7 +60,7 @@ export default function MyWallets() {
                                     </Grid>
                                     <Grid item>
                                         <Typography variant='body2' fontWeight='bold'>
-                                        {t('balance')}: {/* Usar t para traducir */}
+                                        {t('balance')}: 
                                         </Typography>
                                         <Typography variant='body2'>{wallet.balance}</Typography>
                                     </Grid>
@@ -83,7 +83,7 @@ export default function MyWallets() {
                                                     borderRadius: '16px', 
                                                 }}
                                             >
-                                                {t('view_details')} {/* Usar t para traducir */}
+                                                {t('view_details')} 
                                             </Button>
                                         </Link>
                                     </Grid>
@@ -118,7 +118,7 @@ export default function MyWallets() {
                                     <Grid container spacing={1} direction='column' sx={{ marginTop: 0.5 }}>
                                         <Grid item>
                                             <Typography variant='body2' fontWeight='bold'>
-                                            {t('address')}: {/* Usar t para traducir */}
+                                            {t('address')}: 
                                             </Typography>
                                             <Link underline='none' href={`/wallet/${wallet.coin.toLowerCase()}`}>
                                                 <Typography variant='body2' color='primary'>
@@ -128,7 +128,7 @@ export default function MyWallets() {
                                         </Grid>
                                         <Grid item>
                                             <Typography variant='body2' fontWeight='bold'>
-                                            {t('balance')}: {/* Usar t para traducir */}
+                                            {t('balance')}: 
                                             </Typography>
                                             <Typography variant='body2'>{wallet.balance}</Typography>
                                         </Grid>
@@ -151,7 +151,7 @@ export default function MyWallets() {
                                                         borderRadius: '16px'
                                                     }}
                                                 >
-                                                    {t('view_details')} {/* Usar t para traducir */}
+                                                    {t('view_details')} 
                                                 </Button>
                                             </Link>
                                         </Grid>
