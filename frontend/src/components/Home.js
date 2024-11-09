@@ -9,7 +9,8 @@ import { useTranslation } from 'react-i18next';
 const Dashboard = () => {
     const { t } = useTranslation(); 
     const { auth } = useContext(AuthContext);
-   const texts = [
+    
+    const texts = [
         t('account_security_message'),
         t('crypto_potential_message'),
         t('p2p_service_message'),
@@ -62,7 +63,7 @@ const Dashboard = () => {
                     <Grid item xs={12} md={7} lg={8}>
                         <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', height: 300, borderRadius: 2, boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0', bgcolor: '#ffffff' }}>
                             <Typography variant="h6" sx={{ mb: 2, color: 'black', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
-                            {t('welcome', { firstName: auth?.firstName, lastName: auth?.lastName })}
+                                {t('welcome', { firstName: auth?.firstName, lastName: auth?.lastName })}
                             </Typography>
                             <Typography 
                                 variant="body1" 
@@ -84,13 +85,14 @@ const Dashboard = () => {
                                             color="primary"
                                             sx={{
                                                 mr: 1,
-                                                bgcolor: '#3F51B5',
-                                                borderRadius: '12px',
-                                                '&:hover': { bgcolor: '#303F9F' },
-                                                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
-                                                minWidth: '100px',
-                                                fontSize: { xs: '0.8rem', sm: '1rem' },
-                                                padding: { xs: '8px', sm: '10px' } 
+                                                bgcolor: '#2196F3',
+                                                borderRadius: '10px',
+                                                '&:hover': { bgcolor: '#1976D2' }, 
+                                                boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)', 
+                                                minWidth: '70px', 
+                                                fontSize: '0.85rem', 
+                                                padding: '6px 13px', 
+                                                transition: 'all 0.3s ease', 
                                             }}
                                         >
                                             {index === 0 ? t('deposit') : index === 1 ? t('withdraw') : t('security')}
@@ -106,7 +108,7 @@ const Dashboard = () => {
             <Grid item xs={12}>
                 <Paper sx={{ p: 3, display: 'flex', flexDirection: 'column', borderRadius: 2, boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', border: '1px solid #e0e0e0', bgcolor: '#ffffff' }}>
                     <Typography variant="h6" sx={{ mb: 2, color: 'black', fontWeight: 'bold', textShadow: '1px 1px 2px rgba(0, 0, 0, 0.2)' }}>
-                    {t('my_wallets')}
+                        {t('my_wallets')}
                     </Typography>
                     <MyWallets />
                 </Paper>

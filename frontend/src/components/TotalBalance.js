@@ -7,19 +7,18 @@ import useAllWallets from '../hooks/useAllWallets';
 import { Box } from '@mui/material'; 
 import { useTranslation } from 'react-i18next';
 
-
 const TotalBalance = () => {
     const { walletBalance } = useAllWallets();
     const { t } = useTranslation();
 
     return (
         <React.Fragment>
-             <Title>{t('total_balance_title')}</Title>
+            <Title>{t('total_balance_title')}</Title>
             <Typography component="p" variant="h4" sx={{ mb: 1 }}>
                 ${parseFloat(walletBalance).toFixed(2)}
             </Typography>
             <Typography color="text.secondary" sx={{ mb: 3 }}>
-            {t('total_balance_amount')}
+                {t('total_balance_amount')}
             </Typography>
             <Box
                 sx={{
@@ -37,24 +36,26 @@ const TotalBalance = () => {
                         alignItems: 'center',
                         textDecoration: 'none',
                         fontWeight: 'bold',
-                        fontSize: '1rem',
-                        padding: '12px 50px',
-                        borderRadius: '8px',
-                        backgroundColor: '#f0f0f0',
-                        transition: 'background-color 0.3s ease',
-                        boxShadow: 1,
+                        fontSize: '1rem', 
+                        padding: '8px 18px', 
+                        borderRadius: '10px', 
+                        backgroundColor: '#2196F3', 
+                        color: 'white', 
+                        boxShadow: '0px 3px 6px rgba(0, 0, 0, 0.1)', 
+                        transition: 'all 0.3s ease', 
                         '&:hover': {
-                            backgroundColor: '#e0e0e0',
+                            backgroundColor: '#1976D2', 
+                            boxShadow: '0px 6px 12px rgba(0, 0, 0, 0.15)', 
                         },
                     }}
                 >
                     <Typography variant="body1" sx={{ mr: 1 }}>
-                    {t('my_wallets')}
+                        {t('my_wallets')}
                     </Typography>
                     <WalletIcon
                         sx={{
-                            color: '#2186EB',
-                            fontSize: '1.8rem',
+                            color: 'white', 
+                            fontSize: '1.75rem',
                         }}
                     />
                 </Link>

@@ -37,7 +37,6 @@ const Wallets = () => {
     const handleCreateWallet = () => history.push(`/wallet/${selectedCoin}`);
     const handleBack = () => history.push('/');
 
-    
     const texts = [
         t('p2p_service_wallets'),
         t('rpc_description'),
@@ -75,48 +74,48 @@ const Wallets = () => {
     return (
         <Grid container spacing={2} justifyContent="center">
             <Grid item xs={12} md={12}>
-                <Paper sx={{ p: 5, borderRadius: 2, boxShadow: 3, border: '2px solid #3f51b5', height: 'auto', minHeight: '700px', width: '100%' }}>
+                <Paper sx={{ p: 5, borderRadius: 2, boxShadow: 3, height: 'auto', minHeight: '700px', width: '100%' }}>
                     <Grid container spacing={4}>
                         <Grid item xs={12} md={6}>
-                            <Box textAlign={isMobile ? 'center' : 'left'} p={3} border="1px solid #ddd" borderRadius={2}>
+                            <Box textAlign={isMobile ? 'center' : 'left'} p={3} border="1px solid #2196F3" borderRadius={2} sx={{ backgroundColor: '#E3F2FD' }}>
                                 <Typography variant="h6" color="black">
-                                {t('total_balance_title')}
+                                    {t('total_balance_title')}
                                 </Typography>
                                 <Typography variant="h4" fontWeight={500}> 
                                     {'$'}{parseFloat(walletBalance).toFixed(2)}
                                 </Typography>
                             </Box>
-                            <Box textAlign={isMobile ? 'center' : 'left'} mt={3} p={3} border="1px solid #ddd" borderRadius={2}>
-                            <Box
-                            display="flex"
-                            alignItems="center"
-                            sx={{
-                                backgroundColor: '#3F51B5',
-                                padding: '8px 16px',
-                                borderRadius: 2,
-                            }}
-                        >
-                            <img
-                            src={robotImage}
-                            alt="Robot"
-                            width={110}
-                            style={{ marginRight: 16 }}
-                        />
-                        <Typography
-                        variant="body1"
-                        color="white"
-                        style={{ transition: 'opacity 1s', opacity: fadeOut ? 0 : 1 }}
-                        >
-                        {visibleText}
-                        </Typography>
-                         </Box>
-                    </Box>
+                            <Box textAlign={isMobile ? 'center' : 'left'} mt={3} p={3} border="1px solid #2196F3" borderRadius={2} sx={{ backgroundColor: '#E3F2FD' }}>
+                                <Box
+                                    display="flex"
+                                    alignItems="center"
+                                    sx={{
+                                        backgroundColor: '#2196F3',
+                                        padding: '8px 16px',
+                                        borderRadius: 2,
+                                    }}
+                                >
+                                    <img
+                                        src={robotImage}
+                                        alt="Robot"
+                                        width={110}
+                                        style={{ marginRight: 16 }}
+                                    />
+                                    <Typography
+                                        variant="body1"
+                                        color="white"
+                                        style={{ transition: 'opacity 1s', opacity: fadeOut ? 0 : 1 }}
+                                    >
+                                        {visibleText}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </Grid>
 
-                   </Grid>
                         <Grid item xs={12} md={6}>
-                            <Box display="flex" flexDirection="column" alignItems={isMobile ? 'center' : 'flex-start'} p={3} border="1px solid #ddd" borderRadius={2}>
+                            <Box display="flex" flexDirection="column" alignItems={isMobile ? 'center' : 'flex-start'} p={3} border="1px solid #2196F3" borderRadius={2} sx={{ backgroundColor: '#E3F2FD' }}>
                                 <FormControl size="medium" sx={{ mb: 2, width: '100%', maxWidth: 400 }}>
-                                <InputLabel id="select-coin-label">{t('wallets_link_text')}</InputLabel>
+                                    <InputLabel id="select-coin-label">{t('wallets_link_text')}</InputLabel>
                                     <Select
                                         labelId="select-coin-label"
                                         id="select-coin"
@@ -142,6 +141,7 @@ const Wallets = () => {
                                 </FormControl>
 
                                 <Box display="flex" flexDirection={isMobile ? 'column' : 'row'} justifyContent="flex-start" gap={1} width="100%" ml={isMobile ? 0 : 1}>
+                                    {/* Botón para "Deposit" */}
                                     <Button
                                         onClick={handleCreateWallet} 
                                         variant="contained"
@@ -149,15 +149,17 @@ const Wallets = () => {
                                         sx={{
                                             width: isMobile ? '100%' : '120px',
                                             height: 40,
-                                            fontSize: '0.8rem',
-                                            borderRadius: '8px',
-                                            bgcolor: '#3F51B5',
-                                            '&:hover': { bgcolor: '#303F9F' },
+                                            fontSize: '0.85rem', 
+                                            borderRadius: '10px', 
+                                            bgcolor: '#2196F3',
+                                            '&:hover': { bgcolor: '#1976D2' }, 
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                            transition: 'all 0.3s ease', 
                                         }}
                                     >
                                         {t('deposit_button')}
                                     </Button>
+                                    
                                     <Button
                                         onClick={handleCreateWallet}
                                         variant="contained"
@@ -165,15 +167,18 @@ const Wallets = () => {
                                         sx={{
                                             width: isMobile ? '100%' : '120px',
                                             height: 40,
-                                            fontSize: '0.8rem',
-                                            borderRadius: '8px',
-                                            bgcolor: '#3F51B5',
-                                            '&:hover': { bgcolor: '#303F9F' },
+                                            fontSize: '0.85rem', 
+                                            borderRadius: '10px', 
+                                            bgcolor: '#2196F3', 
+                                            '&:hover': { bgcolor: '#1976D2' }, 
                                             boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                            transition: 'all 0.3s ease', 
                                         }}
                                     >
                                         {t('withdraw_button')}
                                     </Button>
+
+                                    {/* Botón para "Back" */}
                                     <Button
                                         onClick={handleBack}
                                         variant="outlined"
@@ -181,12 +186,12 @@ const Wallets = () => {
                                         sx={{
                                             width: isMobile ? '100%' : '100px',
                                             height: 40,
-                                            fontSize: '0.8rem',
-                                            borderRadius: '8px',
-                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
+                                            fontSize: '0.85rem', 
+                                            borderRadius: '10px',
+                                            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', 
                                         }}
                                     >
-                                         {t('back_button')}
+                                        {t('back_button')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -196,7 +201,7 @@ const Wallets = () => {
                     <Divider sx={{ my: 3 }} />
                     <Box>
                         <Typography variant="h6" fontWeight={600} color="black" align="center" mb={2}>
-                        {t('your_wallets_title')}
+                            {t('your_wallets_title')}
                         </Typography>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, minHeight: '300px' }}>
                             <MyWallets />
