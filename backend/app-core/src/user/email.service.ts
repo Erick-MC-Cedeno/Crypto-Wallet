@@ -13,7 +13,7 @@ export class EmailService {
 
   async sendTokenLogin(toEmail: string, token: string): Promise<void> {
     const mailOptions = {
-      from: 'NextCryptoAtm <noreply@nextcryptoatm.com>',
+      from: 'BlockVault <noreply@nextcryptoatm.com>',
       to: toEmail,
       subject: 'Token de verificación para iniciar sesión',
       html: `
@@ -38,7 +38,7 @@ export class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>NextCryptoAtm</h1>
+                    <h1>BlockVault</h1>
                 </div>
                 <div class="content">
                     <p>Hola,</p>
@@ -62,7 +62,7 @@ export class EmailService {
                 </div>
                 <div class="footer">
                     <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-                    <p>Gracias por usar NextCryptoAtm.</p>
+                    <p>Gracias por usar BlockVault.</p>
                 </div>
             </div>
         </body>
@@ -99,7 +99,7 @@ export class EmailService {
 
   async sendLoginNotificationEmail(toEmail: string): Promise<void> {
     const mailOptions = {
-      from: 'NextCryptoAtm <noreply@nextcryptoatm.com>',
+      from: 'BlockVault <noreply@nextcryptoatm.com>',
       to: toEmail,
       subject: 'Notificación de Inicio de sesión',
       html: `
@@ -123,7 +123,7 @@ export class EmailService {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>NextCryptoAtm Exchange</h1>
+                    <h1>BlockVault</h1>
                 </div>
                 <div class="content">
                     <p>Hola,</p>
@@ -143,7 +143,7 @@ export class EmailService {
                 </div>
                 <div class="footer">
                     <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
-                    <p>Gracias por usar NextCryptoAtm.</p>
+                    <p>Gracias por usar BlockVault.</p>
                 </div>
             </div>
         </body>

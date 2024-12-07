@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Box, Button, TextField, Grid, Alert, Container, CircularProgress } from '@mui/material';
-import AtmIcon from '@mui/icons-material/Atm';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const VerifyToken = () => {
-    const [formValues, setFormValues] = useState({ email: '', token: '' });
+    const [formValues, setFormValues] = useState({ token: '' });
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
     const history = useHistory();
@@ -16,16 +16,24 @@ const VerifyToken = () => {
             isMounted.current = false;
         };
     }, []);
+
     const handleChange = (e) => {
         setFormValues({ ...formValues, [e.target.name]: e.target.value });
     };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        const storedEmail = localStorage.getItem('email');
+        if (!storedEmail) {
+            alert('No se encontró el correo electrónico. Por favor, asegúrate de que estés autenticado.');
+            return;
+        }
 
         setLoading(true);
         setTimeout(async () => {
             try {
-                const response = await verifyToken(formValues);
+                const response = await verifyToken({ email: storedEmail, ...formValues });
                 if (isMounted.current && response?.msg === 'Logged in!') {
                     history.push('/');
                 }
@@ -73,31 +81,28 @@ const VerifyToken = () => {
                         mb: 2,
                     }}
                 >
-                    <AtmIcon sx={{ color: 'white' }} />
+                    <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                 </Box>
-                <Typography component="h1" variant="h5" align="center" sx={{ mb: 2, fontFamily: 'Arial, sans-serif', fontWeight: 600 }}>
-                    NextCryptoATM
+                <Typography component="h1" variant="h5">
+                    BlockVault
                 </Typography>
                 <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
-                    Por favor, ingresa tu correo electrónico y el token que recibiste en el correo electrónico
+                    Por favor, ingresa el token que recibiste en el correo electrónico
                 </Typography>
                 <Grid container spacing={2}>
-                    {['email', 'token'].map((field, index) => (
-                        <Grid item xs={12} key={index}>
-                            <TextField
-                                fullWidth
-                                label={field === 'email' ? 'Correo Electrónico' : 'Token'}
-                                variant="outlined"
-                                name={field}
-                                value={formValues[field]}
-                                onChange={handleChange}
-                                required
-                                margin="normal"
-                                autoFocus={field === 'email'}
-                                InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
-                            />
-                        </Grid>
-                    ))}
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Token"
+                            variant="outlined"
+                            name="token"
+                            value={formValues.token}
+                            onChange={handleChange}
+                            required
+                            margin="normal"
+                            InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
+                        />
+                    </Grid>
                     <Grid item xs={12}>
                         <Button 
                             type="submit" 

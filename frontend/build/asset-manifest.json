@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.69eda509.chunk.css",
+    "main.js": "/static/js/main.68aa1fca.chunk.js",
+    "main.js.map": "/static/js/main.68aa1fca.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.3cd7b809.js",
+    "runtime-main.js.map": "/static/js/runtime-main.3cd7b809.js.map",
+    "static/js/2.707191ca.chunk.js": "/static/js/2.707191ca.chunk.js",
+    "static/js/2.707191ca.chunk.js.map": "/static/js/2.707191ca.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.0496fafb4db133cd936e3cdeba4d8178.js": "/precache-manifest.0496fafb4db133cd936e3cdeba4d8178.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.69eda509.chunk.css.map": "/static/css/main.69eda509.chunk.css.map",
+    "static/media/blockchain.png": "/static/media/blockchain.5b1c39e6.png",
+    "static/media/hero-banner.png": "/static/media/hero-banner.ecae9107.png",
+    "static/media/linkIcon.svg": "/static/media/linkIcon.d00f103c.svg",
+    "static/media/receiveCopyIcon.svg": "/static/media/receiveCopyIcon.7c4db96a.svg",
+    "static/media/robot.png": "/static/media/robot.e1542e5c.png",
+    "static/media/wallet.png": "/static/media/wallet.a0b69bac.png",
+    "static/media/web3.png": "/static/media/web3.9848590d.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.3cd7b809.js",
+    "static/js/2.707191ca.chunk.js",
+    "static/css/main.69eda509.chunk.css",
+    "static/js/main.68aa1fca.chunk.js"
+  ]
+}

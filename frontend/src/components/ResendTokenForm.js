@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Box, Grid, Alert } from '@mui/material';
-import AtmIcon from '@mui/icons-material/Atm';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useAuth from '../hooks/useAuth'; 
 import { useHistory } from 'react-router-dom';
 
@@ -57,10 +57,10 @@ const ResendTokenForm = () => {
                         mb: 2,
                     }}
                 >
-                    <AtmIcon sx={{ color: 'white' }} />
+                    <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
                 </Box>
-                <Typography component="h1" variant="h5" align="center" sx={{ mb: 2, fontFamily: 'Arial, sans-serif', fontWeight: 600 }}>
-                    NextCryptoATM
+                <Typography component="h1" variant="h5">
+                    BlockVault
                 </Typography>
                 <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
                     Ingresa tu correo electrónico para reenviar el código de verificación

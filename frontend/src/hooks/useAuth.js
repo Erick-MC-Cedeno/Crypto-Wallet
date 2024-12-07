@@ -75,7 +75,7 @@ export default function useAuth() {
                 setError(data.error || 'Código de verificación inválido.');
             }
         } catch (err) {
-            setError('Token o correo electrónico incorrectos.');
+            setError('Token incorrecto verifica tu correo electrónico.');
         }
     };
 

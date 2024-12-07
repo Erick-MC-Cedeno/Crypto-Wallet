@@ -122,7 +122,7 @@ const Nextmain = () => {
                     </IconButton>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', color: 'white' }}>
-                            NicaBlockVault
+                            BlockVault
                         </Typography>
                         <Box
                             sx={{

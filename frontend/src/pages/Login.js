@@ -19,6 +19,8 @@ export default function Login() {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(event.currentTarget));
         
+        localStorage.setItem('email', data.email);
+
         setLoading(true); 
 
         try {
