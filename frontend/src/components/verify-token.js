@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Typography, Box, Button, TextField, Grid, Alert, Container, CircularProgress } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import RefreshIcon from '@mui/icons-material/Refresh'; 
 import { useHistory } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
@@ -8,6 +9,7 @@ const VerifyToken = () => {
     const [formValues, setFormValues] = useState({ token: '' });
     const { verifyToken, error } = useAuth();
     const [loading, setLoading] = useState(false);
+    const [localError, setLocalError] = useState(null); 
     const history = useHistory();
     const isMounted = useRef(true);
 
@@ -26,7 +28,7 @@ const VerifyToken = () => {
 
         const storedEmail = localStorage.getItem('email');
         if (!storedEmail) {
-            alert('No se encontró el correo electrónico. Por favor, asegúrate de que estés autenticado.');
+            setLocalError('No se encontró el correo electrónico. Por favor, asegúrate de que estés autenticado.'); // Mensaje de error si no se encuentra el correo
             return;
         }
 
@@ -121,16 +123,29 @@ const VerifyToken = () => {
                         </Button>
                     </Grid>
                     <Grid item xs={12}>
-                        <Button
-                            onClick={handleResend}
-                            variant="contained"
-                            color="primary" 
-                            fullWidth
-                            sx={{ mt: 2, borderRadius: 2 }}
+                        <Box 
+                            sx={{ 
+                                display: 'flex', 
+                                justifyContent: 'center', 
+                                alignItems: 'center', 
+                                mt: 2, 
+                                cursor: 'pointer',
+                                textDecoration: 'underline', 
+                                color: 'primary.main' 
+                            }}
+                            onClick={handleResend} 
                         >
-                            Reenviar Token
-                        </Button>
+                            <RefreshIcon sx={{ mr: 1 }} /> 
+                            <Typography variant="body2">Reenviar Token</Typography>
+                        </Box>
                     </Grid>
+                    {localError && ( 
+                        <Grid item xs={12}>
+                            <Alert severity="error" sx={{ mt: 2 }}>
+                                {localError}
+                            </Alert>
+                        </Grid>
+                    )}
                     {error && (
                         <Grid item xs={12}>
                             <Alert severity="error" sx={{ mt: 2 }}>
