@@ -10,7 +10,7 @@ import { WithdrawDto } from './dto/withdraw.dto';
 import { InjectQueue } from '@nestjs/bullmq';
 import { default as QueueType } from './queue/types.queue'
 import { Queue } from 'bullmq';
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
 import { Transaction, TransactionDocument } from '../transaction/schemas/transaction.schema';
 
 @Injectable()
@@ -198,7 +198,7 @@ export class WalletService {
             amount: -1 * withdrawDto.amount,
             created_at: Date.now(),
             status: 1,
-            txHash: uuid(),
+            txHash: uuidv4(),
             to: withdrawDto.to
           });
 
