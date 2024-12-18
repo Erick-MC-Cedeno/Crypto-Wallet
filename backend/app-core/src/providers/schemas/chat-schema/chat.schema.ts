@@ -19,6 +19,13 @@ export class Chat {
 
   @Prop({ default: Date.now })
   timeStamp: Date;
+
+  
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  updatedAt: Date;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

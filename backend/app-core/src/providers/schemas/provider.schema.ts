@@ -26,7 +26,7 @@ export class Provider {
   @Prop({ required: true })
   postalCode: string;
 
-  @Prop({ default: '', required: false }) // Propiedad photo
+  @Prop({ default: '', required: false }) 
   photo?: string;
 
   @Prop({ default: false })
@@ -35,7 +35,7 @@ export class Provider {
   
   _id?: string; 
 
-  // Propiedad calculada para el nombre completo
+  
   get name(): string {
     return `${this.firstName} ${this.lastName}`;
   }

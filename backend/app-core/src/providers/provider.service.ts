@@ -1,99 +1,153 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Provider } from './schemas/provider.schema';
 import { CreateProviderDto } from './dto/provider.dto';
+import { Provider, ProviderDocument } from './schemas/provider.schema';
 import { Chat, ChatDocument } from './schemas/chat-schema/chat.schema';
 import { Message, MessageDocument } from './schemas/chat-schema/message.schema';
+import * as crypto from 'crypto';
+import { User, UserDocument } from '../user/schemas/user.schema';
 
 @Injectable()
 export class ProviderService {
   constructor(
-    @InjectModel('Provider') private providerModel: Model<Provider>,
-    @InjectModel('Chat') private chatModel: Model<ChatDocument>,
-    @InjectModel('Message') private messageModel: Model<MessageDocument>,
+    @InjectModel(Provider.name) private providerModel: Model<ProviderDocument>,
+    @InjectModel(Chat.name) private chatModel: Model<ChatDocument>,
+    @InjectModel(Message.name) private messageModel: Model<MessageDocument>,
+    @InjectModel(User.name) private userModel: Model<UserDocument>, 
   ) {}
 
   async createProvider(createProviderDto: CreateProviderDto): Promise<Provider> {
-    const provider = new this.providerModel(createProviderDto);
-    return provider.save();
+    const createdProvider = new this.providerModel(createProviderDto);
+    return createdProvider.save();
   }
 
   async findAllProviders(): Promise<Provider[]> {
-    return this.providerModel.find().exec();
+    return this.providerModel.find({ isValid: true }).exec();
   }
 
   async findProviderByEmail(email: string): Promise<Provider> {
-    return this.providerModel.findOne({ email }).exec();
+    const provider = await this.providerModel.findOne({ email }).exec();
+    if (!provider) {
+      throw new NotFoundException(`Provider with email ${email} not found`);
+    }
+    return provider;
   }
 
-  async openChat(userEmail: string, providerEmail: string): Promise<{ chat: Chat & { chatId: string } }> {
-    const chat = await this.findOrCreateChat(userEmail, providerEmail);
-    const usersDetails = await this.providerModel.find({ 
-      email: { $in: [userEmail, providerEmail] } 
-    }).exec();
-    const users = usersDetails.map(user => user._id.toString()); 
-    return {
-      chat: {
-        chatId: chat._id.toString(),
-        chatName: chat.chatName,
-        users: users,  
-        latestMessage: chat.latestMessage,
-        photo: chat.photo,
-        timeStamp: chat.timeStamp,
-      },
-    };
+  async findUserByEmail(email: string): Promise<User> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    return user;
   }
 
-  private async findOrCreateChat(userEmail: string, providerEmail: string): Promise<ChatDocument> {
-    let chat = await this.chatModel.findOne({
-      users: { $all: [userEmail, providerEmail] },
-    });
-    if (!chat) {
-      const user = await this.providerModel.findOne({ email: userEmail }).exec();
-      const provider = await this.providerModel.findOne({ email: providerEmail }).exec();
+  async openChat(userEmail: string, providerEmail: string): Promise<{ chat: Chat }> {
+    const provider = await this.findProviderByEmail(providerEmail); 
+    if (!provider) {
+        throw new NotFoundException(`Provider with email ${providerEmail} not found`);
+    }
 
-      chat = new this.chatModel({
-        chatName: `Chat with ${user.firstName} ${user.lastName} and ${provider.firstName} ${provider.lastName}`,
+    const user = await this.findUserByEmail(userEmail); 
+    if (!user) {
+        throw new NotFoundException(`User with email ${userEmail} not found`);
+    }
+
+    console.log(`User found: ${user.firstName} ${user.lastName}`);
+    console.log(`Provider found: ${provider.firstName} ${provider.lastName}`);
+
+    const existingChats = await this.chatModel.aggregate([
+        { $match: { users: { $all: [user._id, provider._id] } } }, 
+        { $limit: 1 },
+    ]);
+
+    if (existingChats.length > 0) {
+        return { chat: existingChats[0] }; 
+    }
+
+    const providerName = provider.firstName && provider.lastName 
+        ? `${provider.firstName} ${provider.lastName}` 
+        : 'Unknown Provider';
+
+    const userName = user.firstName && user.lastName 
+        ? `${user.firstName} ${user.lastName}` 
+        : 'Unknown User';
+
+    const newChat = new this.chatModel({
+        chatName: `Chat with ${userName} and ${providerName}`,
         users: [user._id, provider._id], 
         latestMessage: null,
-        photo: '',
+        photo: provider.photo || '',
         timeStamp: new Date(),
-      });
-      await chat.save();
+    });
+
+    try {
+        await newChat.save();
+    } catch (error) {
+        throw new ConflictException('Could not create chat');
     }
 
-    return chat;
-  }
+    
+    const chatResponse = {
+        chat: {
+            chatName: newChat.chatName,
+            chatId: newChat._id.toString(), 
+            users: newChat.users,
+            latestMessage: newChat.latestMessage,
+            photo: newChat.photo,
+            timeStamp: newChat.timeStamp,
+            createdAt: newChat.createdAt,
+            updatedAt: newChat.updatedAt,
+            __v: newChat.__v,
+        }
+    };
 
+    return chatResponse; 
+}
 
-  async sendMessage(senderId: string, chatId: string, messageContent: string): Promise<Message> {
+  async sendMessage(
+    senderId: string,
+    chatId: string,
+    messageContent: string,
+  ): Promise<Message> {
     const chat = await this.chatModel.findById(chatId).exec();
     if (!chat) {
-      throw new Error('Chat not found');
+      throw new NotFoundException('Chat not found');
     }
-    if (!chat.users.includes(senderId)) {
-      throw new Error('User is not part of this chat');
+
+    const messageHash = crypto
+      .createHash('sha256')
+      .update(`${senderId}-${messageContent}-${Date.now()}`)
+      .digest('hex');
+
+    const existingMessage = await this.messageModel.findOne({ hash: messageHash }).exec();
+    if (existingMessage) {
+      throw new ConflictException('Duplicate message detected');
     }
-    const hash = this.generateHash(messageContent);
-    const message = new this.messageModel({
+
+    const newMessage = new this.messageModel({
       sender: senderId,
       message: messageContent,
-      chatId: chatId,
-      hash: hash,
+      chatId: chat._id,
+      hash: messageHash,
       timeStamp: new Date(),
     });
-    const savedMessage = await message.save();
-    await this.chatModel.findByIdAndUpdate(chatId, { latestMessage: savedMessage._id });
-    return savedMessage;
+    await newMessage.save();
+    chat.latestMessage = newMessage._id;
+    await chat.save();
+    return newMessage;
   }
 
   async getMessages(chatId: string): Promise<Message[]> {
-    return this.messageModel.find({ chatId }).exec(); 
-  }
+    const chat = await this.chatModel.findById(chatId).exec();
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
 
-  private generateHash(messageContent: string): string {
-    const crypto = require('crypto');
-    return crypto.createHash('sha256').update(messageContent).digest('hex');
+    return this.messageModel.find({ chatId }).sort({ timeStamp: 1 }).exec();
   }
 }

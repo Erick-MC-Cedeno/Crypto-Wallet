@@ -29,7 +29,7 @@ export class ProviderController {
       storage: diskStorage({
         destination: './uploads',
         filename: (req, file, cb) => {
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
           cb(null, `${file.fieldname}-${uniqueSuffix}${extname(file.originalname)}`);
         },
       }),
@@ -39,7 +39,7 @@ export class ProviderController {
     @Body() createProviderDto: CreateProviderDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Provider> {
-    console.log(file);
+    console.log(file); 
     return this.providerService.createProvider(createProviderDto);
   }
 
@@ -49,30 +49,29 @@ export class ProviderController {
     return this.providerService.findAllProviders();
   }
 
-  @Get('find/:email')
+  @Get('find/:email') 
   async findProviderByEmail(@Param('email') email: string): Promise<Provider> {
-    return this.providerService.findProviderByEmail(email);
+    return this.providerService.findProviderByEmail(email); 
   }
 
   @UseGuards(AuthenticatedGuard)
   @Post('chat/open')
   async openChat(
-    @Body('userEmail') userEmail: string,
-    @Body('providerEmail') providerEmail: string,
-  ): Promise<{ chat: Chat & { chatId: string } }> {
-    return this.providerService.openChat(userEmail, providerEmail);
+    @Body('userEmail') userEmail: string,  
+    @Body('providerEmail') providerEmail: string, 
+  ): Promise<{ chat: Chat }> { 
+    return this.providerService.openChat(userEmail, providerEmail); 
   }
 
   @UseGuards(AuthenticatedGuard)
-@Post('chat/send')
-async sendMessage(
+  @Post('chat/send')
+  async sendMessage(
     @Body('senderId') senderId: string,
     @Body('chatId') chatId: string,
     @Body('messageContent') messageContent: string,
-): Promise<Message> {
+  ): Promise<Message> {
     return this.providerService.sendMessage(senderId, chatId, messageContent);
-}
-
+  }
 
   @UseGuards(AuthenticatedGuard)
   @Get('chat/messages/:chatId')
