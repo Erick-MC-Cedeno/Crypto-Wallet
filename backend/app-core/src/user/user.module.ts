@@ -22,6 +22,7 @@ import { EmailModule } from './email.module';
     UserService,
     HashService,
     AuthService
-  ]
+  ],
+  exports: [UserService, MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])], 
 })
 export class UserModule { }

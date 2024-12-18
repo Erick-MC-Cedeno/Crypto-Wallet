@@ -26,11 +26,19 @@ export class Provider {
   @Prop({ required: true })
   postalCode: string;
 
-  @Prop()
-  image?: string;
+  @Prop({ default: '', required: false }) // Propiedad photo
+  photo?: string;
 
   @Prop({ default: false })
   isValid: boolean;
+
+  
+  _id?: string; 
+
+  // Propiedad calculada para el nombre completo
+  get name(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }
 
 export const ProviderSchema = SchemaFactory.createForClass(Provider);

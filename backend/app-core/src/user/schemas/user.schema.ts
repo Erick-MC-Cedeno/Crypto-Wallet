@@ -26,6 +26,8 @@ export class User {
     @Prop({ type: [{ type: Types.ObjectId, ref: 'Wallet' }] })
     wallets: [Wallet];
 
+    _id?: string; 
+
     @Prop()
     token: string;
 
@@ -34,6 +36,7 @@ export class User {
 
     @Prop({ default: false })
     isTokenEnabled: boolean;
+    
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

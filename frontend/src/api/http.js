@@ -30,7 +30,12 @@ const transactionApi = `${baseApi}/transaction/info`
 
 // Endpoints provider
 const providerApi = `${baseApi}/provider`;
-const createapi = `${baseApi}/create`;
+const createProviderApi = `${providerApi}/create`;
+const getAllProvidersApi = `${providerApi}/all`;
+const findProviderByEmailApi = (email) => `${providerApi}/find/${email}`;
+const openChatApi = `${providerApi}/chat/open`;
+const sendMessageApi = `${providerApi}/chat/send`;
+const getMessagesApi = (chatId) => `${providerApi}/chat/messages/${chatId}`;
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 
@@ -64,7 +69,12 @@ export {
     allWalletInfoApi,
     transactionApi,
     providerApi,
-    createapi,
+    createProviderApi,
+    getAllProvidersApi,
+    findProviderByEmailApi,
+    openChatApi,
+    sendMessageApi,
+    getMessagesApi,
     verifyTokenApi,
     changePasswordApi,
     updateTokenStatusApi,
@@ -73,4 +83,4 @@ export {
     verifyEmailApi,
     sendVerificationEmailApi,
     isEmailVerifiedApi
-}
+};
