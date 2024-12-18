@@ -7,6 +7,8 @@ import {
   UploadedFile,
   UseInterceptors,
   UseGuards,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProviderService } from './provider.service';
@@ -39,19 +41,35 @@ export class ProviderController {
     @Body() createProviderDto: CreateProviderDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Provider> {
-    console.log(file); 
-    return this.providerService.createProvider(createProviderDto);
+    try {
+      console.log(file);
+      return await this.providerService.createProvider(createProviderDto);
+    } catch (error) {
+      throw new InternalServerErrorException('Error creating provider: ' + error.message);
+    }
   }
 
   @UseGuards(AuthenticatedGuard)
   @Get('all')
   async findAllProviders(): Promise<Provider[]> {
-    return this.providerService.findAllProviders();
+    try {
+      return await this.providerService.findAllProviders();
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching providers: ' + error.message);
+    }
   }
 
-  @Get('find/:email') 
+  @Get('find/:email')
   async findProviderByEmail(@Param('email') email: string): Promise<Provider> {
-    return this.providerService.findProviderByEmail(email); 
+    try {
+      const provider = await this.providerService.findProviderByEmail(email);
+      if (!provider) {
+        throw new NotFoundException(`Provider with email ${email} not found`);
+      }
+      return provider;
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching provider: ' + error.message);
+    }
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -60,7 +78,11 @@ export class ProviderController {
     @Body('userEmail') userEmail: string,  
     @Body('providerEmail') providerEmail: string, 
   ): Promise<{ chat: Chat }> { 
-    return this.providerService.openChat(userEmail, providerEmail); 
+    try {
+      return await this.providerService.openChat(userEmail, providerEmail); 
+    } catch (error) {
+      throw new InternalServerErrorException('Error opening chat: ' + error.message);
+    }
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -70,12 +92,20 @@ export class ProviderController {
     @Body('chatId') chatId: string,
     @Body('messageContent') messageContent: string,
   ): Promise<Message> {
-    return this.providerService.sendMessage(senderId, chatId, messageContent);
+    try {
+      return await this.providerService.sendMessage(senderId, chatId, messageContent);
+    } catch (error) {
+      throw new InternalServerErrorException('Error sending message: ' + error.message);
+    }
   }
 
   @UseGuards(AuthenticatedGuard)
   @Get('chat/messages/:chatId')
   async getMessages(@Param('chatId') chatId: string): Promise<Message[]> {
-    return this.providerService.getMessages(chatId);
+    try {
+      return await this.providerService.getMessages(chatId);
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching messages: ' + error.message);
+    }
   }
 }
