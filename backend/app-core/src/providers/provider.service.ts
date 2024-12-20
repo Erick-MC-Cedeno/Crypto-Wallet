@@ -79,7 +79,7 @@ export class ProviderService {
 
     const newChat = new this.chatModel({
         chatName: `Chat with ${userName} and ${providerName}`,
-        users: [user._id, provider._id], 
+        users: [user.email, provider.email],
         latestMessage: null,
         photo: provider.photo || '',
         timeStamp: new Date(),
@@ -110,7 +110,7 @@ export class ProviderService {
 }
 
   async sendMessage(
-    senderId: string,
+    senderEmail: string,
     chatId: string,
     messageContent: string,
   ): Promise<Message> {
@@ -121,7 +121,7 @@ export class ProviderService {
 
     const messageHash = crypto
       .createHash('sha256')
-      .update(`${senderId}-${messageContent}-${Date.now()}`)
+      .update(`${senderEmail}-${messageContent}-${Date.now()}`)
       .digest('hex');
 
     const existingMessage = await this.messageModel.findOne({ hash: messageHash }).exec();
@@ -130,7 +130,7 @@ export class ProviderService {
     }
 
     const newMessage = new this.messageModel({
-      sender: senderId,
+      sender: senderEmail,
       message: messageContent,
       chatId: chat._id,
       hash: messageHash,
@@ -147,7 +147,9 @@ export class ProviderService {
     if (!chat) {
       throw new NotFoundException('Chat not found');
     }
-
-    return this.messageModel.find({ chatId }).sort({ timeStamp: 1 }).exec();
+  
+    const chatMessages = await this.messageModel.find({ chatId }).sort({ timeStamp: 1 }).exec();
+    return chatMessages;
   }
+  
 }

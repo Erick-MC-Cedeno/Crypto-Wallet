@@ -3,7 +3,6 @@ axios.defaults.withCredentials = true
 
 const baseApi = 'http://192.168.100.2:4000/secure/api'
 
-
 // Endpoints usuario
 const loginApi = `${baseApi}/user/login`
 const logoutApi = `${baseApi}/user/logout`

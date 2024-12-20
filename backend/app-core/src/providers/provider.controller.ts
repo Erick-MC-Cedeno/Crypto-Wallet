@@ -9,6 +9,7 @@ import {
   UseGuards,
   NotFoundException,
   InternalServerErrorException,
+  Req,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProviderService } from './provider.service';
@@ -19,6 +20,7 @@ import { extname } from 'path';
 import { Chat } from './schemas/chat-schema/chat.schema';
 import { Message } from './schemas/chat-schema/message.schema';
 import { AuthenticatedGuard } from '../guard/auth/authenticated.guard';
+import { Request } from 'express'; 
 
 @Controller('provider')
 export class ProviderController {
@@ -38,11 +40,13 @@ export class ProviderController {
     }),
   )
   async createProvider(
+    @Req() req: Request, 
     @Body() createProviderDto: CreateProviderDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Provider> {
     try {
       console.log(file);
+      
       return await this.providerService.createProvider(createProviderDto);
     } catch (error) {
       throw new InternalServerErrorException('Error creating provider: ' + error.message);
@@ -51,7 +55,7 @@ export class ProviderController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('all')
-  async findAllProviders(): Promise<Provider[]> {
+  async findAllProviders(@Req() req: Request): Promise<Provider[]> {
     try {
       return await this.providerService.findAllProviders();
     } catch (error) {
@@ -60,7 +64,7 @@ export class ProviderController {
   }
 
   @Get('find/:email')
-  async findProviderByEmail(@Param('email') email: string): Promise<Provider> {
+  async findProviderByEmail(@Param('email') email: string, @Req() req: Request): Promise<Provider> { // Agregar req como parámetro
     try {
       const provider = await this.providerService.findProviderByEmail(email);
       if (!provider) {
@@ -76,7 +80,8 @@ export class ProviderController {
   @Post('chat/open')
   async openChat(
     @Body('userEmail') userEmail: string,  
-    @Body('providerEmail') providerEmail: string, 
+    @Body('providerEmail') providerEmail: string,
+    @Req() req: Request, 
   ): Promise<{ chat: Chat }> { 
     try {
       return await this.providerService.openChat(userEmail, providerEmail); 
@@ -88,12 +93,13 @@ export class ProviderController {
   @UseGuards(AuthenticatedGuard)
   @Post('chat/send')
   async sendMessage(
-    @Body('senderId') senderId: string,
+    @Body('senderEmail') senderEmail: string,
     @Body('chatId') chatId: string,
     @Body('messageContent') messageContent: string,
+    @Req() req: Request, 
   ): Promise<Message> {
     try {
-      return await this.providerService.sendMessage(senderId, chatId, messageContent);
+      return await this.providerService.sendMessage(senderEmail, chatId, messageContent);
     } catch (error) {
       throw new InternalServerErrorException('Error sending message: ' + error.message);
     }
@@ -101,7 +107,7 @@ export class ProviderController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('chat/messages/:chatId')
-  async getMessages(@Param('chatId') chatId: string): Promise<Message[]> {
+  async getMessages(@Param('chatId') chatId: string, @Req() req: Request): Promise<Message[]> { // Agregar req como parámetro
     try {
       return await this.providerService.getMessages(chatId);
     } catch (error) {

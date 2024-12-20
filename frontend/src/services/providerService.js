@@ -32,8 +32,8 @@ export default class ProviderService {
     
     
 
-    static async sendMessage(senderId, chatId, messageContent) {
-        return await post(sendMessageApi, { senderId, chatId, messageContent });
+    static async sendMessage(senderEmail, chatId, messageContent) {
+        return await post(sendMessageApi, { senderEmail, chatId, messageContent });
     }
 
     

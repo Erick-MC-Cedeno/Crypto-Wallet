@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import {
   Card,
   CardContent,
@@ -21,6 +21,10 @@ import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import BadgeIcon from '@mui/icons-material/Badge';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../hooks/AuthContext';
+import useProviders from '../hooks/useProviders';
+import User from '../services/user'; // Importar User
 
 const theme = createTheme({
   typography: {
@@ -108,6 +112,35 @@ export default function ProviderCard({ provider }) {
   const [open, setOpen] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [cryptoCoin, setCryptoCoin] = useState('');
+  const { openChat } = useProviders();
+  const { auth } = useContext(AuthContext);
+  const history = useHistory();
+  const isMounted = useRef(false);
+
+  useEffect(() => {
+    isMounted.current = true;
+
+    const fetchUserEmail = async () => {
+      if (!auth) return;
+      try {
+        const { data } = await User.getInfo();
+        if (data?.data && isMounted.current) {
+          const { email } = data.data;
+          auth.email = email;
+        } else {
+          console.error(data.error);
+        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchUserEmail();
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, [auth]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -123,6 +156,25 @@ export default function ProviderCard({ provider }) {
 
   const handleCryptoCoinChange = (event) => {
     setCryptoCoin(event.target.value);
+  };
+
+  const handleConfirm = async () => {
+    try {
+      const userEmail = auth?.email;
+      if (!userEmail) {
+        console.error('User email is not available');
+        return;
+      }
+      const response = await openChat(userEmail, provider.email);
+      console.log('Open chat response:', response);
+      localStorage.setItem('chatData', JSON.stringify(response));
+      if (response) {
+        history.push('/chat');
+      }
+    } catch (error) {
+      console.error('Error opening chat:', error);
+    }
+    handleClose();
   };
 
   return (
@@ -207,7 +259,7 @@ export default function ProviderCard({ provider }) {
           <Button onClick={handleClose} color="secondary">
             Cancelar
           </Button>
-          <Button onClick={handleClose} color="secondary">
+          <Button onClick={handleConfirm} color="secondary">
             Confirmar
           </Button>
         </DialogActions>

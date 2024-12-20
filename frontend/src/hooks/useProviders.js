@@ -38,21 +38,24 @@ export default function useProviders() {
     const openChat = async (userEmail, providerEmail) => {
         setLoading(true);
         try {
+            console.log('Opening chat with:', { userEmail, providerEmail });
             const response = await ProviderService.openChat(userEmail, providerEmail);
             setSuccessMessage('Chat abierto exitosamente.');
+            localStorage.setItem('chatData', JSON.stringify(response.data));
             return response.data;
         } catch (err) {
             setError(err);
+            console.error('Error opening chat:', err);
         } finally {
             setLoading(false);
         }
     };
 
     
-    const sendMessage = async (senderId, chatId, messageContent) => {
+    const sendMessage = async (senderEmail, chatId, messageContent) => {
         setLoading(true);
         try {
-            const response = await ProviderService.sendMessage(senderId, chatId, messageContent);
+            const response = await ProviderService.sendMessage(senderEmail, chatId, messageContent);
             setSuccessMessage('Mensaje enviado exitosamente.');
             return response.data;
         } catch (err) {
@@ -68,6 +71,7 @@ export default function useProviders() {
         try {
             const response = await ProviderService.getMessages(chatId);
             setMessages(response.data);
+            return response.data;
         } catch (err) {
             setError(err);
         } finally {
