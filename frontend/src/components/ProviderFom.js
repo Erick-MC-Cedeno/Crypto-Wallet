@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   TextField,
   Button,
@@ -11,7 +11,9 @@ import {
   InputAdornment
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import ProviderService from '../services/providerService';
+import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../hooks/AuthContext';
+import useProviders from '../hooks/useProviders';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -42,6 +44,26 @@ export default function ProviderForm() {
     cityError: false,
     postalCodeError: false
   });
+
+  const { findProviderByEmail, createProvider } = useProviders();
+  const { auth } = useContext(AuthContext);
+  const history = useHistory();
+
+  useEffect(() => {
+    const checkProvider = async () => {
+      try {
+        const existingProvider = await findProviderByEmail(auth.email);
+        if (existingProvider) {
+          console.log('Provider already exists, redirecting to /providerchat');
+          history.push('/providerchat');
+        }
+      } catch (err) {
+        console.error('Error checking provider:', err);
+      }
+    };
+
+    checkProvider();
+  }, [auth.email, findProviderByEmail, history]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,15 +107,17 @@ export default function ProviderForm() {
       return;
     }
     setLoading(true);
-    const formData = new FormData();
-    Object.keys(providerData).forEach(key => formData.append(key, providerData[key]));
-    if (file) {
-      formData.append('image', file);
-    }
 
     try {
-      await ProviderService.createProvider(formData);
+      const formData = new FormData();
+      Object.keys(providerData).forEach(key => formData.append(key, providerData[key]));
+      if (file) {
+        formData.append('image', file);
+      }
+
+      await createProvider(formData);
       setSnackbarMessage('Provider created successfully');
+      history.push('/providerchat');
     } catch (err) {
       setSnackbarMessage('Error creating provider');
     } finally {
@@ -263,7 +287,7 @@ export default function ProviderForm() {
               </Box>
             </Grid>
           </Grid>
-                    <Snackbar
+          <Snackbar
             open={snackbarOpen}
             autoHideDuration={6000}
             onClose={handleCloseSnackbar}

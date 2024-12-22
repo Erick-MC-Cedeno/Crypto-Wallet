@@ -106,12 +106,41 @@ export class ProviderController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @Post('chat/send-as-provider')
+  async sendMessageAsProvider(
+    @Body('providerEmail') providerEmail: string,
+    @Body('chatId') chatId: string,
+    @Body('messageContent') messageContent: string,
+    @Req() req: Request, 
+  ): Promise<Message> {
+    try {
+      return await this.providerService.sendMessageAsProvider(providerEmail, chatId, messageContent);
+    } catch (error) {
+      throw new InternalServerErrorException('Error sending message as provider: ' + error.message);
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
   @Get('chat/messages/:chatId')
   async getMessages(@Param('chatId') chatId: string, @Req() req: Request): Promise<Message[]> { // Agregar req como parámetro
     try {
       return await this.providerService.getMessages(chatId);
     } catch (error) {
       throw new InternalServerErrorException('Error fetching messages: ' + error.message);
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('chat/details-by-email/:email')
+  async getChatDetailsByEmail(@Param('email') email: string, @Req() req: Request): Promise<any> {
+    try {
+      const chatDetails = await this.providerService.getChatDetailsByEmail(email);
+      if (!chatDetails) {
+        throw new NotFoundException('No chats found for this user');
+      }
+      return chatDetails;
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching chat details: ' + error.message);
     }
   }
 }

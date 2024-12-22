@@ -23,7 +23,8 @@ import ResendTokenForm from './components/ResendTokenForm'
 import EmailVerificationComponent from './components/verify'
 import { LanguageProvider } from './hooks/LanguageContext';
 import './i18n'; 
-import Chatcomponent from './components/Chat'
+import Chatcomponent from './components/Chat';
+import ProviderChatComponent from './components/ProviderChatComponent';
 
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
                                     <PrivateRoute exact path='/settings' component={Settings}/>
                                     <PrivateRoute exact path='/verifyemail' component={EmailVerificationComponent}/>
                                     <PrivateRoute exact path='/chat' component={Chatcomponent}/>
+                                    <PrivateRoute exact path='/providerchat' component={ProviderChatComponent}/>
                                     <PublicRoute exact path='/login' component={Login} />
                                     <PublicRoute exact path='/register' component={Register} />
                                     <PublicRoute exact path='/nextmain' component={Nextmain}/>

@@ -23,7 +23,10 @@ export class ProviderService {
 
   async createProvider(createProviderDto: CreateProviderDto): Promise<Provider> {
     const createdProvider = new this.providerModel(createProviderDto);
-    return createdProvider.save();
+    await createdProvider.save();
+    // Esperar a que se inicie un chat con el proveedor
+    await this.openChat(createProviderDto.email, createProviderDto.email);
+    return createdProvider;
   }
 
   async findAllProviders(): Promise<Provider[]> {
@@ -51,24 +54,17 @@ export class ProviderService {
     if (!provider) {
         throw new NotFoundException(`Provider with email ${providerEmail} not found`);
     }
-
     const user = await this.findUserByEmail(userEmail); 
     if (!user) {
         throw new NotFoundException(`User with email ${userEmail} not found`);
     }
-
-    console.log(`User found: ${user.firstName} ${user.lastName}`);
-    console.log(`Provider found: ${provider.firstName} ${provider.lastName}`);
-
     const existingChats = await this.chatModel.aggregate([
         { $match: { users: { $all: [user._id, provider._id] } } }, 
         { $limit: 1 },
     ]);
-
     if (existingChats.length > 0) {
         return { chat: existingChats[0] }; 
     }
-
     const providerName = provider.firstName && provider.lastName 
         ? `${provider.firstName} ${provider.lastName}` 
         : 'Unknown Provider';
@@ -84,14 +80,11 @@ export class ProviderService {
         photo: provider.photo || '',
         timeStamp: new Date(),
     });
-
     try {
         await newChat.save();
     } catch (error) {
         throw new ConflictException('Could not create chat');
     }
-
-    
     const chatResponse = {
         chat: {
             chatName: newChat.chatName,
@@ -105,9 +98,8 @@ export class ProviderService {
             __v: newChat.__v,
         }
     };
-
     return chatResponse; 
-}
+  }
 
   async sendMessage(
     senderEmail: string,
@@ -118,7 +110,6 @@ export class ProviderService {
     if (!chat) {
       throw new NotFoundException('Chat not found');
     }
-
     const messageHash = crypto
       .createHash('sha256')
       .update(`${senderEmail}-${messageContent}-${Date.now()}`)
@@ -128,9 +119,38 @@ export class ProviderService {
     if (existingMessage) {
       throw new ConflictException('Duplicate message detected');
     }
-
     const newMessage = new this.messageModel({
       sender: senderEmail,
+      message: messageContent,
+      chatId: chat._id,
+      hash: messageHash,
+      timeStamp: new Date(),
+    });
+    await newMessage.save();
+    chat.latestMessage = newMessage._id;
+    await chat.save();
+    return newMessage;
+  }
+
+  async sendMessageAsProvider(
+    providerEmail: string,
+    chatId: string,
+    messageContent: string,
+  ): Promise<Message> {
+    const chat = await this.chatModel.findById(chatId).exec();
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+    const messageHash = crypto
+      .createHash('sha256')
+      .update(`${providerEmail}-${messageContent}-${Date.now()}`)
+      .digest('hex');
+    const existingMessage = await this.messageModel.findOne({ hash: messageHash }).exec();
+    if (existingMessage) {
+      throw new ConflictException('Duplicate message detected');
+    }
+    const newMessage = new this.messageModel({
+      sender: providerEmail,
       message: messageContent,
       chatId: chat._id,
       hash: messageHash,
@@ -147,9 +167,42 @@ export class ProviderService {
     if (!chat) {
       throw new NotFoundException('Chat not found');
     }
-  
     const chatMessages = await this.messageModel.find({ chatId }).sort({ timeStamp: 1 }).exec();
     return chatMessages;
   }
-  
+  async getChatDetails(chatId: string): Promise<{ chatId: string, users: string[] }> {
+    const chat = await this.chatModel.findById(chatId).exec();
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+    const users = await this.userModel.find({ _id: { $in: chat.users } }).exec();
+    const userEmails = users.map(user => user.email);
+    return {
+      chatId: chat._id.toString(),
+      users: userEmails,
+    };
+  }
+
+  async getChatDetailsByEmail(email: string): Promise<any> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+    const chats = await this.chatModel.find({ users: email }).sort({ timeStamp: -1 }).exec();
+    if (chats.length === 0) {
+      return [];
+    }
+    const latestChat = chats[0];
+    return {
+      chatName: latestChat.chatName,
+      chatId: latestChat._id.toString(),
+      users: latestChat.users,
+      latestMessage: latestChat.latestMessage,
+      photo: latestChat.photo,
+      timeStamp: latestChat.timeStamp,
+      createdAt: latestChat.createdAt,
+      updatedAt: latestChat.updatedAt,
+      __v: latestChat.__v
+    };
+  }
 }

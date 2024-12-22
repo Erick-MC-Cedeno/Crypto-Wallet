@@ -35,6 +35,8 @@ const findProviderByEmailApi = (email) => `${providerApi}/find/${email}`;
 const openChatApi = `${providerApi}/chat/open`;
 const sendMessageApi = `${providerApi}/chat/send`;
 const getMessagesApi = (chatId) => `${providerApi}/chat/messages/${chatId}`;
+const sendMessageAsProviderApi = `${providerApi}/chat/send-as-provider`;
+const getChatDetailsByEmailApi = (email) => `${providerApi}/chat/details-by-email/${email}`;
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 
@@ -81,5 +83,7 @@ export {
     updateUserProfileApi,
     verifyEmailApi,
     sendVerificationEmailApi,
-    isEmailVerifiedApi
+    isEmailVerifiedApi,
+    sendMessageAsProviderApi,
+    getChatDetailsByEmailApi,
 };

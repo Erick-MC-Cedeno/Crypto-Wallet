@@ -7,6 +7,8 @@ import {
     openChatApi,
     sendMessageApi,
     getMessagesApi,
+    sendMessageAsProviderApi,
+    getChatDetailsByEmailApi,
 } from '../api/http';
 
 export default class ProviderService {
@@ -15,29 +17,31 @@ export default class ProviderService {
         return await post(createProviderApi, body);
     }
 
-   
     static async getAllProviders() {
         return await get(getAllProvidersApi, {});
     }
 
-    
     static async findProviderByEmail(email) {
         return await get(findProviderByEmailApi(email), {});
     }
 
-    
     static async openChat(userEmail, providerEmail) {
         return await post(openChatApi, { userEmail, providerEmail });
     }
     
-    
-
     static async sendMessage(senderEmail, chatId, messageContent) {
         return await post(sendMessageApi, { senderEmail, chatId, messageContent });
     }
 
-    
     static async getMessages(chatId) {
         return await get(getMessagesApi(chatId), {});
+    }
+
+    static async sendMessageAsProvider(providerEmail, chatId, messageContent) {
+        return await post(sendMessageAsProviderApi, { providerEmail, chatId, messageContent });
+    }
+
+    static async getChatDetailsByEmail(chatId) {
+        return await get(getChatDetailsByEmailApi(chatId), {});
     }
 }

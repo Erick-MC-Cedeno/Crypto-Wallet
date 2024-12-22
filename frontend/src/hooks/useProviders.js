@@ -7,7 +7,6 @@ export default function useProviders() {
     const [error, setError] = useState(null);
     const [messages, setMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState(null);
-
     
     const fetchProviders = async () => {
         setLoading(true);
@@ -21,7 +20,6 @@ export default function useProviders() {
         }
     };
 
-    
     const findProviderByEmail = async (email) => {
         setLoading(true);
         try {
@@ -34,7 +32,6 @@ export default function useProviders() {
         }
     };
 
-    
     const openChat = async (userEmail, providerEmail) => {
         setLoading(true);
         try {
@@ -51,7 +48,6 @@ export default function useProviders() {
         }
     };
 
-    
     const sendMessage = async (senderEmail, chatId, messageContent) => {
         setLoading(true);
         try {
@@ -65,7 +61,34 @@ export default function useProviders() {
         }
     };
 
-    
+    const sendMessageAsProvider = async (providerEmail, chatId, messageContent) => {
+        setLoading(true);
+        try {
+            console.log(`Sending message as provider: ${providerEmail}, chatId: ${chatId}, content: ${messageContent}`);
+            const response = await ProviderService.sendMessageAsProvider(providerEmail, chatId, messageContent);
+            setSuccessMessage('Mensaje enviado exitosamente.');
+            console.log('Message sent successfully:', response.data);
+            return response.data;
+        } catch (err) {
+            console.error('Error sending message as provider:', err);
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+      
+      const getChatDetailsByEmail = async (email) => {
+        setLoading(true);
+        try {
+          const response = await ProviderService.getChatDetailsByEmail(email);
+          return response.data;
+        } catch (err) {
+          setError(err);
+        } finally {
+          setLoading(false);
+        }
+      };
+
     const getMessages = async (chatId) => {
         setLoading(true);
         try {
@@ -79,7 +102,6 @@ export default function useProviders() {
         }
     };
 
-    
     useEffect(() => {
         fetchProviders();
     }, []);
@@ -94,7 +116,8 @@ export default function useProviders() {
         findProviderByEmail,
         openChat,
         sendMessage,
+        sendMessageAsProvider,
+        getChatDetailsByEmail,
         getMessages,
     };
-    
 }
