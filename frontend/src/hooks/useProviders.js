@@ -64,13 +64,10 @@ export default function useProviders() {
     const sendMessageAsProvider = async (providerEmail, chatId, messageContent) => {
         setLoading(true);
         try {
-            console.log(`Sending message as provider: ${providerEmail}, chatId: ${chatId}, content: ${messageContent}`);
             const response = await ProviderService.sendMessageAsProvider(providerEmail, chatId, messageContent);
             setSuccessMessage('Mensaje enviado exitosamente.');
-            console.log('Message sent successfully:', response.data);
             return response.data;
         } catch (err) {
-            console.error('Error sending message as provider:', err);
             setError(err);
         } finally {
             setLoading(false);

@@ -1,58 +1,110 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material';
+import { Box, TextField, Button, Typography, List, ListItem, Paper } from '@mui/material';
 import { AuthContext } from '../hooks/AuthContext';
 import useProviders from '../hooks/useProviders';
 
 const ProviderChatComponent = () => {
     const { auth } = useContext(AuthContext);
-    const { getChatDetailsByEmail, getMessages, sendMessageAsProvider, loading, error } = useProviders();
+    const { getChatDetailsByEmail, getMessages, sendMessageAsProvider, error, messages } = useProviders();
     const [chatId, setChatId] = useState(null);
     const [messageContent, setMessageContent] = useState('');
-    const [chatMessages, setChatMessages] = useState([]);
+    const [fetchError, setFetchError] = useState(null);
 
     useEffect(() => {
-        const fetchChatDetails = async () => {
-            if (!chatId) {
-                const chatDetails = await getChatDetailsByEmail(auth.email);
-                if (chatDetails) {
-                    setChatId(chatDetails.chatId);
-                    const messages = await getMessages(chatDetails.chatId);
-                    setChatMessages(messages.map(msg => msg.message));
-                }
+        const fetchMessages = async (chatId) => {
+            try {
+                await getMessages(chatId);
+            } catch (err) {
+                setFetchError(err.message);
             }
         };
-        fetchChatDetails();
-    }, [auth.email, chatId, getChatDetailsByEmail, getMessages]);
+
+        const chatData = JSON.parse(localStorage.getItem('chatData'));
+        if (chatData) {
+            setChatId(chatData.chat.chatId);
+            fetchMessages(chatData.chat.chatId);
+        } else {
+            const fetchChatDetails = async () => {
+                try {
+                    const chatDetails = await getChatDetailsByEmail(auth.email);
+                    if (chatDetails) {
+                        setChatId(chatDetails.chatId);
+                        fetchMessages(chatDetails.chatId);
+                        localStorage.setItem('chatData', JSON.stringify({ chat: chatDetails }));
+                    }
+                } catch (err) {
+                    setFetchError(err.message);
+                }
+            };
+
+            fetchChatDetails();
+        }
+    }, [auth.email, getChatDetailsByEmail, getMessages]);
 
     const handleSendMessage = async () => {
-        if (chatId && messageContent) {
+        try {
+            if (!messageContent.trim()) return;
             await sendMessageAsProvider(auth.email, chatId, messageContent);
-            const messages = await getMessages(chatId);
-            setChatMessages(messages.map(msg => msg.message));
             setMessageContent('');
+            await getMessages(chatId);
+        } catch (err) {
+            setFetchError(err.message);
         }
     };
 
     return (
-        <Box sx={{ p: 2 }}>
-            <Typography variant="h4">Chat Room</Typography>
-            {loading && <CircularProgress />}
+        <Box sx={{ padding: 3, maxWidth: 600, margin: 'auto' }}>
+            <Typography variant="h5" gutterBottom>
+                Chat Room
+            </Typography>
             {error && <Typography color="error">{error.message}</Typography>}
-            <Box sx={{ my: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px', height: '300px', overflowY: 'scroll' }}>
-                {chatMessages.map((msg, index) => (
-                    <Typography key={index} variant="body1">{msg}</Typography>
-                ))}
-            </Box>
+            {fetchError && <Typography color="error">{fetchError}</Typography>}
+            <Paper sx={{ maxHeight: 400, overflow: 'auto', marginBottom: 2, padding: 2 }}>
+                <List>
+                    {messages.length === 0 ? (
+                        <Typography variant="body1">Aún no hay mensajes</Typography>
+                    ) : (
+                        messages.map((message, index) => (
+                            <ListItem
+                                key={index}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: message.sender === auth.email ? 'flex-end' : 'flex-start',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        backgroundColor: message.sender === auth.email ? '#e0f7fa' : '#f1f8e9',
+                                        color: message.sender === auth.email ? '#00796b' : '#33691e',
+                                        borderRadius: 2,
+                                        padding: 1,
+                                        maxWidth: '70%',
+                                    }}
+                                >
+                                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                                        {message.sender === auth.email ? 'You' : message.sender}
+                                    </Typography>
+                                    <Typography variant="body2">{message.message}</Typography>
+                                </Box>
+                            </ListItem>
+                        ))
+                    )}
+                </List>
+            </Paper>
             <TextField
-                label="Type your message"
-                variant="outlined"
                 fullWidth
+                variant="outlined"
+                label="Escribe tu mensaje"
                 value={messageContent}
                 onChange={(e) => setMessageContent(e.target.value)}
-                sx={{ mb: 2 }}
+                onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                        handleSendMessage();
+                    }
+                }}
             />
-            <Button variant="contained" color="primary" onClick={handleSendMessage} disabled={loading}>
-                Send Message
+            <Button variant="contained" color="primary" onClick={handleSendMessage} sx={{ marginTop: 2 }}>
+                Enviar
             </Button>
         </Box>
     );
