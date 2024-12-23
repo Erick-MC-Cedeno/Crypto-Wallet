@@ -39,6 +39,7 @@ export class ProviderController {
       }),
     }),
   )
+  
   async createProvider(
     @Req() req: Request, 
     @Body() createProviderDto: CreateProviderDto,
@@ -62,7 +63,8 @@ export class ProviderController {
       throw new InternalServerErrorException('Error fetching providers: ' + error.message);
     }
   }
-
+  
+@UseGuards(AuthenticatedGuard)
   @Get('find/:email')
   async findProviderByEmail(@Param('email') email: string, @Req() req: Request): Promise<Provider> { // Agregar req como parámetro
     try {

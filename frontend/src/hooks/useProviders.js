@@ -7,6 +7,7 @@ export default function useProviders() {
     const [error, setError] = useState(null);
     const [messages, setMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState(null);
+
     
     const fetchProviders = async () => {
         setLoading(true);
@@ -20,13 +21,35 @@ export default function useProviders() {
         }
     };
 
+
+    const createProvider = async (body) => {
+        setLoading(true);
+        try {
+            const response = await ProviderService.createProvider(body);
+            setSuccessMessage('Proveedor creado exitosamente.');
+            return response.data;
+        } catch (err) {
+            setError(err);
+            console.error('Error creating provider:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const findProviderByEmail = async (email) => {
         setLoading(true);
         try {
             const response = await ProviderService.findProviderByEmail(email);
+            if (!response.data) {
+                throw new Error("No hay proveedores");
+            }
             return response.data;
         } catch (err) {
-            setError(err);
+            if (err.response && err.response.status === 500) {
+                setError("Error del servidor. Por favor, inténtelo de nuevo más tarde.");
+            } else {
+                setError(err.message || err);
+            }
         } finally {
             setLoading(false);
         }
@@ -116,5 +139,6 @@ export default function useProviders() {
         sendMessageAsProvider,
         getChatDetailsByEmail,
         getMessages,
+        createProvider,
     };
 }

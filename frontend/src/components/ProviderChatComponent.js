@@ -12,6 +12,7 @@ const ProviderChatComponent = () => {
 
     useEffect(() => {
         const fetchMessages = async (chatId) => {
+            if (!chatId) return;
             try {
                 await getMessages(chatId);
             } catch (err) {
@@ -19,31 +20,36 @@ const ProviderChatComponent = () => {
             }
         };
 
-        const chatData = JSON.parse(localStorage.getItem('chatData'));
-        if (chatData) {
-            setChatId(chatData.chat.chatId);
-            fetchMessages(chatData.chat.chatId);
-        } else {
-            const fetchChatDetails = async () => {
-                try {
-                    const chatDetails = await getChatDetailsByEmail(auth.email);
-                    if (chatDetails) {
+        const fetchChatDetails = async () => {
+            try {
+                const chatDetails = await getChatDetailsByEmail(auth.email);
+                if (chatDetails && chatDetails.chatId) {
+                    if (chatId !== chatDetails.chatId) {
                         setChatId(chatDetails.chatId);
-                        fetchMessages(chatDetails.chatId);
                         localStorage.setItem('chatData', JSON.stringify({ chat: chatDetails }));
                     }
-                } catch (err) {
-                    setFetchError(err.message);
+                    fetchMessages(chatDetails.chatId);
                 }
-            };
+            } catch (err) {
+                setFetchError(err.message);
+            }
+        };
 
-            fetchChatDetails();
-        }
-    }, [auth.email, getChatDetailsByEmail, getMessages]);
+        fetchChatDetails();
+
+        const intervalId = setInterval(() => {
+            if (chatId && messages.length > 0) {
+                fetchMessages(chatId);
+            }
+        }, 2000); // Ejecutar cada 5 segundos
+
+        return () => clearInterval(intervalId);
+        
+    }, [auth.email, chatId, messages.length]); 
 
     const handleSendMessage = async () => {
         try {
-            if (!messageContent.trim()) return;
+            if (!messageContent.trim() || !chatId) return;
             await sendMessageAsProvider(auth.email, chatId, messageContent);
             setMessageContent('');
             await getMessages(chatId);

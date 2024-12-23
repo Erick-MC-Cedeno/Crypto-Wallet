@@ -58,12 +58,17 @@ export default function ProviderForm() {
           history.push('/providerchat');
         }
       } catch (err) {
-        console.error('Error checking provider:', err);
+        if (err.message === "No hay proveedores") {
+          console.log('No hay proveedores');
+        } else {
+          console.error('Error checking provider:', err);
+        }
       }
     };
 
     checkProvider();
-  }, [auth.email, findProviderByEmail, history]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Ejecutar solo una vez al montar el componente
 
   const handleChange = (e) => {
     const { name, value } = e.target;
