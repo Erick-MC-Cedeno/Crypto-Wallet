@@ -20,6 +20,8 @@ const ProviderChatComponent = () => {
             }
         };
 
+        // NOS VEMOS TOMORROW
+
         const fetchChatDetails = async () => {
             try {
                 const chatDetails = await getChatDetailsByEmail(auth.email);
