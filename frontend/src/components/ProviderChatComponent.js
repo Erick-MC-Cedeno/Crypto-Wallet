@@ -27,15 +27,17 @@ const ProviderChatComponent = () => {
                     if (chatId !== chatDetails.chatId) {
                         setChatId(chatDetails.chatId);
                         localStorage.setItem('chatData', JSON.stringify({ chat: chatDetails }));
+                        fetchMessages(chatDetails.chatId);
                     }
-                    fetchMessages(chatDetails.chatId);
                 }
             } catch (err) {
                 setFetchError(err.message);
             }
         };
 
-        fetchChatDetails();
+        if (!chatId) {
+            fetchChatDetails();
+        }
 
         const intervalId = setInterval(() => {
             if (chatId && messages.length > 0) {
