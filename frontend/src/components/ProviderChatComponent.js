@@ -20,8 +20,6 @@ const ProviderChatComponent = () => {
             }
         };
 
-        // NOS VEMOS TOMORROW
-
         const fetchChatDetails = async () => {
             try {
                 const chatDetails = await getChatDetailsByEmail(auth.email);
@@ -43,11 +41,11 @@ const ProviderChatComponent = () => {
             if (chatId && messages.length > 0) {
                 fetchMessages(chatId);
             }
-        }, 2000); // Ejecutar cada 5 segundos
+        }, 2000); // Ejecutar cada 2 segundos
 
         return () => clearInterval(intervalId);
         
-    }, [auth.email, chatId, messages.length]); 
+    }, [auth.email, chatId, messages.length, getChatDetailsByEmail, getMessages]); 
 
     const handleSendMessage = async () => {
         try {
