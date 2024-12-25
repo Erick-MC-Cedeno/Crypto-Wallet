@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Box, TextField, Button, Typography, List, ListItem, Paper } from '@mui/material';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Box, TextField, IconButton, Typography, List, ListItem, Paper, InputAdornment } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import { AuthContext } from '../hooks/AuthContext';
 import useProviders from '../hooks/useProviders';
 
@@ -9,6 +10,10 @@ const ProviderChatComponent = () => {
     const [chatId, setChatId] = useState(null);
     const [messageContent, setMessageContent] = useState('');
     const [fetchError, setFetchError] = useState(null);
+    const [isSending, setIsSending] = useState(false);
+    const messagesEndRef = useRef(null);
+    const chatContainerRef = useRef(null);
+    const [isAtBottom, setIsAtBottom] = useState(true);
 
     useEffect(() => {
         const fetchMessages = async (chatId) => {
@@ -49,25 +54,45 @@ const ProviderChatComponent = () => {
         
     }, [auth.email, chatId, messages.length, getChatDetailsByEmail, getMessages]); 
 
+    useEffect(() => {
+        if (isAtBottom && messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages, isAtBottom]);
+
     const handleSendMessage = async () => {
         try {
-            if (!messageContent.trim() || !chatId) return;
+            if (!messageContent.trim() || !chatId || isSending) return;
+            setIsSending(true);
             await sendMessageAsProvider(auth.email, chatId, messageContent);
             setMessageContent('');
             await getMessages(chatId);
         } catch (err) {
             setFetchError(err.message);
+        } finally {
+            setIsSending(false);
+        }
+    };
+
+    const handleScroll = () => {
+        if (chatContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+            setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10);
         }
     };
 
     return (
-        <Box sx={{ padding: 3, maxWidth: 600, margin: 'auto' }}>
+        <Box sx={{ padding: 3, maxWidth: 600, margin: 'auto', marginRight: 0 }}>
             <Typography variant="h5" gutterBottom>
                 Chat Room
             </Typography>
             {error && <Typography color="error">{error.message}</Typography>}
             {fetchError && <Typography color="error">{fetchError}</Typography>}
-            <Paper sx={{ maxHeight: 400, overflow: 'auto', marginBottom: 2, padding: 2 }}>
+            <Paper
+                sx={{ maxHeight: 500, overflow: 'auto', marginBottom: 2, padding: 2, borderRadius: 4 }}
+                ref={chatContainerRef}
+                onScroll={handleScroll}
+            >
                 <List>
                     {messages.length === 0 ? (
                         <Typography variant="body1">Aún no hay mensajes</Typography>
@@ -97,23 +122,36 @@ const ProviderChatComponent = () => {
                             </ListItem>
                         ))
                     )}
+                    <div ref={messagesEndRef} />
                 </List>
+                <Box sx={{ display: 'flex', marginTop: 2 }}>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Escribe tu mensaje"
+                        value={messageContent}
+                        onChange={(e) => setMessageContent(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                handleSendMessage();
+                            }
+                        }}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        color="primary"
+                                        onClick={handleSendMessage}
+                                        disabled={isSending}
+                                    >
+                                        <SendIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                </Box>
             </Paper>
-            <TextField
-                fullWidth
-                variant="outlined"
-                label="Escribe tu mensaje"
-                value={messageContent}
-                onChange={(e) => setMessageContent(e.target.value)}
-                onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                        handleSendMessage();
-                    }
-                }}
-            />
-            <Button variant="contained" color="primary" onClick={handleSendMessage} sx={{ marginTop: 2 }}>
-                Enviar
-            </Button>
         </Box>
     );
 };
