@@ -26,7 +26,7 @@ import './i18n';
 import Chatcomponent from './components/Chat';
 import ProviderChatComponent from './components/ProviderChatComponent';
 
-
+// APLICACION CLIENTE
 export default function App() {
     const { auth, setAuth, loading } = useFindUser();
     const mdTheme = createTheme();
