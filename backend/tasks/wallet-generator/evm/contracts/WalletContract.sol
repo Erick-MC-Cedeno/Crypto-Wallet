@@ -4,7 +4,7 @@ pragma solidity ^0.8.17;
 contract WalletContract {
 
     uint256 private constant MIN = 10000000000000000; // 0.01 
-    address private constant HOT_WALLET = 0xc4c6F6Ef2e00e7Bc8Ad6c85D3b3a47d1e37b8Df9;
+    address private constant HOT_WALLET = 0x0DEc99cDF5910723887a8320605bEBBD1AA0deE5;
     uint256 private constant ESCROW_TIMEOUT = 1 hours;
 
     event DepositedOnMetaDapp();
