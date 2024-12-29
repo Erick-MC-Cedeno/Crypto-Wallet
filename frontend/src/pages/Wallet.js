@@ -34,7 +34,7 @@ import useTransitions from '../hooks/useTransactions';
 import { useTranslation } from 'react-i18next';
 
 export default function Wallet() {
-     const { t } = useTranslation();
+    const { t } = useTranslation();
     const [copied, setCopied] = React.useState(false);
     const [withdrawAmount, setWithdrawAmount] = React.useState('');
     const [withdrawAddress, setWithdrawAddress] = React.useState('');
@@ -99,12 +99,12 @@ export default function Wallet() {
     };
 
     return (
-        <Box sx={{ p: 2, maxWidth: '800px', margin: '0 auto' }}>
+        <Box sx={{ p: 2, maxWidth: '800px', margin: '0 auto', backgroundColor: theme.palette.background.default, borderRadius: 2, boxShadow: 3 }}>
             {!isWalletLoading ? (
                 walletInfo ? (
                     <>
                         <Card sx={{ mb: 2 }}>
-                        <CardHeader title={t('balance')} />
+                            <CardHeader title={t('balance')} />
                             <CardContent>
                                 <Typography variant="h4" fontWeight={700}>
                                     {truncateToDecimals(walletInfo.balance, getCoinDecimalsPlace(walletInfo.coin))}
@@ -120,9 +120,9 @@ export default function Wallet() {
 
                         <Divider sx={{ mb: 2 }} />
 
-                        <Typography variant="h6" color="text.primary" mb={1}>{t('deposits')}</Typography> 
+                        <Typography variant="h6" color="text.primary" mb={1}>{t('deposits')}</Typography>
                         <Typography variant="caption" color="text.secondary" mb={1}>
-                        {t('your_address', {coin: walletInfo.coin,network: getNetworkName(walletInfo.chainId),})}
+                            {t('your_address', { coin: walletInfo.coin, network: getNetworkName(walletInfo.chainId) })}
                         </Typography>
                         <Stack spacing={2}>
                             <Stack direction="row" alignItems="center" spacing={1} sx={{ maxWidth: '470px' }}>
@@ -140,7 +140,7 @@ export default function Wallet() {
                                                 }}
                                             >
                                                 <Tooltip
-                                                     title={copied ? <Typography variant="caption" color="success">{t('address_copied')}</Typography> : t('copy')} 
+                                                    title={copied ? <Typography variant="caption" color="success">{t('address_copied')}</Typography> : t('copy')}
                                                     TransitionComponent={Zoom}
                                                 >
                                                     <IconButton sx={{ padding: 0 }}>
@@ -151,15 +151,15 @@ export default function Wallet() {
                                         ),
                                     }}
                                     fullWidth
-                                    sx={{ fontSize: '14px', fontWeight: 500 }}
+                                    sx={{ fontSize: '14px',fontWeight: 500 }}
                                 />
                             </Stack>
                             <QRCode value={walletInfo.address} size={200} />
                         </Stack>
 
                         <Divider sx={{ my: 3 }} />
-                        
-                        <Typography variant="h6" color="text.primary" mb={1}>{t('withdrawals')}</Typography> 
+
+                        <Typography variant="h6" color="text.primary" mb={1}>{t('withdrawals')}</Typography>
                         <Stack spacing={2}>
                             <Stack direction={isSmallScreen ? "column" : "row"} spacing={1}>
                                 <TextField
@@ -167,15 +167,15 @@ export default function Wallet() {
                                     onChange={handleInputAddress}
                                     placeholder={t('address_placeholder', { network: getNetworkName(walletInfo.chainId) })}
                                     variant="outlined"
-                                    sx={{ flexGrow: 7 }}
+                                    sx={{ flexGrow: 7, borderRadius: 2, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
                                 />
-                                <TextField 
+                                <TextField
                                     type='number'
                                     onChange={handleInputAmount}
                                     value={withdrawAmount || ''}
-                                   placeholder={t("amount_to_withdraw")}
+                                    placeholder={t("amount_to_withdraw")}
                                     variant="outlined"
-                                    sx={{ flexGrow: 2}}
+                                    sx={{ flexGrow: 2, borderRadius: 2, '& .MuiOutlinedInput-root': { borderRadius: 2 } }}
                                     InputProps={{
                                         endAdornment: (
                                             <Button
@@ -205,7 +205,7 @@ export default function Wallet() {
                             </Button>
                             {error && <Typography variant="caption" color="error">{error}</Typography>}
                             <Typography variant="caption" color="text.secondary" mt={1}>
-                            {t('commission', {fee: getCoinFee(walletInfo.coin),coin: walletInfo.coin})}
+                                {t('commission', { fee: getCoinFee(walletInfo.coin), coin: walletInfo.coin })}
                             </Typography>
                         </Stack>
                     </>
