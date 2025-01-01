@@ -1,138 +1,115 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Box, TextField, IconButton, Typography, List, ListItem, Paper, InputAdornment } from '@mui/material';
+import React, { useState, useEffect, useContext, useRef, useCallback, memo } from 'react';
+import { 
+    Box, 
+    TextField, 
+    IconButton, 
+    Typography, 
+    List, 
+    ListItem, 
+    Paper, 
+    InputAdornment,
+    CircularProgress,
+    Fade
+} from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { AuthContext } from '../hooks/AuthContext';
 import useProviders from '../hooks/useProviders';
+
+const Message = memo(({ message, isOwnMessage }) => (
+    <ListItem sx={{ display: 'flex', justifyContent: isOwnMessage ? 'flex-end' : 'flex-start', padding: 1 }}>
+        <Fade in timeout={500}>
+            <Box
+                sx={{
+                    bgcolor: isOwnMessage ? '#1976d2' : '#f5f5f5',
+                    color: isOwnMessage ? '#fff' : '#000',
+                    borderRadius: 2,
+                    padding: 1.5,
+                    maxWidth: '70%',
+                }}
+            >
+                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                    {isOwnMessage ? 'Tú' : message.sender}
+                </Typography>
+                <Typography variant="body1">{message.message}</Typography>
+            </Box>
+        </Fade>
+    </ListItem>
+));
 
 const ProviderChatComponent = () => {
     const { auth } = useContext(AuthContext);
     const { getChatDetailsByEmail, getMessages, sendMessageAsProvider, error, messages } = useProviders();
     const [chatId, setChatId] = useState(null);
     const [messageContent, setMessageContent] = useState('');
-    const [fetchError, setFetchError] = useState(null);
     const [isSending, setIsSending] = useState(false);
     const messagesEndRef = useRef(null);
-    const chatContainerRef = useRef(null);
-    const [isAtBottom, setIsAtBottom] = useState(true);
+
+    const fetchMessages = useCallback(async (id) => {
+        if (id) await getMessages(id);
+    }, [getMessages]);
 
     useEffect(() => {
-        const fetchMessages = async (chatId) => {
-            if (!chatId) return;
-            try {
-                await getMessages(chatId);
-            } catch (err) {
-                setFetchError(err.message);
+        (async () => {
+            if (!chatId) {
+                try {
+                    const { chatId: id } = await getChatDetailsByEmail(auth.email) || {};
+                    if (id) setChatId(id);
+                } catch {}
             }
-        };
-
-        const fetchChatDetails = async () => {
-            try {
-                const chatDetails = await getChatDetailsByEmail(auth.email);
-                if (chatDetails && chatDetails.chatId) {
-                    if (chatId !== chatDetails.chatId) {
-                        setChatId(chatDetails.chatId);
-                        localStorage.setItem('chatData', JSON.stringify({ chat: chatDetails }));
-                        fetchMessages(chatDetails.chatId);
-                    }
-                }
-            } catch (err) {
-                setFetchError(err.message);
-            }
-        };
-
-        if (!chatId) {
-            fetchChatDetails();
-        }
-
-        const intervalId = setInterval(() => {
-            if (chatId && messages.length > 0) {
-                fetchMessages(chatId);
-            }
-        }, 2000); // Ejecutar cada 2 segundos
-
-        return () => clearInterval(intervalId);
-        
-    }, [auth.email, chatId, messages.length, getChatDetailsByEmail, getMessages]); 
+        })();
+    }, [auth.email, chatId, getChatDetailsByEmail]);
 
     useEffect(() => {
-        if (isAtBottom && messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages, isAtBottom]);
+        const interval = setInterval(() => {
+            if (chatId && document.visibilityState === 'visible') fetchMessages(chatId);
+        }, 2000);
+        return () => clearInterval(interval);
+    }, [chatId, fetchMessages]);
+
+    useEffect(() => {
+        if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }, [messages]);
 
     const handleSendMessage = async () => {
-        try {
-            if (!messageContent.trim() || !chatId || isSending) return;
-            setIsSending(true);
-            await sendMessageAsProvider(auth.email, chatId, messageContent);
-            setMessageContent('');
-            await getMessages(chatId);
-        } catch (err) {
-            setFetchError(err.message);
-        } finally {
-            setIsSending(false);
-        }
-    };
-
-    const handleScroll = () => {
-        if (chatContainerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-            setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10);
-        }
+        if (!messageContent.trim() || isSending || !chatId) return;
+        setIsSending(true);
+        await sendMessageAsProvider(auth.email, chatId, messageContent);
+        setMessageContent('');
+        await fetchMessages(chatId);
+        setIsSending(false);
     };
 
     return (
-        <Box sx={{ padding: 3, maxWidth: 600, margin: 'auto', marginRight: 0 }}>
-            <Typography variant="h5" gutterBottom>
-                Chat Room
-            </Typography>
-            {error && <Typography color="error">{error.message}</Typography>}
-            {fetchError && <Typography color="error">{fetchError}</Typography>}
-            <Paper
-                sx={{ maxHeight: 500, overflow: 'auto', marginBottom: 2, padding: 2, borderRadius: 4 }}
-                ref={chatContainerRef}
-                onScroll={handleScroll}
-            >
-                <List>
+        <Box sx={{ height: 'calc(85vh - 40px)', width: '85%', maxWidth: 800, margin: 'auto', p: 2, bgcolor: '#f0f2f5' }}>
+            <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3 }}>
+                <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', bgcolor: '#fff' }}>
+                    <Typography variant="h6" align="center">Chat Room</Typography>
+                </Box>
+
+                {error && <Typography color="error" sx={{ p: 2 }}>{error.message}</Typography>}
+
+                <Box sx={{ flex: 1, overflow: 'auto', p: 2, bgcolor: '#fff' }}>
                     {messages.length === 0 ? (
-                        <Typography variant="body1">Aún no hay mensajes</Typography>
+                        <Typography variant="body1" align="center" color="text.secondary">Aún no hay mensajes</Typography>
                     ) : (
-                        messages.map((message, index) => (
-                            <ListItem
-                                key={index}
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: message.sender === auth.email ? 'flex-end' : 'flex-start',
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        backgroundColor: message.sender === auth.email ? '#e0f7fa' : '#f1f8e9',
-                                        color: message.sender === auth.email ? '#00796b' : '#33691e',
-                                        borderRadius: 2,
-                                        padding: 1,
-                                        maxWidth: '70%',
-                                    }}
-                                >
-                                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                                        {message.sender === auth.email ? 'You' : message.sender}
-                                    </Typography>
-                                    <Typography variant="body2">{message.message}</Typography>
-                                </Box>
-                            </ListItem>
-                        ))
+                        <List>
+                            {messages.map((msg, idx) => (
+                                <Message key={msg.id || idx} message={msg} isOwnMessage={msg.sender === auth.email} />
+                            ))}
+                            <div ref={messagesEndRef} />
+                        </List>
                     )}
-                    <div ref={messagesEndRef} />
-                </List>
-                <Box sx={{ display: 'flex', marginTop: 2 }}>
+                </Box>
+
+                <Box sx={{ p: 2, bgcolor: '#fff', borderTop: 1, borderColor: 'divider' }}>
                     <TextField
                         fullWidth
-                        variant="outlined"
-                        label="Escribe tu mensaje"
+                        placeholder="Escribe tu mensaje..."
                         value={messageContent}
                         onChange={(e) => setMessageContent(e.target.value)}
                         onKeyPress={(e) => {
-                            if (e.key === 'Enter') {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
                                 handleSendMessage();
                             }
                         }}
@@ -140,14 +117,14 @@ const ProviderChatComponent = () => {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        color="primary"
                                         onClick={handleSendMessage}
-                                        disabled={isSending}
+                                        disabled={isSending || !messageContent.trim()}
+                                        sx={{ bgcolor: 'primary.main', color: '#fff', '&:hover': { bgcolor: 'primary.dark' } }}
                                     >
-                                        <SendIcon />
+                                        {isSending ? <CircularProgress size={24} color="inherit" /> : <SendIcon />}
                                     </IconButton>
                                 </InputAdornment>
-                            ),
+                            )
                         }}
                     />
                 </Box>
@@ -156,4 +133,4 @@ const ProviderChatComponent = () => {
     );
 };
 
-export default ProviderChatComponent;
+export default memo(ProviderChatComponent);

@@ -24,7 +24,6 @@ export class ProviderService {
   async createProvider(createProviderDto: CreateProviderDto): Promise<Provider> {
     const createdProvider = new this.providerModel(createProviderDto);
     await createdProvider.save();
-    // Esperar a que se inicie un chat con el proveedor
     await this.openChat(createProviderDto.email, createProviderDto.email);
     return createdProvider;
   }

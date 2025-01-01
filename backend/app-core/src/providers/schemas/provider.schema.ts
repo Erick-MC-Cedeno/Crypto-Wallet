@@ -32,10 +32,8 @@ export class Provider {
   @Prop({ default: false })
   isValid: boolean;
 
-  
   _id?: string; 
 
-  
   get name(): string {
     return `${this.firstName} ${this.lastName}`;
   }
