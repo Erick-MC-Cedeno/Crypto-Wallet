@@ -8,7 +8,14 @@ import {
   Paper,
   Snackbar,
   CircularProgress,
-  InputAdornment
+  InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  DialogContentText,
+  Checkbox,
+  FormControlLabel,
 } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { useHistory } from 'react-router-dom';
@@ -19,6 +26,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonIcon from '@mui/icons-material/Person';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningIcon from '@mui/icons-material/Warning';
+import SecurityIcon from '@mui/icons-material/Security';
 
 export default function ProviderForm() {
   const [providerData, setProviderData] = useState({
@@ -44,6 +53,8 @@ export default function ProviderForm() {
     cityError: false,
     postalCodeError: false
   });
+  const [openDialog, setOpenDialog] = useState(true);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const { findProviderByEmail, createProvider } = useProviders();
   const { auth } = useContext(AuthContext);
@@ -135,6 +146,107 @@ export default function ProviderForm() {
     setSnackbarOpen(false);
   };
 
+  const handleAcceptTerms = () => {
+    if (acceptTerms) {
+      setOpenDialog(false);
+    } else {
+      setSnackbarMessage('Debes aceptar los términos y condiciones para continuar');
+      setSnackbarOpen(true);
+    }
+  };
+
+  if (openDialog) {
+    return (
+      <Dialog
+        open={openDialog}
+        maxWidth="md"
+        fullWidth
+        sx={{
+          '& .MuiPaper-root': {
+            borderRadius: 2,
+            p: 2,
+          }
+        }}
+      >
+        <DialogTitle sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          color: 'primary.main',
+          fontWeight: 'bold'
+        }}>
+          <SecurityIcon fontSize="large" />
+          Términos y Condiciones - Proveedor P2P BlockVault
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2, color: 'text.primary' }}>
+            Al registrarte como proveedor P2P en BlockVault, aceptas las siguientes condiciones:
+          </DialogContentText>
+          
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" color="error" sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <WarningIcon /> Advertencias Importantes:
+            </Typography>
+            <Typography component="ul" sx={{ pl: 2 }}>
+              <li>Tu registro está sujeto a un proceso de verificación de identidad.</li>
+              <li>El proceso de verificación puede tomar de 2 a 4 días hábiles.</li>
+              <li>Deberás proporcionar documentación válida y una selfie para la verificación.</li>
+              <li>El sistema Escrow será utilizado para todas las transacciones.</li>
+              <li>Cualquier intento de fraude o abuso será reportado a las autoridades.</li>
+            </Typography>
+          </Box>
+
+          <Box sx={{ bgcolor: 'grey.100', p: 2, borderRadius: 1, mb: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              BlockVault se reserva el derecho de:
+              <ul>
+                <li>Rechazar solicitudes que no cumplan con los requisitos.</li>
+                <li>Suspender cuentas que violen nuestros términos.</li>
+                <li>Reportar actividades sospechosas a las autoridades competentes.</li>
+                <li>Retener fondos en caso de investigación por fraude.</li>
+              </ul>
+            </Typography>
+          </Box>
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+                color="primary"
+              />
+            }
+            label="He leído y acepto los términos y condiciones de BlockVault"
+            sx={{ mt: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => history.push('/')}
+            color="error"
+            variant="outlined"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleAcceptTerms}
+            color="primary"
+            variant="contained"
+            disabled={!acceptTerms}
+            sx={{
+              fontWeight: 'bold',
+              '&:enabled': {
+                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              }
+            }}
+          >
+            Aceptar y Continuar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -173,7 +285,7 @@ export default function ProviderForm() {
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <Grid container spacing={3}>
-            {[
+            {[ 
               { label: 'First Name', name: 'firstName', icon: <PersonIcon /> },
               { label: 'Last Name', name: 'lastName', icon: <PersonIcon /> },
               { label: 'ID Number', name: 'idNumber', icon: <PhotoCameraIcon /> },
@@ -301,7 +413,6 @@ export default function ProviderForm() {
           />
         </Box>
       </Paper>
-
       <style jsx global>{`
         @keyframes glow {
           0% {
