@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useContext, useRef, memo } from 'react';
 import { 
     Box, 
     TextField, 
@@ -38,50 +38,134 @@ const Message = memo(({ message, isOwnMessage }) => (
 
 const ProviderChatComponent = () => {
     const { auth } = useContext(AuthContext);
-    const { getChatDetailsByEmail, getMessages, sendMessageAsProvider, error, messages } = useProviders();
+    const { getChatDetailsByEmail, getMessages, sendMessageAsProvider, error, messages, setMessages } = useProviders();
+    const [chats, setChats] = useState([]);
     const [chatId, setChatId] = useState(null);
     const [messageContent, setMessageContent] = useState('');
     const [isSending, setIsSending] = useState(false);
+    const [isLoadingMessages, setIsLoadingMessages] = useState(false);
     const messagesEndRef = useRef(null);
+    const lastFetchTime = useRef(0);
 
-    const fetchMessages = useCallback(async (id) => {
-        if (id) await getMessages(id);
-    }, [getMessages]);
-
+   
     useEffect(() => {
-        (async () => {
-            if (!chatId) {
-                try {
-                    const { chatId: id } = await getChatDetailsByEmail(auth.email) || {};
-                    if (id) setChatId(id);
-                } catch {}
+        const savedChats = localStorage.getItem('chats');
+        const savedChatId = localStorage.getItem('chatId');
+        const savedMessages = localStorage.getItem('messages');
+
+        if (savedChats) {
+            setChats(JSON.parse(savedChats));
+        }
+        if (savedChatId) {
+            setChatId(savedChatId);
+        }
+        if (savedMessages) {
+            setMessages(JSON.parse(savedMessages));
+        }
+    }, [setMessages]);
+
+    
+    useEffect(() => {
+        if (chats.length > 0) {
+            localStorage.setItem('chats', JSON.stringify(chats));
+        }
+        if (chatId) {
+            localStorage.setItem('chatId', chatId);
+        }
+        if (messages.length > 0) {
+            localStorage.setItem('messages', JSON.stringify(messages));
+        }
+    }, [chats, chatId, messages]);
+
+   
+    useEffect(() => {
+        if (!auth.email) return;
+
+        const fetchChatDetails = async () => {
+            try {
+                const chatDetails = await getChatDetailsByEmail(auth.email);
+                setChats(chatDetails);
+                if (chatDetails.length > 0 && !chatId) {
+                    setChatId(chatDetails[0].chatId); 
+                }
+            } catch (e) {
+                console.error('Error fetching chat details:', e);
             }
-        })();
-    }, [auth.email, chatId, getChatDetailsByEmail]);
+        };
+
+        fetchChatDetails();
+    }, [auth.email, getChatDetailsByEmail, chatId]);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (chatId && document.visibilityState === 'visible') fetchMessages(chatId);
-        }, 2000);
-        return () => clearInterval(interval);
-    }, [chatId, fetchMessages]);
+        if (!chatId || isLoadingMessages) return; 
 
+        const fetchMessagesForChat = async () => {
+            const now = Date.now();
+            if (now - lastFetchTime.current > 5000) { 
+                lastFetchTime.current = now;
+                setIsLoadingMessages(true); 
+                try {
+                    const fetchedMessages = await getMessages(chatId);
+                    if (JSON.stringify(fetchedMessages) !== JSON.stringify(messages)) {
+                        setMessages(fetchedMessages);
+                    }
+                } catch (e) {
+                    console.error(`Error fetching messages for chatId ${chatId}:`, e);
+                } finally {
+                    setIsLoadingMessages(false); 
+                }
+            }
+        };
+
+        fetchMessagesForChat();
+        const interval = setInterval(fetchMessagesForChat, 10000); 
+        return () => clearInterval(interval); 
+    }, [chatId, isLoadingMessages, messages, getMessages, setMessages]);
+
+    
     useEffect(() => {
-        if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
     }, [messages]);
 
+    
     const handleSendMessage = async () => {
         if (!messageContent.trim() || isSending || !chatId) return;
         setIsSending(true);
-        await sendMessageAsProvider(auth.email, chatId, messageContent);
-        setMessageContent('');
-        await fetchMessages(chatId);
-        setIsSending(false);
+        try {
+            await sendMessageAsProvider(auth.email, chatId, messageContent);
+            setMessageContent(''); 
+            await getMessages(chatId); 
+        } catch (e) {
+            console.error('Error sending message:', e);
+        } finally {
+            setIsSending(false);
+        }
     };
 
     return (
-        <Box sx={{ height: 'calc(85vh - 40px)', width: '85%', maxWidth: 800, margin: 'auto', p: 2, bgcolor: '#f0f2f5' }}>
-            <Paper elevation={3} sx={{ height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3 }}>
+        <Box sx={{ display: 'flex', height: 'calc(85vh - 40px)', width: '85%', maxWidth: 800, margin: 'auto', p: 2, bgcolor: '#f0f2f5' }}>
+            {/* Lista de Chats */}
+            <Paper elevation={3} sx={{ width: '25%', height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3, mr: 2 }}>
+                <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', bgcolor: '#fff' }}>
+                    <Typography variant="h6" align="center">Chats</Typography>
+                </Box>
+                <List sx={{ flex: 1, overflow: 'auto' }}>
+                    {chats.map((chat) => (
+                        <ListItem 
+                            button 
+                            key={chat.chatId} 
+                            selected={chat.chatId === chatId} 
+                            onClick={() => setChatId(chat.chatId)} 
+                        >
+                            <Typography variant="body1">{chat.chatName}</Typography>
+                        </ListItem>
+                    ))}
+                </List>
+            </Paper>
+
+            <Paper elevation={3} sx={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3 }}>
                 <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', bgcolor: '#fff' }}>
                     <Typography variant="h6" align="center">Chat Room</Typography>
                 </Box>
@@ -101,6 +185,7 @@ const ProviderChatComponent = () => {
                     )}
                 </Box>
 
+               
                 <Box sx={{ p: 2, bgcolor: '#fff', borderTop: 1, borderColor: 'divider' }}>
                     <TextField
                         fullWidth

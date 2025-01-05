@@ -8,7 +8,6 @@ export default function useProviders() {
     const [messages, setMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState(null);
 
-    
     const fetchProviders = async () => {
         setLoading(true);
         try {
@@ -20,7 +19,6 @@ export default function useProviders() {
             setLoading(false);
         }
     };
-
 
     const createProvider = async (body) => {
         setLoading(true);
@@ -96,18 +94,27 @@ export default function useProviders() {
             setLoading(false);
         }
     };
-      
-      const getChatDetailsByEmail = async (email) => {
+
+    const getChatDetailsByEmail = async (email) => {
         setLoading(true);
         try {
-          const response = await ProviderService.getChatDetailsByEmail(email);
-          return response.data;
+            const response = await ProviderService.getChatDetailsByEmail(email);
+            if (response.data && response.data.length === 0) {
+                setError('No chats found for this user');
+                return [];
+            }
+            return response.data;
         } catch (err) {
-          setError(err);
+            if (err.response && err.response.status === 404) {
+                setError(`User with email ${email} not found`);
+            } else {
+                setError(err.message || 'Error fetching chat details');
+            }
+            console.error('Error fetching chat details:', err);
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
+    };
 
     const getMessages = async (chatId) => {
         setLoading(true);
@@ -130,8 +137,9 @@ export default function useProviders() {
         providers,
         loading,
         error,
-        setError, 
+        setError,
         messages,
+        setMessages,
         successMessage,
         findProviderByEmail,
         openChat,

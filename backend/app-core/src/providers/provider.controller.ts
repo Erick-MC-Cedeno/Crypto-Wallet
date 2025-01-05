@@ -39,7 +39,6 @@ export class ProviderController {
       }),
     }),
   )
-  
   async createProvider(
     @Req() req: Request, 
     @Body() createProviderDto: CreateProviderDto,
@@ -47,7 +46,6 @@ export class ProviderController {
   ): Promise<Provider> {
     try {
       console.log(file);
-      
       return await this.providerService.createProvider(createProviderDto);
     } catch (error) {
       throw new InternalServerErrorException('Error creating provider: ' + error.message);
@@ -63,10 +61,10 @@ export class ProviderController {
       throw new InternalServerErrorException('Error fetching providers: ' + error.message);
     }
   }
-  
-@UseGuards(AuthenticatedGuard)
+
+  @UseGuards(AuthenticatedGuard)
   @Get('find/:email')
-  async findProviderByEmail(@Param('email') email: string, @Req() req: Request): Promise<Provider> { // Agregar req como parámetro
+  async findProviderByEmail(@Param('email') email: string, @Req() req: Request): Promise<Provider> {
     try {
       const provider = await this.providerService.findProviderByEmail(email);
       if (!provider) {
@@ -113,10 +111,11 @@ export class ProviderController {
     @Body('providerEmail') providerEmail: string,
     @Body('chatId') chatId: string,
     @Body('messageContent') messageContent: string,
-    @Req() req: Request, 
+    @Req() req: any, // Cambiar el tipo de Request a any para incluir la propiedad user
   ): Promise<Message> {
     try {
-      return await this.providerService.sendMessageAsProvider(providerEmail, chatId, messageContent);
+      const userEmail = req.user.email; // Obtener el email del usuario de la sesión actual
+      return await this.providerService.sendMessageAsProvider(providerEmail, chatId, messageContent, userEmail);
     } catch (error) {
       throw new InternalServerErrorException('Error sending message as provider: ' + error.message);
     }
@@ -124,7 +123,7 @@ export class ProviderController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('chat/messages/:chatId')
-  async getMessages(@Param('chatId') chatId: string, @Req() req: Request): Promise<Message[]> { // Agregar req como parámetro
+  async getMessages(@Param('chatId') chatId: string, @Req() req: Request): Promise<Message[]> {
     try {
       return await this.providerService.getMessages(chatId);
     } catch (error) {
@@ -143,6 +142,47 @@ export class ProviderController {
       return chatDetails;
     } catch (error) {
       throw new InternalServerErrorException('Error fetching chat details: ' + error.message);
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('chat/messages-as-provider/:providerEmail')
+  async getMessagesAsProvider(
+    @Param('providerEmail') providerEmail: string,
+    @Req() req: Request
+  ): Promise<any[]> {
+    try {
+      return await this.providerService.getMessagesAsProvider(providerEmail);
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching messages as provider: ' + error.message);
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Get('chat/messages-as-user/:userEmail')
+  async getMessagesAsUser(
+    @Param('userEmail') userEmail: string,
+    @Req() req: Request
+  ): Promise<any[]> {
+    try {
+      return await this.providerService.getMessagesAsUser(userEmail);
+    } catch (error) {
+      throw new InternalServerErrorException('Error fetching messages as user: ' + error.message);
+    }
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Post('chat/send-as-user')
+  async sendMessageAsUser(
+    @Body('userEmail') userEmail: string,
+    @Body('chatId') chatId: string,
+    @Body('messageContent') messageContent: string,
+    @Req() req: Request, 
+  ): Promise<Message> {
+    try {
+      return await this.providerService.sendMessageAsUser(userEmail, chatId, messageContent);
+    } catch (error) {
+      throw new InternalServerErrorException('Error sending message as user: ' + error.message);
     }
   }
 }
