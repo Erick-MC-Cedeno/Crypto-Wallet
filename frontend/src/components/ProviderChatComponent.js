@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, memo } from 'react';
+import React, { useState, useEffect, useContext, useRef, memo, useCallback } from 'react';
 import { 
     Box, 
     TextField, 
@@ -38,16 +38,23 @@ const Message = memo(({ message, isOwnMessage }) => (
 
 const ProviderChatComponent = () => {
     const { auth } = useContext(AuthContext);
-    const { getChatDetailsByEmail, getMessages, sendMessageAsProvider, error, messages, setMessages } = useProviders();
+    const { getMessages, sendMessageAsProvider, error, messages, setMessages } = useProviders();
     const [chats, setChats] = useState([]);
     const [chatId, setChatId] = useState(null);
     const [messageContent, setMessageContent] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [isLoadingMessages, setIsLoadingMessages] = useState(false);
     const messagesEndRef = useRef(null);
-    const lastFetchTime = useRef(0);
+    const mountedRef = useRef(true);
 
-   
+    // Control de montaje
+    useEffect(() => {
+        return () => {
+            mountedRef.current = false;
+        };
+    }, []);
+
+    // Cargar estado inicial desde localStorage
     useEffect(() => {
         const savedChats = localStorage.getItem('chats');
         const savedChatId = localStorage.getItem('chatId');
@@ -64,85 +71,77 @@ const ProviderChatComponent = () => {
         }
     }, [setMessages]);
 
-    
+    // Persistir estado
     useEffect(() => {
-        if (chats.length > 0) {
+        const persistState = () => {
             localStorage.setItem('chats', JSON.stringify(chats));
-        }
-        if (chatId) {
             localStorage.setItem('chatId', chatId);
-        }
-        if (messages.length > 0) {
             localStorage.setItem('messages', JSON.stringify(messages));
-        }
+        };
+        persistState();
     }, [chats, chatId, messages]);
 
-   
-    useEffect(() => {
-        if (!auth.email) return;
+    // Cargar mensajes con debounce
+    const loadMessages = useCallback(async () => {
+        if (!chatId || isLoadingMessages) return;
 
-        const fetchChatDetails = async () => {
-            try {
-                const chatDetails = await getChatDetailsByEmail(auth.email);
-                setChats(chatDetails);
-                if (chatDetails.length > 0 && !chatId) {
-                    setChatId(chatDetails[0].chatId); 
-                }
-            } catch (e) {
-                console.error('Error fetching chat details:', e);
+        try {
+            setIsLoadingMessages(true);
+            const fetchedMessages = await getMessages(chatId);
+            
+            if (mountedRef.current) {
+                setMessages(fetchedMessages);
+                setIsLoadingMessages(false);
             }
+        } catch (error) {
+            if (mountedRef.current) {
+                console.error(`Error fetching messages for chatId ${chatId}:`, error);
+                setIsLoadingMessages(false);
+            }
+        }
+    }, [chatId, isLoadingMessages, getMessages, setMessages]);
+
+    // Polling de mensajes optimizado
+    useEffect(() => {
+        if (!chatId) return;
+
+        let timeoutId;
+        const pollMessages = () => {
+            loadMessages();
+            timeoutId = setTimeout(pollMessages, 10000);
         };
 
-        fetchChatDetails();
-    }, [auth.email, getChatDetailsByEmail, chatId]);
+        pollMessages();
+        return () => clearTimeout(timeoutId);
+    }, [chatId, loadMessages]);
 
-    useEffect(() => {
-        if (!chatId || isLoadingMessages) return; 
+    // Enviar mensaje optimizado
+    const handleSendMessage = useCallback(async () => {
+        if (!messageContent.trim() || isSending || !chatId) return;
 
-        const fetchMessagesForChat = async () => {
-            const now = Date.now();
-            if (now - lastFetchTime.current > 5000) { 
-                lastFetchTime.current = now;
-                setIsLoadingMessages(true); 
-                try {
-                    const fetchedMessages = await getMessages(chatId);
-                    if (JSON.stringify(fetchedMessages) !== JSON.stringify(messages)) {
-                        setMessages(fetchedMessages);
-                    }
-                } catch (e) {
-                    console.error(`Error fetching messages for chatId ${chatId}:`, e);
-                } finally {
-                    setIsLoadingMessages(false); 
-                }
+        try {
+            setIsSending(true);
+            await sendMessageAsProvider(auth.email, chatId, messageContent);
+            
+            if (mountedRef.current) {
+                setMessageContent('');
+                setIsSending(false);
+                await loadMessages();
             }
-        };
+        } catch (error) {
+            if (mountedRef.current) {
+                console.error('Error sending message:', error);
+                setIsSending(false);
+            }
+        }
+    }, [messageContent, chatId, isSending, auth.email, sendMessageAsProvider, loadMessages]);
 
-        fetchMessagesForChat();
-        const interval = setInterval(fetchMessagesForChat, 10000); 
-        return () => clearInterval(interval); 
-    }, [chatId, isLoadingMessages, messages, getMessages, setMessages]);
-
-    
+    // Auto-scroll
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [messages]);
-
-    
-    const handleSendMessage = async () => {
-        if (!messageContent.trim() || isSending || !chatId) return;
-        setIsSending(true);
-        try {
-            await sendMessageAsProvider(auth.email, chatId, messageContent);
-            setMessageContent(''); 
-            await getMessages(chatId); 
-        } catch (e) {
-            console.error('Error sending message:', e);
-        } finally {
-            setIsSending(false);
-        }
-    };
 
     return (
         <Box sx={{ display: 'flex', height: 'calc(85vh - 40px)', width: '85%', maxWidth: 800, margin: 'auto', p: 2, bgcolor: '#f0f2f5' }}>
@@ -185,7 +184,6 @@ const ProviderChatComponent = () => {
                     )}
                 </Box>
 
-               
                 <Box sx={{ p: 2, bgcolor: '#fff', borderTop: 1, borderColor: 'divider' }}>
                     <TextField
                         fullWidth
