@@ -8,11 +8,10 @@ import {
     sendMessageApi,
     getMessagesApi,
     sendMessageAsProviderApi,
-    getChatDetailsByEmailApi,
+    getChatDetailsByEmailApi
 } from '../api/http';
 
-export default class ProviderService {
-  
+export default class Provider {
     static async createProvider(body) {
         return await post(createProviderApi, body);
     }
@@ -22,26 +21,27 @@ export default class ProviderService {
     }
 
     static async findProviderByEmail(email) {
-        return await get(findProviderByEmailApi(email), {});
+        return await get(findProviderByEmailApi.replace(':email', email), {});
     }
 
-    static async openChat(userEmail, providerEmail) {
-        return await post(openChatApi, { userEmail, providerEmail });
+    static async openChat(body) {
+        return await post(openChatApi, body);
     }
-    
-    static async sendMessage(senderEmail, chatId, messageContent) {
-        return await post(sendMessageApi, { senderEmail, chatId, messageContent });
+
+    static async sendMessage(body) {
+        return await post(sendMessageApi, body);
+    }
+
+    static async sendMessageAsProvider(body) {
+        return await post(sendMessageAsProviderApi, body);
     }
 
     static async getMessages(chatId) {
-        return await get(getMessagesApi(chatId), {});
+        return await get(getMessagesApi.replace(':chatId', chatId), {});
     }
 
-    static async sendMessageAsProvider(providerEmail, chatId, messageContent) {
-        return await post(sendMessageAsProviderApi, { providerEmail, chatId, messageContent });
+    static async getChatDetailsByEmail(email) {
+        return await get(getChatDetailsByEmailApi.replace(':email', email), {});
     }
 
-    static async getChatDetailsByEmail(chatId) {
-        return await get(getChatDetailsByEmailApi(chatId), {});
-    }
 }

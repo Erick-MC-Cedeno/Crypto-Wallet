@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext, useRef, memo, useCallback } from 'react';
-import { 
-    Box, 
-    TextField, 
-    IconButton, 
-    Typography, 
-    List, 
-    ListItem, 
-    Paper, 
+import React, { useState, useEffect, useContext, useRef, memo } from 'react';
+import {
+    Box,
+    TextField,
+    IconButton,
+    Typography,
+    List,
+    ListItem,
+    Paper,
     InputAdornment,
     CircularProgress,
     Fade
@@ -15,133 +15,122 @@ import SendIcon from '@mui/icons-material/Send';
 import { AuthContext } from '../hooks/AuthContext';
 import useProviders from '../hooks/useProviders';
 
-const Message = memo(({ message, isOwnMessage }) => (
-    <ListItem sx={{ display: 'flex', justifyContent: isOwnMessage ? 'flex-end' : 'flex-start', padding: 1 }}>
-        <Fade in timeout={500}>
-            <Box
-                sx={{
-                    bgcolor: isOwnMessage ? '#1976d2' : '#f5f5f5',
-                    color: isOwnMessage ? '#fff' : '#000',
-                    borderRadius: 2,
-                    padding: 1.5,
-                    maxWidth: '70%',
-                }}
-            >
-                <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                    {isOwnMessage ? 'Tú' : message.sender}
-                </Typography>
-                <Typography variant="body1">{message.message}</Typography>
-            </Box>
-        </Fade>
-    </ListItem>
-));
+const Message = memo(({ message, isOwnMessage }) => {
+    return (
+        <ListItem sx={{ display: 'flex', justifyContent: isOwnMessage ? 'flex-end' : 'flex-start', padding: 1 }}>
+            <Fade in timeout={500}>
+                <Box
+                    sx={{
+                        bgcolor: isOwnMessage ? '#1976d2' : '#f5f5f5',
+                        color: isOwnMessage ? '#fff' : '#000',
+                        borderRadius: 2,
+                        padding: 1.5,
+                        maxWidth: '70%',
+                    }}
+                >
+                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        {isOwnMessage ? 'Tú' : message.sender}
+                    </Typography>
+                    <Typography variant="body1">{message.message}</Typography>
+                </Box>
+            </Fade>
+        </ListItem>
+    );
+});
 
 const ProviderChatComponent = () => {
     const { auth } = useContext(AuthContext);
-    const { getMessages, sendMessageAsProvider, error, messages, setMessages } = useProviders();
+    const {
+        getMessages,
+        sendMessageAsProvider,
+        getChatDetailsByEmail,
+        error,
+        clearError,
+    } = useProviders();
+
     const [chats, setChats] = useState([]);
     const [chatId, setChatId] = useState(null);
     const [messageContent, setMessageContent] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
     const mountedRef = useRef(true);
+    const intervalIdRef = useRef(null);
 
-    // Control de montaje
     useEffect(() => {
+        fetchChatDetails();
+
         return () => {
             mountedRef.current = false;
+            if (intervalIdRef.current) {
+                clearInterval(intervalIdRef.current);
+            }
         };
     }, []);
 
-    // Cargar estado inicial desde localStorage
-    useEffect(() => {
-        const savedChats = localStorage.getItem('chats');
-        const savedChatId = localStorage.getItem('chatId');
-        const savedMessages = localStorage.getItem('messages');
+    const fetchChatDetails = async () => {
+        try {
+            setIsLoading(true);
+            clearError();
+            const chatDetails = await getChatDetailsByEmail(auth.email);
+            setChats(chatDetails.data);
 
-        if (savedChats) {
-            setChats(JSON.parse(savedChats));
+            if (chatDetails.data.length > 0) {
+                const firstChatId = chatDetails.data[0].chatId;
+                setChatId(firstChatId);
+                await loadMessages(firstChatId);
+            }
+        } catch (error) {
+            console.error('Error al obtener detalles del chat:', error);
+        } finally {
+            setIsLoading(false);
         }
-        if (savedChatId) {
-            setChatId(savedChatId);
-        }
-        if (savedMessages) {
-            setMessages(JSON.parse(savedMessages));
-        }
-    }, [setMessages]);
+    };
 
-    // Persistir estado
-    useEffect(() => {
-        const persistState = () => {
-            localStorage.setItem('chats', JSON.stringify(chats));
-            localStorage.setItem('chatId', chatId);
-            localStorage.setItem('messages', JSON.stringify(messages));
-        };
-        persistState();
-    }, [chats, chatId, messages]);
-
-    // Cargar mensajes con debounce
-    const loadMessages = useCallback(async () => {
-        if (!chatId || isLoadingMessages) return;
+    const loadMessages = async (currentChatId) => {
+        if (!currentChatId || isLoadingMessages) {
+            return;
+        }
 
         try {
             setIsLoadingMessages(true);
-            const fetchedMessages = await getMessages(chatId);
-            
-            if (mountedRef.current) {
-                setMessages(fetchedMessages);
-                setIsLoadingMessages(false);
-            }
+            const fetchedMessages = await getMessages(currentChatId);
+            setMessages(fetchedMessages.messages);
         } catch (error) {
-            if (mountedRef.current) {
-                console.error(`Error fetching messages for chatId ${chatId}:`, error);
-                setIsLoadingMessages(false);
-            }
+            console.error('Error al cargar mensajes:', error);
+        } finally {
+            setIsLoadingMessages(false);
         }
-    }, [chatId, isLoadingMessages, getMessages, setMessages]);
+    };
 
-    // Polling de mensajes optimizado
-    useEffect(() => {
-        if (!chatId) return;
-
-        let timeoutId;
-        const pollMessages = () => {
-            loadMessages();
-            timeoutId = setTimeout(pollMessages, 10000);
-        };
-
-        pollMessages();
-        return () => clearTimeout(timeoutId);
-    }, [chatId, loadMessages]);
-
-    // Enviar mensaje optimizado
-    const handleSendMessage = useCallback(async () => {
-        if (!messageContent.trim() || isSending || !chatId) return;
+    const handleSendMessage = async () => {
+        if (!messageContent.trim() || isSending || !chatId) {
+            return;
+        }
 
         try {
             setIsSending(true);
-            await sendMessageAsProvider(auth.email, chatId, messageContent);
-            
-            if (mountedRef.current) {
-                setMessageContent('');
-                setIsSending(false);
-                await loadMessages();
-            }
-        } catch (error) {
-            if (mountedRef.current) {
-                console.error('Error sending message:', error);
-                setIsSending(false);
-            }
-        }
-    }, [messageContent, chatId, isSending, auth.email, sendMessageAsProvider, loadMessages]);
+            await sendMessageAsProvider({
+                providerEmail: auth.email,  
+                chatId,                    
+                messageContent: messageContent,  
+            });
 
-    // Auto-scroll
-    useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            setMessageContent('');
+            await loadMessages(chatId);
+        } catch (error) {
+            console.error('Error al enviar mensaje:', error);
+        } finally {
+            setIsSending(false);
         }
-    }, [messages]);
+    };
+
+    const handleChatSelection = async (chat) => {
+        setChatId(chat.chatId);
+        await loadMessages(chat.chatId);
+    };
 
     return (
         <Box sx={{ display: 'flex', height: 'calc(85vh - 40px)', width: '85%', maxWidth: 800, margin: 'auto', p: 2, bgcolor: '#f0f2f5' }}>
@@ -151,16 +140,20 @@ const ProviderChatComponent = () => {
                     <Typography variant="h6" align="center">Chats</Typography>
                 </Box>
                 <List sx={{ flex: 1, overflow: 'auto' }}>
-                    {chats.map((chat) => (
-                        <ListItem 
-                            button 
-                            key={chat.chatId} 
-                            selected={chat.chatId === chatId} 
-                            onClick={() => setChatId(chat.chatId)} 
-                        >
-                            <Typography variant="body1">{chat.chatName}</Typography>
-                        </ListItem>
-                    ))}
+                    {Array.isArray(chats) && chats.length > 0 ? (
+                        chats.map((chat) => (
+                            <ListItem
+                                button
+                                key={chat.chatId}
+                                selected={chat.chatId === chatId}
+                                onClick={() => handleChatSelection(chat)}
+                            >
+                                <Typography variant="body1">{chat.chatName}</Typography>
+                            </ListItem>
+                        ))
+                    ) : (
+                        <Typography variant="body1" align="center" color="text.secondary">No se encontraron chats disponibles.</Typography>
+                    )}
                 </List>
             </Paper>
 
@@ -172,11 +165,11 @@ const ProviderChatComponent = () => {
                 {error && <Typography color="error" sx={{ p: 2 }}>{error.message}</Typography>}
 
                 <Box sx={{ flex: 1, overflow: 'auto', p: 2, bgcolor: '#fff' }}>
-                    {messages.length === 0 ? (
+                    {Array.isArray(messages) && messages.length === 0 ? (
                         <Typography variant="body1" align="center" color="text.secondary">Aún no hay mensajes</Typography>
                     ) : (
                         <List>
-                            {messages.map((msg, idx) => (
+                            {Array.isArray(messages) && messages.map((msg, idx) => (
                                 <Message key={msg.id || idx} message={msg} isOwnMessage={msg.sender === auth.email} />
                             ))}
                             <div ref={messagesEndRef} />

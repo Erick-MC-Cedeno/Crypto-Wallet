@@ -31,12 +31,13 @@ const transactionApi = `${baseApi}/transaction/info`
 const providerApi = `${baseApi}/provider`;
 const createProviderApi = `${providerApi}/create`;
 const getAllProvidersApi = `${providerApi}/all`;
-const findProviderByEmailApi = (email) => `${providerApi}/find/${email}`;
+const findProviderByEmailApi = `${providerApi}/findProviderByEmail/:email`;
 const openChatApi = `${providerApi}/chat/open`;
-const sendMessageApi = `${providerApi}/chat/send`;
-const getMessagesApi = (chatId) => `${providerApi}/chat/messages/${chatId}`;
-const sendMessageAsProviderApi = `${providerApi}/chat/send-as-provider`;
-const getChatDetailsByEmailApi = (email) => `${providerApi}/chat/details-by-email/${email}`;
+const sendMessageApi = `${providerApi}/message/send`;
+const sendMessageAsProviderApi = `${providerApi}/message/sendAsProvider`;
+const getMessagesApi = `${providerApi}/messages/chat/:chatId`;
+const getChatDetailsByEmailApi = `${providerApi}/chat/detailsbyemail/:email`;
+
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 

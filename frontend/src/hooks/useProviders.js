@@ -1,152 +1,142 @@
-import { useState, useEffect } from 'react';
-import ProviderService from '../services/providerService';
+import { useState } from 'react';
+import Provider from '../services/providerService';
 
-export default function useProviders() {
-    const [providers, setProviders] = useState([]);
-    const [loading, setLoading] = useState(true);
+export default function useProvider() {
     const [error, setError] = useState(null);
-    const [messages, setMessages] = useState([]);
     const [successMessage, setSuccessMessage] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const fetchProviders = async () => {
-        setLoading(true);
+    const clearError = () => setError(null);
+    const clearSuccessMessage = () => setSuccessMessage(null);
+
+    const createProvider = async (body) => {
+        clearError();
+        setIsLoading(true);
         try {
-            const response = await ProviderService.getAllProviders();
-            setProviders(response.data);
+            const { data } = await Provider.createProvider(body);
+            if (data) {
+                setSuccessMessage('Provider creado con éxito.');
+            } else {
+                setError('Error al crear el provider.');
+            }
         } catch (err) {
-            setError(err);
+            setError(err.message);
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
-    const createProvider = async (body) => {
-        setLoading(true);
+    const getAllProviders = async () => {
+        clearError();
+        setIsLoading(true);
         try {
-            const response = await ProviderService.createProvider(body);
-            setSuccessMessage('Proveedor creado exitosamente.');
-            return response.data;
+            const { data } = await Provider.getAllProviders();
+            return data;
         } catch (err) {
-            setError(err);
-            console.error('Error creating provider:', err);
+            setError(err.message);
+            return [];
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     const findProviderByEmail = async (email) => {
-        setLoading(true);
+        clearError();
+        setIsLoading(true);
         try {
-            const response = await ProviderService.findProviderByEmail(email);
-            if (!response.data) {
-                throw new Error("No hay proveedores");
-            }
-            return response.data;
+            const { data } = await Provider.findProviderByEmail(email);
+            return data;
         } catch (err) {
-            if (err.response && err.response.status === 500) {
-                setError("Error del servidor. Por favor, inténtelo de nuevo más tarde.");
-            } else {
-                setError(err.message || err);
-            }
+            setError(err.message);
+            return null;
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
-    const openChat = async (userEmail, providerEmail) => {
-        setLoading(true);
+    const openChat = async (body) => {
+        clearError();
+        setIsLoading(true);
         try {
-            console.log('Opening chat with:', { userEmail, providerEmail });
-            const response = await ProviderService.openChat(userEmail, providerEmail);
-            setSuccessMessage('Chat abierto exitosamente.');
-            localStorage.setItem('chatData', JSON.stringify(response.data));
-            return response.data;
+            const { data } = await Provider.openChat(body);
+            return data;
         } catch (err) {
-            setError(err);
-            console.error('Error opening chat:', err);
+            setError(err.message);
+            return null;
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
-    const sendMessage = async (senderEmail, chatId, messageContent) => {
-        setLoading(true);
+    const sendMessage = async (body) => {
+        clearError();
+        setIsLoading(true);
         try {
-            const response = await ProviderService.sendMessage(senderEmail, chatId, messageContent);
-            setSuccessMessage('Mensaje enviado exitosamente.');
-            return response.data;
+            const { data } = await Provider.sendMessage(body);
+            return data;
         } catch (err) {
-            setError(err);
+            setError(err.message);
+            return null;
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
-    const sendMessageAsProvider = async (providerEmail, chatId, messageContent) => {
-        setLoading(true);
+    const sendMessageAsProvider = async (body) => {
+        clearError();
+        setIsLoading(true);
         try {
-            const response = await ProviderService.sendMessageAsProvider(providerEmail, chatId, messageContent);
-            setSuccessMessage('Mensaje enviado exitosamente.');
-            return response.data;
+            const { data } = await Provider.sendMessageAsProvider(body);
+            return data;
         } catch (err) {
-            setError(err);
+            setError(err.message);
+            return null;
         } finally {
-            setLoading(false);
-        }
-    };
-
-    const getChatDetailsByEmail = async (email) => {
-        setLoading(true);
-        try {
-            const response = await ProviderService.getChatDetailsByEmail(email);
-            if (response.data && response.data.length === 0) {
-                setError('No chats found for this user');
-                return [];
-            }
-            return response.data;
-        } catch (err) {
-            if (err.response && err.response.status === 404) {
-                setError(`User with email ${email} not found`);
-            } else {
-                setError(err.message || 'Error fetching chat details');
-            }
-            console.error('Error fetching chat details:', err);
-        } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     const getMessages = async (chatId) => {
-        setLoading(true);
+        clearError();
+        setIsLoading(true);
         try {
-            const response = await ProviderService.getMessages(chatId);
-            setMessages(response.data);
-            return response.data;
+            const { data } = await Provider.getMessages(chatId);
+            return data;
         } catch (err) {
-            setError(err);
+            setError(err.message);
+            return [];
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
-    useEffect(() => {
-        fetchProviders();
-    }, []);
+    const getChatDetailsByEmail = async (email) => {
+        clearError();
+        setIsLoading(true);
+        try {
+            const { data } = await Provider.getChatDetailsByEmail(email);
+            return data;
+        } catch (err) {
+            setError(err.message);
+            return [];
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return {
-        providers,
-        loading,
-        error,
-        setError,
-        messages,
-        setMessages,
-        successMessage,
+        createProvider,
+        getAllProviders,
         findProviderByEmail,
         openChat,
         sendMessage,
         sendMessageAsProvider,
-        getChatDetailsByEmail,
         getMessages,
-        createProvider,
+        getChatDetailsByEmail,
+        error,
+        successMessage,
+        isLoading,
+        clearError,
+        clearSuccessMessage
     };
 }
