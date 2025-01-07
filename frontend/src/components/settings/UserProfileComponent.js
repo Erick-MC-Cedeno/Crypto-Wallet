@@ -7,8 +7,8 @@ import {
     Avatar
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import useAuth from '../hooks/useAuth';
-import { AuthContext } from '../hooks/AuthContext';
+import useAuth from '../../hooks/useAuth';
+import { AuthContext } from '../../hooks/AuthContext';
 
 function UserProfileComponent() {
     const { updateUserProfile, error, successMessage } = useAuth();

@@ -1,5 +1,5 @@
 import React from 'react';
-import ProviderForm from '../components/ProviderFom';
+import ProviderForm from '../components/providers/ProviderFom';
 import { Typography, Box } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd'; 
 

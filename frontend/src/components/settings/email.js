@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Alert, Typography, CircularProgress, Container } from '@mui/material';
-import { AuthContext } from '../hooks/AuthContext'; 
-import useAuth from '../hooks/useAuth'; 
+import { AuthContext } from '../../hooks/AuthContext'; 
+import useAuth from '../../hooks/useAuth'; 
 
 const EmailVerificationStatus = () => {
     const { auth } = useContext(AuthContext); 

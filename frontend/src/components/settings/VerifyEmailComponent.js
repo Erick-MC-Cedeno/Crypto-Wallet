@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Alert, Typography, CircularProgress, Button, Snackbar } from '@mui/material'; 
-import { AuthContext } from '../hooks/AuthContext'; 
-import useAuth from '../hooks/useAuth'; 
+import { AuthContext } from '../../hooks/AuthContext'; 
+import useAuth from '../../hooks/useAuth'; 
 import MuiAlert from '@mui/material/Alert';
 
 const VerifyEmailComponent = () => {

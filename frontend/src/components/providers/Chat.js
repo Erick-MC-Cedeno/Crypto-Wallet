@@ -11,8 +11,8 @@ import {
     CircularProgress 
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { AuthContext } from '../hooks/AuthContext';
-import useProviders from '../hooks/useProviders';
+import { AuthContext } from '../../hooks/AuthContext';
+import useProviders from '../../hooks/useProviders';
 
 const ChatComponent = () => {
     const [messageContent, setMessageContent] = useState('');

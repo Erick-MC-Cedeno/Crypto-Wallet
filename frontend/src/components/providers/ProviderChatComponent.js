@@ -12,8 +12,8 @@ import {
     Fade
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { AuthContext } from '../hooks/AuthContext';
-import useProviders from '../hooks/useProviders';
+import { AuthContext } from '../../hooks/AuthContext';
+import useProviders from '../../hooks/useProviders';
 
 const Message = memo(({ message, isOwnMessage }) => {
     return (

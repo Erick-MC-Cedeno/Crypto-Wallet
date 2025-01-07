@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Button, Container, Typography, Box, Grid, Alert } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import useAuth from '../hooks/useAuth'; 
+import useAuth from '../../hooks/useAuth'; 
 import { useHistory } from 'react-router-dom';
 
 const ResendTokenForm = () => {

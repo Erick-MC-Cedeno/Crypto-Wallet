@@ -6,8 +6,8 @@ import useFindUser from './hooks/useFindUser'
 import Login from "./pages/Login"
 import { Box, Container, CssBaseline, Toolbar } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import PublicRoute from './components/PublicRoute'
-import PrivateRoute from './components/PrivateRoute'
+import PublicRoute from './components/route-control/PublicRoute'
+import PrivateRoute from './components/route-control/PrivateRoute'
 import Register from './pages/Register'
 import Navbar from './components/Navbar'
 import Home from './components/Home'
@@ -17,14 +17,14 @@ import WelcomeTemplate from './pages/welcometemplate'
 import ProvidersList from './pages/List'
 import CreateProvider from './pages/Create';
 import Nextmain from './pages/Nextmain'
-import VerifyToken from './components/verify-token'
-import Settings from './components/Settings'
-import ResendTokenForm from './components/ResendTokenForm'
-import EmailVerificationComponent from './components/verify'
+import VerifyToken from './components/2FA/verify-token'
+import Settings from './components/settings/Settings'
+import ResendTokenForm from './components/2FA/ResendTokenForm'
+import EmailVerificationComponent from './components/settings/verify'
 import { LanguageProvider } from './hooks/LanguageContext';
 import './i18n'; 
-import Chatcomponent from './components/Chat';
-import ProviderChatComponent from './components/ProviderChatComponent';
+import Chatcomponent from './components/providers/Chat';
+import ProviderChatComponent from './components/providers/ProviderChatComponent';
 
 // APLICACION CLIENTE
 export default function App() {

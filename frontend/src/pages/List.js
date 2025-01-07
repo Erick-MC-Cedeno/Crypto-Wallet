@@ -1,6 +1,6 @@
 import React from 'react';
 import useProviders from '../hooks/useProviders';
-import ProviderCard from '../components/ProviderCard';
+import ProviderCard from '../components/providers/ProviderCard';
 import { Typography, Box, Grid } from '@mui/material';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 

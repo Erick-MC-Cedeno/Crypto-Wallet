@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { AuthContext } from '../hooks/AuthContext';
-import User from '../services/user';
+import { AuthContext } from '../../hooks/AuthContext';
+import User from '../../services/user';
 import { Button, Typography, Dialog, DialogTitle, DialogContent, Box, Paper } from '@mui/material';
 
 const EmailVerificationComponent = () => {
