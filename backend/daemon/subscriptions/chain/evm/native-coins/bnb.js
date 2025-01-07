@@ -16,7 +16,7 @@ connectDB.then(() => {
 
     web3.eth.subscribe('logs', {
         topics: [
-            web3.utils.sha3('DepositedOnMetaDapp()')
+            web3.utils.sha3('DepositedOnBlockVault()')
         ]
     }, async function (error, result) {
         if (!error) {

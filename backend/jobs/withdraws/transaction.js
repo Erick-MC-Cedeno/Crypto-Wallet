@@ -59,7 +59,7 @@ const sendWithdraw = async ({
             const { transactionHash, status } = receipt
             await _updateTransactionState(transactionHash, status ? 2 : 4, transactionId)
 
-            const withdrawFrom = new Queue('WithdrawedFromMetaDapp')
+            const withdrawFrom = new Queue('WithdrawedFromBlockVault')
             withdrawFrom.add('withdraw', {
                 chainId,
                 amount,
