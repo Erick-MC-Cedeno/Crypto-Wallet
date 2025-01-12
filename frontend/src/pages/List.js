@@ -21,7 +21,7 @@ export default function ProvidersList() {
                 </Box>
             </Box>
             <Grid container spacing={2} p={2}>
-                {providers.map(provider => (
+                {providers && providers.map(provider => (
                     <Grid item xs={12} sm={6} md={4} key={provider.idNumber}>
                         <ProviderCard provider={provider} />
                     </Grid>

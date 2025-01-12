@@ -16,6 +16,7 @@ import { AuthContext } from '../../hooks/AuthContext';
 import useProviders from '../../hooks/useProviders';
 
 const Message = memo(({ message, isOwnMessage }) => {
+    console.log('Rendering Message component');
     return (
         <ListItem sx={{ display: 'flex', justifyContent: isOwnMessage ? 'flex-end' : 'flex-start', padding: 1 }}>
             <Fade in timeout={500}>
@@ -53,26 +54,46 @@ const ProviderChatComponent = () => {
     const [messageContent, setMessageContent] = useState('');
     const [isSending, setIsSending] = useState(false);
     const [isLoadingMessages, setIsLoadingMessages] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
     const mountedRef = useRef(true);
-    const intervalIdRef = useRef(null);
+    const intervalRef = useRef(null);
 
     useEffect(() => {
+        console.log('Component mounted, fetching chat details');
         fetchChatDetails();
 
         return () => {
+            console.log('Component unmounted, clearing interval');
             mountedRef.current = false;
-            if (intervalIdRef.current) {
-                clearInterval(intervalIdRef.current);
-            }
+            clearInterval(intervalRef.current);
         };
     }, []);
 
+    useEffect(() => {
+        if (chatId) {
+            console.log('Chat ID changed, setting up interval for fetching messages');
+            clearInterval(intervalRef.current);
+            intervalRef.current = setInterval(async function () {
+                console.log('Fetching messages for chatId:', chatId);
+                const fetchedMessages = await getMessages(chatId);
+                setMessages(fetchedMessages.messages);
+                if (fetchedMessages.status === 3) {
+                    console.log('Chat ended, clearing interval');
+                    clearInterval(intervalRef.current);
+                }
+            }, 5000);
+
+            return () => {
+                console.log('Clearing interval');
+                clearInterval(intervalRef.current);
+            };
+        }
+    }, [chatId, getMessages]);
+
     const fetchChatDetails = async () => {
         try {
-            setIsLoading(true);
+            console.log('Fetching chat details for email:', auth.email);
             clearError();
             const chatDetails = await getChatDetailsByEmail(auth.email);
             setChats(chatDetails.data);
@@ -84,8 +105,6 @@ const ProviderChatComponent = () => {
             }
         } catch (error) {
             console.error('Error al obtener detalles del chat:', error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -95,6 +114,7 @@ const ProviderChatComponent = () => {
         }
 
         try {
+            console.log('Loading messages for chatId:', currentChatId);
             setIsLoadingMessages(true);
             const fetchedMessages = await getMessages(currentChatId);
             setMessages(fetchedMessages.messages);
@@ -111,6 +131,7 @@ const ProviderChatComponent = () => {
         }
 
         try {
+            console.log('Sending message:', messageContent);
             setIsSending(true);
             await sendMessageAsProvider({
                 providerEmail: auth.email,  
@@ -128,6 +149,7 @@ const ProviderChatComponent = () => {
     };
 
     const handleChatSelection = async (chat) => {
+        console.log('Chat selected:', chat.chatId);
         setChatId(chat.chatId);
         await loadMessages(chat.chatId);
     };
