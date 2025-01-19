@@ -49,8 +49,6 @@ node generate.js (--number of wallets--) + (--network ID--)
  # Dashboard
 ![Home](frontend/src/assets/screenshots/Home.png)
 
-# Dashboard wallets
-![Wallet](frontend/src/assets/screenshots/wallet.png)
 
 # Wallets
 ![Wallets](frontend/src/assets/screenshots/wallets.png)
@@ -64,5 +62,9 @@ node generate.js (--number of wallets--) + (--network ID--)
 
 # Transactions History
 ![Transa](frontend/src/assets/screenshots/history.png)
+
+# Dashboard wallets
+![Wallet](frontend/src/assets/screenshots/wallet.png)
+
 
 
