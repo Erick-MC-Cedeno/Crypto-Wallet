@@ -21,12 +21,19 @@ npm install
 nest start --watch (listening mode)  
 nest start  
 
-## START DAEMONS
+## START DAEMONS AND WORKERS
+pm2 start process.json
+pm2 monit 
+pm2 stop process.json
+
+
+## START INSTANCES 
 docker-compose up  
 download redis server  
 download mongo server  
 redis-server  
 mongod --port --  
+
 
 ## DEPLOY SMART CONTRACT AND GENERATE WALLETS
 cd backend/tasks/  
