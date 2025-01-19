@@ -1,4 +1,4 @@
-# NicBlockVault
+# BlockVault
 
 ## SETUP NODE ENV 
 set NODE_OPTIONS=--openssl-legacy-provider
@@ -55,9 +55,6 @@ node generate.js (--number of wallets--) + (--network ID--)
 # Wallets
 ![Wallets](frontend/src/assets/screenshots/wallets.png)
 
-
-# Home3 
-![Home (2)](frontend/src/assets/screenshots/Home3.png)
 
 # Settings
 ![Settings](frontend/src/assets/screenshots/Settings.png)
