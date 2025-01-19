@@ -13,7 +13,7 @@ export class EmailService {
 
   async sendTokenLogin(toEmail: string, token: string): Promise<void> {
     const mailOptions = {
-      from: 'BlockVault <noreply@nextcryptoatm.com>',
+      from: 'BlockVault <noreply@blockvault.com>',
       to: toEmail,
       subject: 'Token de verificación para iniciar sesión',
       html: `
