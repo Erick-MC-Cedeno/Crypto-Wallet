@@ -50,10 +50,10 @@ node generate.js (--number of wallets--) + (--network ID--)
 ![Home](frontend/src/assets/screenshots/Home.png)
 
 # Dashboard wallets
-![Wallet](frontend/src/assets/screenshots/Wallet.png)
+![Wallet](frontend/src/assets/screenshots/wallet.png)
 
 # Wallets
-![Wallets](frontend/src/assets/screenshots/Wallets.png)
+![Wallets](frontend/src/assets/screenshots/wallets.png)
 
 
 # Home3 
