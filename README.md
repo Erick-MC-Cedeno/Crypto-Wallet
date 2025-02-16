@@ -62,8 +62,8 @@ $ mongod --port --
 # Deploy smart contract and generate wallets 
 $ cd backend/tasks/+
 $ npm install -g truffle  
-& truffle deploy --network (--network name--)  
-& node generate.js (--number of wallets--) + (--network ID--)  
+$ truffle deploy --network (--network name--)  
+$ node generate.js (--number of wallets--) + (--network ID--)  
 
 # Screenshots  
 
