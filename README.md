@@ -10,9 +10,11 @@
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
 # Setup env node
+
 windows
 
 $ set NODE_OPTIONS=--openssl-legacy-provider  
+
 linux
 
 $ set NODE_OPTIONS=--openssl-legacy-provider 
