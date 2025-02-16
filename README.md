@@ -9,46 +9,49 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
-# SETUP NODE ENV  
+# Setup env node
+windows
 $ set NODE_OPTIONS=--openssl-legacy-provider  
+linux
+$ set NODE_OPTIONS=--openssl-legacy-provider 
 
-# START FRONTEND  
+# Start frontend
 $ cd frontend  
 $ npm install  
-npm start  
+$ npm start  
 
-## INSTALL BACKEND DEPENDENCIES  
-cd backend  
-npm install  
-npm install -g pm2  
-npm install -g solc  
+# Install backend dependencies
+$ cd backend  
+$ npm install  
+$ npm install -g pm2  
+$ npm install -g solc  
 
-## START APP-CORE  
-cd backend/app-core  
-npm i -g @nestjs/cli  
-npm install  
-nest start --watch (listening mode)  
-nest start  
+# Start app-core
+$ cd backend/app-core  
+$ npm i -g @nestjs/cli  
+$ npm install  
+$ nest start --watch (listening mode)  
+$ nest start  
 
-## START DAEMONS AND WORKERS  
-pm2 start process.json  
-pm2 monit  
-pm2 stop process.json  
+# Start Deamons and Workers
+$ pm2 start process.json  
+$ pm2 monit  
+$ pm2 stop process.json  
 
-## START INSTANCES  
-docker-compose up  
-download Redis server  
-download MongoDB server  
-redis-server  
-mongod --port --  
+# start Instances
+$ docker-compose up  
+$ download Redis server  
+$ download MongoDB server  
+$ redis-server  
+$ mongod --port --  
 
-## DEPLOY SMART CONTRACT AND GENERATE WALLETS  
-cd backend/tasks/  
-npm install -g truffle  
-truffle deploy --network (--network name--)  
-node generate.js (--number of wallets--) + (--network ID--)  
+# Deploy smart contract and generate wallets 
+$ cd backend/tasks/+
+$ npm install -g truffle  
+& truffle deploy --network (--network name--)  
+& node generate.js (--number of wallets--) + (--network ID--)  
 
-### Screenshots  
+# Screenshots  
 
 # Login  
 ![Login](frontend/src/assets/screenshots/Login.png)  
