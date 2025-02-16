@@ -12,12 +12,13 @@
 # Setup env node
 
 windows
-
-$ set NODE_OPTIONS=--openssl-legacy-provider  
-
+```
+$ set NODE_OPTIONS=--openssl-legacy-provider
+```
 linux
-
-$ export NODE_OPTIONS=--openssl-legacy-provider 
+```
+$ export NODE_OPTIONS=--openssl-legacy-provider
+```
 
 # Start frontend
 $ cd frontend  
