@@ -1,4 +1,4 @@
-# BlockVault
+# BlockVault  still in development
 
 ## 🛠️ Technology Stack
 
