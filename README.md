@@ -25,7 +25,6 @@ $ export NODE_OPTIONS=--openssl-legacy-provider
 $ cd frontend  
 $ npm install
 ```
-
 # if error
 ```
 $ npm install --force
@@ -34,44 +33,49 @@ $ npm install --force
 $ npm start
 ```
 # Install backend dependencies
+```
 $ cd backend  
 $ npm install
-```
-# if error
-```
-$ npm install --force
-```
-
 $ npm install -g pm2  
-$ npm install -g solc  
+$ npm install -g solc
+```
 
 # Start app-core
+```
 $ cd backend/app-core  
 $ npm i -g @nestjs/cli  
-$ npm install  
+$ npm install
+```
 # if error 
+```
 $ npm install --force
-
 $ nest start --watch (listening mode)  
-$ nest start  
+$ nest start
+```
 
 # Start Deamons and Workers
+```
 $ pm2 start process.json  
 $ pm2 monit  
-$ pm2 stop process.json  
+$ pm2 stop process.json
+```
 
 # start Instances
+```
 $ docker-compose up  
 $ download Redis server  
 $ download MongoDB server  
 $ redis-server  
-$ mongod --port --  
+$ mongod --port --
+```
 
 # Deploy smart contract and generate wallets 
+```
 $ cd backend/tasks/+
 $ npm install -g truffle  
 $ truffle deploy --network (--network name--)  
-$ node generate.js (--number of wallets--) + (--network ID--)  
+$ node generate.js (--number of wallets--) + (--network ID--)
+```
 
 # Screenshots  
 
