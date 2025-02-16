@@ -22,11 +22,16 @@ $ set NODE_OPTIONS=--openssl-legacy-provider
 # Start frontend
 $ cd frontend  
 $ npm install  
-$ npm start  
+# if error 
+$ npm install --force
+$ npm start
+
 
 # Install backend dependencies
 $ cd backend  
-$ npm install  
+$ npm install
+# if error 
+$ npm install --force
 $ npm install -g pm2  
 $ npm install -g solc  
 
@@ -34,6 +39,8 @@ $ npm install -g solc
 $ cd backend/app-core  
 $ npm i -g @nestjs/cli  
 $ npm install  
+# if error 
+$ npm install --force
 $ nest start --watch (listening mode)  
 $ nest start  
 
