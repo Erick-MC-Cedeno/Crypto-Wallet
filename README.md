@@ -9,12 +9,12 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
-## SETUP NODE ENV  
-set NODE_OPTIONS=--openssl-legacy-provider  
+# SETUP NODE ENV  
+$ set NODE_OPTIONS=--openssl-legacy-provider  
 
-## START FRONTEND  
+# START FRONTEND  
 $ cd frontend  
-npm install  
+$ npm install  
 npm start  
 
 ## INSTALL BACKEND DEPENDENCIES  
