@@ -11,29 +11,36 @@
 
 # Setup env node
 
-windows
+Windows
 ```
 $ set NODE_OPTIONS=--openssl-legacy-provider
 ```
-linux
+Linux
 ```
 $ export NODE_OPTIONS=--openssl-legacy-provider
 ```
 
 # Start frontend
+```
 $ cd frontend  
-$ npm install  
-# if error 
+$ npm install
+```
+
+# if error
+```
 $ npm install --force
-
+```
+```
 $ npm start
-
-
+```
 # Install backend dependencies
 $ cd backend  
 $ npm install
-# if error 
+```
+# if error
+```
 $ npm install --force
+```
 
 $ npm install -g pm2  
 $ npm install -g solc  
