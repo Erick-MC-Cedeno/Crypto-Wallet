@@ -1,7 +1,6 @@
 # BlockVault
 
-
-## 🛠️ Tecnologías Stack
+## 🛠️ Technology Stack
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
@@ -10,80 +9,70 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
 
+## SETUP NODE ENV  
+set NODE_OPTIONS=--openssl-legacy-provider  
 
-
-## SETUP NODE ENV 
-set NODE_OPTIONS=--openssl-legacy-provider
-
-## START FRONTEND
+## START FRONTEND  
 cd frontend  
 npm install  
 npm start  
 
-## INSTALL BACKEND DEPENDENCIES
+## INSTALL BACKEND DEPENDENCIES  
 cd backend  
 npm install  
 npm install -g pm2  
 npm install -g solc  
 
-## START APP-CORE
+## START APP-CORE  
 cd backend/app-core  
 npm i -g @nestjs/cli  
 npm install  
 nest start --watch (listening mode)  
 nest start  
 
-## START DAEMONS AND WORKERS
-pm2 start process.json
-pm2 monit 
-pm2 stop process.json
+## START DAEMONS AND WORKERS  
+pm2 start process.json  
+pm2 monit  
+pm2 stop process.json  
 
-
-## START INSTANCES 
+## START INSTANCES  
 docker-compose up  
-download redis server  
-download mongo server  
+download Redis server  
+download MongoDB server  
 redis-server  
 mongod --port --  
 
-
-## DEPLOY SMART CONTRACT AND GENERATE WALLETS
+## DEPLOY SMART CONTRACT AND GENERATE WALLETS  
 cd backend/tasks/  
 npm install -g truffle  
 truffle deploy --network (--network name--)  
 node generate.js (--number of wallets--) + (--network ID--)  
 
+### Screenshots  
 
+# Login  
+![Login](frontend/src/assets/screenshots/Login.png)  
 
-### Screenshots
-# Login
-![Login](frontend/src/assets/screenshots/Login.png)
+# Register  
+![Register](frontend/src/assets/screenshots/Register.png)  
 
-# Register
-![Register](frontend/src/assets/screenshots/Register.png)
+# 2FA Auth  
+![2FA](frontend/src/assets/screenshots/2FA.png)  
 
-# 2FA Auth
-![2FA](frontend/src/assets/screenshots/2FA.png)
+# Dashboard  
+![Home](frontend/src/assets/screenshots/Home.png)  
 
- # Dashboard
-![Home](frontend/src/assets/screenshots/Home.png)
+# Wallets  
+![Wallets](frontend/src/assets/screenshots/wallets.png)  
 
+# Settings  
+![Settings](frontend/src/assets/screenshots/Settings.png)  
 
-# Wallets
-![Wallets](frontend/src/assets/screenshots/wallets.png)
+# Transactions  
+![Transa](frontend/src/assets/screenshots/trans.png)  
 
+# Transactions History  
+![Transa](frontend/src/assets/screenshots/history.png)  
 
-# Settings
-![Settings](frontend/src/assets/screenshots/Settings.png)
-
-# Transactions
-![Transa](frontend/src/assets/screenshots/trans.png)
-
-# Transactions History
-![Transa](frontend/src/assets/screenshots/history.png)
-
-# Dashboard wallets
-![Wallet](frontend/src/assets/screenshots/wallet.png)
-
-
-
+# Dashboard wallets  
+![Wallet](frontend/src/assets/screenshots/wallet.png)  
