@@ -24,6 +24,7 @@ $ cd frontend
 $ npm install  
 # if error 
 $ npm install --force
+
 $ npm start
 
 
@@ -32,6 +33,7 @@ $ cd backend
 $ npm install
 # if error 
 $ npm install --force
+
 $ npm install -g pm2  
 $ npm install -g solc  
 
@@ -41,6 +43,7 @@ $ npm i -g @nestjs/cli
 $ npm install  
 # if error 
 $ npm install --force
+
 $ nest start --watch (listening mode)  
 $ nest start  
 
