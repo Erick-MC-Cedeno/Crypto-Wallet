@@ -30,14 +30,13 @@ const transactionApi = `${baseApi}/transaction/info`
 // Endpoints provider
 const providerApi = `${baseApi}/provider`;
 const createProviderApi = `${providerApi}/create`;
-const getAllProvidersApi = `${providerApi}/all`;
-const findProviderByEmailApi = `${providerApi}/findProviderByEmail/:email`;
+const getAllProvidersApi = `${providerApi}/all`;  // Ruta corregida
+const findProviderByEmailApi = `${providerApi}/provider/findProviderByEmail/:email`;  // Ruta corregida
 const openChatApi = `${providerApi}/chat/open`;
 const sendMessageApi = `${providerApi}/message/send`;
 const sendMessageAsProviderApi = `${providerApi}/message/sendAsProvider`;
-const getMessagesApi = `${providerApi}/messages/chat/:chatId`;
-const getChatDetailsByEmailApi = `${providerApi}/chat/detailsbyemail/:email`;
-
+const getMessagesApi = `${providerApi}/messages/chat/:chatId`;  // Ruta corregida
+const getChatDetailsByEmailApi = `${providerApi}/chat/detailsbyemail/:email`;  // Correcta
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 

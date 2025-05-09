@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef, memo } from 'react';
+import React, { useState, useEffect, useContext, useRef, memo, useCallback } from 'react';
 import {
     Box,
     TextField,
@@ -16,7 +16,6 @@ import { AuthContext } from '../../hooks/AuthContext';
 import useProviders from '../../hooks/useProviders';
 
 const Message = memo(({ message, isOwnMessage }) => {
-    console.log('Rendering Message component');
     return (
         <ListItem sx={{ display: 'flex', justifyContent: isOwnMessage ? 'flex-end' : 'flex-start', padding: 1 }}>
             <Fade in timeout={500}>
@@ -37,7 +36,7 @@ const Message = memo(({ message, isOwnMessage }) => {
             </Fade>
         </ListItem>
     );
-});
+}, (prev, next) => prev.message.id === next.message.id && prev.isOwnMessage === next.isOwnMessage);
 
 const ProviderChatComponent = () => {
     const { auth } = useContext(AuthContext);
@@ -56,44 +55,24 @@ const ProviderChatComponent = () => {
     const [isLoadingMessages, setIsLoadingMessages] = useState(false);
     const [messages, setMessages] = useState([]);
     const messagesEndRef = useRef(null);
-    const mountedRef = useRef(true);
     const intervalRef = useRef(null);
 
-    useEffect(() => {
-        console.log('Component mounted, fetching chat details');
-        fetchChatDetails();
+    const loadMessages = useCallback(async (currentChatId) => {
+        if (!currentChatId || isLoadingMessages) return;
 
-        return () => {
-            console.log('Component unmounted, clearing interval');
-            mountedRef.current = false;
-            clearInterval(intervalRef.current);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (chatId) {
-            console.log('Chat ID changed, setting up interval for fetching messages');
-            clearInterval(intervalRef.current);
-            intervalRef.current = setInterval(async function () {
-                console.log('Fetching messages for chatId:', chatId);
-                const fetchedMessages = await getMessages(chatId);
-                setMessages(fetchedMessages.messages);
-                if (fetchedMessages.status === 3) {
-                    console.log('Chat ended, clearing interval');
-                    clearInterval(intervalRef.current);
-                }
-            }, 5000);
-
-            return () => {
-                console.log('Clearing interval');
-                clearInterval(intervalRef.current);
-            };
-        }
-    }, [chatId, getMessages]);
-
-    const fetchChatDetails = async () => {
         try {
-            console.log('Fetching chat details for email:', auth.email);
+            setIsLoadingMessages(true);
+            const fetchedMessages = await getMessages(currentChatId);
+            setMessages(fetchedMessages.messages);
+        } catch (error) {
+            console.error('Error al cargar mensajes:', error);
+        } finally {
+            setIsLoadingMessages(false);
+        }
+    }, [getMessages, isLoadingMessages]);
+
+    const fetchChatDetails = useCallback(async () => {
+        try {
             clearError();
             const chatDetails = await getChatDetailsByEmail(auth.email);
             setChats(chatDetails.data);
@@ -106,39 +85,45 @@ const ProviderChatComponent = () => {
         } catch (error) {
             console.error('Error al obtener detalles del chat:', error);
         }
-    };
+    }, [auth.email, clearError, getChatDetailsByEmail, loadMessages]);
 
-    const loadMessages = async (currentChatId) => {
-        if (!currentChatId || isLoadingMessages) {
-            return;
-        }
+    useEffect(() => {
+        fetchChatDetails();
+        return () => clearInterval(intervalRef.current);
+    }, [fetchChatDetails]);
 
-        try {
-            console.log('Loading messages for chatId:', currentChatId);
-            setIsLoadingMessages(true);
-            const fetchedMessages = await getMessages(currentChatId);
+    useEffect(() => {
+        if (!chatId) return;
+
+        clearInterval(intervalRef.current); // Siempre limpia antes de crear uno nuevo
+        intervalRef.current = setInterval(async () => {
+            const fetchedMessages = await getMessages(chatId);
             setMessages(fetchedMessages.messages);
-        } catch (error) {
-            console.error('Error al cargar mensajes:', error);
-        } finally {
-            setIsLoadingMessages(false);
+
+            if (fetchedMessages.status === 3) {
+                clearInterval(intervalRef.current);
+            }
+        }, 5000);
+
+        return () => clearInterval(intervalRef.current);
+    }, [chatId, getMessages]);
+
+    useEffect(() => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    };
+    }, [messages]);
 
     const handleSendMessage = async () => {
-        if (!messageContent.trim() || isSending || !chatId) {
-            return;
-        }
+        if (!messageContent.trim() || isSending || !chatId) return;
 
         try {
-            console.log('Sending message:', messageContent);
             setIsSending(true);
             await sendMessageAsProvider({
-                providerEmail: auth.email,  
-                chatId,                    
-                messageContent: messageContent,  
+                providerEmail: auth.email,
+                chatId,
+                messageContent,
             });
-
             setMessageContent('');
             await loadMessages(chatId);
         } catch (error) {
@@ -149,7 +134,6 @@ const ProviderChatComponent = () => {
     };
 
     const handleChatSelection = async (chat) => {
-        console.log('Chat selected:', chat.chatId);
         setChatId(chat.chatId);
         await loadMessages(chat.chatId);
     };
@@ -179,6 +163,7 @@ const ProviderChatComponent = () => {
                 </List>
             </Paper>
 
+            {/* Ventana de Mensajes */}
             <Paper elevation={3} sx={{ flex: 1, height: '100%', display: 'flex', flexDirection: 'column', borderRadius: 3 }}>
                 <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider', bgcolor: '#fff' }}>
                     <Typography variant="h6" align="center">Chat Room</Typography>
@@ -191,7 +176,7 @@ const ProviderChatComponent = () => {
                         <Typography variant="body1" align="center" color="text.secondary">Aún no hay mensajes</Typography>
                     ) : (
                         <List>
-                            {Array.isArray(messages) && messages.map((msg, idx) => (
+                            {messages.map((msg, idx) => (
                                 <Message key={msg.id || idx} message={msg} isOwnMessage={msg.sender === auth.email} />
                             ))}
                             <div ref={messagesEndRef} />

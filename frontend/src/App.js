@@ -14,7 +14,7 @@ import Home from './components/Home'
 import Wallets from './pages/Wallets'
 import Wallet from './pages/Wallet'
 import WelcomeTemplate from './pages/welcometemplate'
-import ProvidersList from './pages/List'
+import ProviderCard from './components/providers/ProviderCard'
 import CreateProvider from './pages/Create';
 import Nextmain from './pages/Nextmain'
 import VerifyToken from './components/2FA/verify-token'
@@ -57,7 +57,7 @@ export default function App() {
                                     <PrivateRoute exact path='/' component={Home} />
                                     <PrivateRoute exact path="/wallets" component={Wallets} />
                                     <PrivateRoute exact path="/wallet/:walletId" component={Wallet} />
-                                    <PrivateRoute exact path="/providers" component={ProvidersList} />
+                                    <PrivateRoute exact path="/providers" component={ProviderCard} />
                                     <PrivateRoute exact path="/create" component={CreateProvider} />
                                     <PrivateRoute exact path='/welcome' component={WelcomeTemplate}/>
                                     <PrivateRoute exact path='/settings' component={Settings}/>

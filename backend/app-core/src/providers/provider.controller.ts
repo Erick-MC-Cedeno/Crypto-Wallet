@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ProviderService } from './provider.service';
 import { CreateProviderDto } from './dto/provider.dto';
 import { AuthenticatedGuard } from '../guard/auth/authenticated.guard';
@@ -34,7 +42,10 @@ export class ProviderController {
 
   @UseGuards(AuthenticatedGuard)
   @Post('chat/open')
-  openChat(@Body() { userEmail, providerEmail }: { userEmail: string; providerEmail: string }) {
+  openChat(
+    @Body()
+    { userEmail, providerEmail }: { userEmail: string; providerEmail: string },
+  ) {
     return this.providerService.openChat(userEmail, providerEmail);
   }
 
@@ -44,21 +55,46 @@ export class ProviderController {
     return this.providerService.getMessages(chatId);
   }
 
-
   @UseGuards(AuthenticatedGuard)
   @Post('message/send')
   sendMessage(
-    @Body() { senderEmail, chatId, messageContent }: { senderEmail: string; chatId: string; messageContent: string }
+    @Body()
+    {
+      senderEmail,
+      chatId,
+      messageContent,
+    }: {
+      senderEmail: string;
+      chatId: string;
+      messageContent: string;
+    },
   ) {
-    return this.providerService.sendMessage(senderEmail, chatId, messageContent);
+    return this.providerService.sendMessage(
+      senderEmail,
+      chatId,
+      messageContent,
+    );
   }
 
   @UseGuards(AuthenticatedGuard)
   @Post('message/sendAsProvider')
   sendMessageAsProvider(
-    @Body() { providerEmail, chatId, messageContent }: { providerEmail: string; chatId: string; messageContent: string;  }
+    @Body()
+    {
+      providerEmail,
+      chatId,
+      messageContent,
+    }: {
+      providerEmail: string;
+      chatId: string;
+      messageContent: string;
+    },
   ) {
-    return this.providerService.sendMessageAsProvider(providerEmail, chatId, messageContent);
+    return this.providerService.sendMessageAsProvider(
+      providerEmail,
+      chatId,
+      messageContent,
+    );
   }
 
   @UseGuards(AuthenticatedGuard)

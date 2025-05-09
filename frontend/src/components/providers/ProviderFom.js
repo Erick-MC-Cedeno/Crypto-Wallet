@@ -39,7 +39,7 @@ export default function ProviderForm() {
     city: '',
     postalCode: ''
   });
-  const [file, setFile] = useState(null);
+  const [setFile] = useState(null);
   const [fileUploaded, setFileUploaded] = useState(false);
   const [loading, setLoading] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -85,7 +85,7 @@ export default function ProviderForm() {
     const { name, value } = e.target;
     setProviderData(prevData => ({ ...prevData, [name]: value }));
 
-    // Validate fields
+    // Validar campos
     setErrors(prevErrors => ({
       ...prevErrors,
       [name + 'Error']: validateField(name, value)
@@ -125,13 +125,13 @@ export default function ProviderForm() {
     setLoading(true);
 
     try {
-      const formData = new FormData();
-      Object.keys(providerData).forEach(key => formData.append(key, providerData[key]));
-      if (file) {
-        formData.append('image', file);
-      }
+      // Enviar los datos sin la imagen
+      const requestData = {
+        ...providerData,
+        // No incluimos la imagen aquí
+      };
 
-      await createProvider(formData);
+      await createProvider(requestData); // Enviar solo los datos del proveedor
       setSnackbarMessage('Provider created successfully');
       history.push('/providerchat');
     } catch (err) {
