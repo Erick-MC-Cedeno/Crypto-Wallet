@@ -28,15 +28,16 @@ const transactionsApi = `${baseApi}/transaction/all`
 const transactionApi = `${baseApi}/transaction/info`
 
 // Endpoints provider
-const providerApi = `${baseApi}/provider`;
-const createProviderApi = `${providerApi}/create`;
-const getAllProvidersApi = `${providerApi}/all`;  // Ruta corregida
-const findProviderByEmailApi = `${providerApi}/provider/findProviderByEmail/:email`;  // Ruta corregida
-const openChatApi = `${providerApi}/chat/open`;
-const sendMessageApi = `${providerApi}/message/send`;
-const sendMessageAsProviderApi = `${providerApi}/message/sendAsProvider`;
-const getMessagesApi = `${providerApi}/messages/chat/:chatId`;  // Ruta corregida
-const getChatDetailsByEmailApi = `${providerApi}/chat/detailsbyemail/:email`;  // Correcta
+const createProvider = `${baseApi}/providers/create`
+const getAllProviders = `${baseApi}/providers/allProviders`
+const createChatApi = `${baseApi}/providers/createChat`
+const sendMessageAsUserApi = `${baseApi}/providers/sendMessageAsUser`
+const sendMessageAsProviderApi = `${baseApi}/providers/sendMessageAsProvider`
+const getMessagesApi = `${baseApi}/providers/getMessages/:chatId`
+
+
+
+
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 
@@ -69,13 +70,6 @@ export {
     transactionsApi,
     allWalletInfoApi,
     transactionApi,
-    providerApi,
-    createProviderApi,
-    getAllProvidersApi,
-    findProviderByEmailApi,
-    openChatApi,
-    sendMessageApi,
-    getMessagesApi,
     verifyTokenApi,
     changePasswordApi,
     updateTokenStatusApi,
@@ -84,6 +78,10 @@ export {
     verifyEmailApi,
     sendVerificationEmailApi,
     isEmailVerifiedApi,
+    createProvider,
+    getAllProviders,
+    createChatApi,
+    sendMessageAsUserApi,
     sendMessageAsProviderApi,
-    getChatDetailsByEmailApi,
+    getMessagesApi
 };

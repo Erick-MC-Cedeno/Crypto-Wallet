@@ -22,6 +22,8 @@ export class ProviderService {
     private readonly messageModel: Model<MessageDocument>,
   ) {}
 
+  
+
   async createProvider(createProviderDto: CreateProviderDto): Promise<Provider> {
     const { email, idNumber } = createProviderDto;
     const existing = await this.providerModel.findOne({
@@ -38,6 +40,8 @@ export class ProviderService {
     return this.providerModel.find().exec();
   }
 
+
+
   async createChat(createChatDto: CreateChatDto): Promise<Chat> {
     const { chatName, users, latestMessage } = createChatDto;
     const chatroomId = uuidv4();
@@ -53,6 +57,8 @@ export class ProviderService {
       chatroomId,  
     };
   }
+
+
 
   async sendMessageAsUser(createMessageDto: CreateMessageDto): Promise<Chat> {
     const { sender, message, chatId, hash } = createMessageDto;
@@ -75,18 +81,18 @@ export class ProviderService {
     return chat;
   }
 
+
+
   async sendMessageAsProvider(createMessageDto: CreateMessageDto): Promise<Chat> {
     const { sender, message, chatId, hash } = createMessageDto;
     const chat = await this.chatModel.findOne({ chatroomId: chatId });
     if (!chat) {
       throw new BadRequestException('Chat not found.');
     }
-
     const provider = await this.providerModel.findOne({ email: sender });
     if (!provider) {
       throw new BadRequestException('Provider not found.');
     }
-
     const newMessage = new this.messageModel({
       sender,
       message,
@@ -96,9 +102,10 @@ export class ProviderService {
     await newMessage.save();
     chat.latestMessage = message;
     await chat.save();
-
     return chat;
   }
+
+
 
   async getMessages(chatId: string): Promise<any> {  
     const chat = await this.chatModel.findOne({ chatroomId: chatId }).exec();

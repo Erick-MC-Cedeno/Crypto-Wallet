@@ -1,47 +1,44 @@
 import {
     get,
     post,
-    createProviderApi,
-    getAllProvidersApi,
-    findProviderByEmailApi,
-    openChatApi,
-    sendMessageApi,
-    getMessagesApi,
+    createProvider,
+    getAllProviders,
+    createChatApi,
+    sendMessageAsUserApi,
     sendMessageAsProviderApi,
-    getChatDetailsByEmailApi
+    getMessagesApi
+
 } from '../api/http';
 
 export default class Provider {
     static async createProvider(body) {
-        return await post(createProviderApi, body);
+        const { data } = await post(createProvider, body)
+        return data
     }
 
     static async getAllProviders() {
-        return await get(getAllProvidersApi, {});
+        const { data } = await get(getAllProviders)
+        return data
     }
 
-    static async findProviderByEmail(email) {
-        return await get(findProviderByEmailApi.replace(':email', email), {});
+    static async createChat(body) {
+        const { data } = await post(createChatApi, body)
+        return data
     }
 
-    static async openChat(body) {
-        return await post(openChatApi, body);
-    }
-
-    static async sendMessage(body) {
-        return await post(sendMessageApi, body);
+    static async sendMessageAsUser(body) {
+        const { data } = await post(sendMessageAsUserApi, body)
+        return data
     }
 
     static async sendMessageAsProvider(body) {
-        return await post(sendMessageAsProviderApi, body);
+        const { data } = await post(sendMessageAsProviderApi, body)
+        return data
     }
 
     static async getMessages(chatId) {
-        return await get(getMessagesApi.replace(':chatId', chatId), {});
-    }
-
-    static async getChatDetailsByEmail(email) {
-        return await get(getChatDetailsByEmailApi.replace(':email', email), {});
+        const { data } = await get(getMessagesApi.replace(':chatId', chatId))
+        return data
     }
 
 }
