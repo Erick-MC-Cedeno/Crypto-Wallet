@@ -23,7 +23,6 @@ export class ProviderService {
   ) {}
 
   
-
   async createProvider(createProviderDto: CreateProviderDto): Promise<Provider> {
     const { email, idNumber } = createProviderDto;
     const existing = await this.providerModel.findOne({
@@ -41,7 +40,6 @@ export class ProviderService {
   }
 
 
-
   async createChat(createChatDto: CreateChatDto): Promise<Chat> {
     const { chatName, users, latestMessage } = createChatDto;
     const chatroomId = uuidv4();
@@ -57,7 +55,6 @@ export class ProviderService {
       chatroomId,  
     };
   }
-
 
 
   async sendMessageAsUser(createMessageDto: CreateMessageDto): Promise<Chat> {
@@ -82,7 +79,6 @@ export class ProviderService {
   }
 
 
-
   async sendMessageAsProvider(createMessageDto: CreateMessageDto): Promise<Chat> {
     const { sender, message, chatId, hash } = createMessageDto;
     const chat = await this.chatModel.findOne({ chatroomId: chatId });
@@ -104,7 +100,6 @@ export class ProviderService {
     await chat.save();
     return chat;
   }
-
 
 
   async getMessages(chatId: string): Promise<any> {  
