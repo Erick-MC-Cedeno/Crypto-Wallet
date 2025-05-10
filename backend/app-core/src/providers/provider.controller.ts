@@ -1,105 +1,64 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Request, UseGuards } from '@nestjs/common';
 import { ProviderService } from './provider.service';
 import { CreateProviderDto } from './dto/provider.dto';
+import { CreateChatDto } from './dto/chat.dto';
+import { CreateMessageDto } from './dto/message.dto';
+import { Provider } from './schemas/provider.schema';
+import { Chat } from './schemas/chat-schema/chat.schema';
 import { AuthenticatedGuard } from '../guard/auth/authenticated.guard';
 
-@Controller('provider')
+@Controller('providers')
 export class ProviderController {
   constructor(private readonly providerService: ProviderService) {}
 
   @UseGuards(AuthenticatedGuard)
   @Post('create')
-  createProvider(@Request() req, @Body() createProviderDto: CreateProviderDto) {
+  createProvider(
+    @Request() req,
+    @Body() createProviderDto: CreateProviderDto
+  ): Promise<Provider> {
     createProviderDto.email = req.user.email;
     return this.providerService.createProvider(createProviderDto);
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('all')
-  findAllProviders() {
+  @Get('allProviders')
+  findAllProviders(): Promise<Provider[]> {
     return this.providerService.findAllProviders();
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('findProviderByEmail/:email')
-  findProviderByEmail(@Param('email') email: string) {
-    return this.providerService.findProviderByEmail(email);
+  @Post('createChat')
+  createChat(
+    @Request() req,
+    @Body() createChatDto: CreateChatDto
+  ): Promise<Chat> {
+    return this.providerService.createChat(createChatDto);
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('user/:email')
-  findUserByEmail(@Param('email') email: string) {
-    return this.providerService.findUserByEmail(email);
+  @Post('sendMessageAsUser')
+  sendMessageAsUser(
+    @Request() req,
+    @Body() createMessageDto: CreateMessageDto
+  ): Promise<Chat> {
+    createMessageDto.sender = req.user.email;
+    return this.providerService.sendMessageAsUser(createMessageDto);
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Post('chat/open')
-  openChat(
-    @Body()
-    { userEmail, providerEmail }: { userEmail: string; providerEmail: string },
-  ) {
-    return this.providerService.openChat(userEmail, providerEmail);
-  }
-
-  @UseGuards(AuthenticatedGuard)
-  @Get('messages/chat/:chatId')
-  getMessages(@Param('chatId') chatId: string) {
-    return this.providerService.getMessages(chatId);
-  }
-
-  @UseGuards(AuthenticatedGuard)
-  @Post('message/send')
-  sendMessage(
-    @Body()
-    {
-      senderEmail,
-      chatId,
-      messageContent,
-    }: {
-      senderEmail: string;
-      chatId: string;
-      messageContent: string;
-    },
-  ) {
-    return this.providerService.sendMessage(
-      senderEmail,
-      chatId,
-      messageContent,
-    );
-  }
-
-  @UseGuards(AuthenticatedGuard)
-  @Post('message/sendAsProvider')
+  @Post('sendMessageAsProvider')
   sendMessageAsProvider(
-    @Body()
-    {
-      providerEmail,
-      chatId,
-      messageContent,
-    }: {
-      providerEmail: string;
-      chatId: string;
-      messageContent: string;
-    },
-  ) {
-    return this.providerService.sendMessageAsProvider(
-      providerEmail,
-      chatId,
-      messageContent,
-    );
+    @Request() req,
+    @Body() createMessageDto: CreateMessageDto
+  ): Promise<Chat> {
+    createMessageDto.sender = req.user.email;
+    return this.providerService.sendMessageAsProvider(createMessageDto);
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('chat/detailsbyemail/:email')
-  async getChatDetailsByEmail(@Param('email') email: string) {
-    return this.providerService.getChatDetailsByEmail(email);
+  @Get('getMessages/:chatId')
+  getMessages(@Param('chatId') chatId: string): Promise<any> {
+    return this.providerService.getMessages(chatId);
   }
 }

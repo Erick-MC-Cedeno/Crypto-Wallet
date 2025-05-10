@@ -32,5 +32,4 @@ export class CreateProviderDto {
   @IsBoolean()
   isValid: boolean = false;
 
-  image?: string;
 }

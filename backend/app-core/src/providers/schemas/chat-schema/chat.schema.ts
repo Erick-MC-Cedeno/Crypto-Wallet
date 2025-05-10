@@ -20,12 +20,14 @@ export class Chat {
   @Prop({ default: Date.now })
   timeStamp: Date;
 
-  
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
 
   @Prop({ type: Date, default: Date.now })
   updatedAt: Date;
+
+  @Prop({ required: true })  
+  chatroomId: string;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
