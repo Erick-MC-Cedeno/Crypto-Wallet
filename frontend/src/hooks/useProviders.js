@@ -44,7 +44,7 @@ export default function useProvider() {
         setError(null);
         return res;  
       } else {
-        setError({ message: 'No se encontró proveedor con ese email.' });
+        setError({ message: 'Aun no eres un proveedor P2P debes registrarte.' });
         return null;  
       }
     } catch (err) {
