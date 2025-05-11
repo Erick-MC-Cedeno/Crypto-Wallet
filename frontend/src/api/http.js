@@ -29,6 +29,7 @@ const transactionApi = `${baseApi}/transaction/info`
 
 // Endpoints provider
 const createProvider = `${baseApi}/providers/create`
+const findByEMail = `${baseApi}/providers/findByEMail/:email`
 const getAllProviders = `${baseApi}/providers/allProviders`
 const createChatApi = `${baseApi}/providers/createChat`
 const sendMessageAsUserApi = `${baseApi}/providers/sendMessageAsUser`
@@ -79,6 +80,7 @@ export {
     sendVerificationEmailApi,
     isEmailVerifiedApi,
     createProvider,
+    findByEMail,
     getAllProviders,
     createChatApi,
     sendMessageAsUserApi,

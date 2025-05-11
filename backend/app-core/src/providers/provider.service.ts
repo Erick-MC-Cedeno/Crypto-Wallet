@@ -35,8 +35,15 @@ export class ProviderService {
     return newProvider.save();
   }
 
+  
+
   async findAllProviders(): Promise<Provider[]> {
-    return this.providerModel.find().exec();
+    return this.providerModel.find({ isValid: true }).exec();
+  }
+
+
+  async findProviderByEmail(email: string): Promise<Provider> {
+    return this.providerModel.findOne({ email }).exec();
   }
 
 

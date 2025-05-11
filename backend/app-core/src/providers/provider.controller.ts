@@ -22,10 +22,17 @@ export class ProviderController {
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('allProviders')
-  findAllProviders(): Promise<Provider[]> {
-    return this.providerService.findAllProviders();
+  @Get('findByEMail/:email')
+  findProviderByEmail(@Param('email') email: string): Promise<Provider> {
+    return this.providerService.findProviderByEmail(email);
   }
+
+@UseGuards(AuthenticatedGuard)
+@Get('allProviders')
+findAllProviders(): Promise<Provider[]> {
+  return this.providerService.findAllProviders();
+}
+
 
   @UseGuards(AuthenticatedGuard)
   @Post('createChat')

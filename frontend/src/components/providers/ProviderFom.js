@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
-import {
-  TextField,
-  Button,
-  Typography,
-  Grid,
-  Paper,
-  Alert,
-} from '@mui/material';
+import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom'; 
+import { TextField, Button, Typography, Grid, Paper, Alert } from '@mui/material';
 import useProvider from '../../hooks/useProviders';
+import { AuthContext } from '../../hooks/AuthContext';
 
 export default function ProviderForm() {
-  const { createNewProvider, provider, error } = useProvider();
+  const { createNewProvider, findByEMail, provider, error } = useProvider();
+  const { auth } = useContext(AuthContext);
+  const history = useHistory();
 
   const [form, setForm] = useState({
     firstName: '',
@@ -22,18 +19,49 @@ export default function ProviderForm() {
     postalCode: '',
   });
 
+  const [hasCheckedProvider, setHasCheckedProvider] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({
-      ...form,
+    setForm((prevForm) => ({
+      ...prevForm,
       [name]: value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     await createNewProvider(form);
+   
   };
+
+  
+  useEffect(() => {
+    const fetchProvider = async () => {
+      if (!hasCheckedProvider && auth?.email) {
+        setHasCheckedProvider(true);
+  
+        try {
+          const response = await findByEMail(auth.email);
+  
+          if (response) {          
+            history.push('/providerChat');
+          } else {
+          }
+        } catch (err) {
+          console.error("Error en findByEMail:", err);
+        }
+      }
+    };
+    fetchProvider();
+  }, [auth?.email, hasCheckedProvider, findByEMail, history]);
+
+  
+  useEffect(() => {
+    if (provider) {
+      history.push('/providerChat');
+    }
+  }, [provider, history]);
 
   return (
     <Paper elevation={3} style={{ padding: 24, maxWidth: 600, margin: '40px auto' }}>

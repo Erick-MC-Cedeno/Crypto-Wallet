@@ -2,6 +2,7 @@ import {
     get,
     post,
     createProvider,
+    findByEMail,
     getAllProviders,
     createChatApi,
     sendMessageAsUserApi,
@@ -13,6 +14,11 @@ import {
 export default class Provider {
     static async createProvider(body) {
         const { data } = await post(createProvider, body)
+        return data
+    }
+
+    static async findByEMail(email) {
+        const { data } = await get(findByEMail.replace(':email', email))
         return data
     }
 

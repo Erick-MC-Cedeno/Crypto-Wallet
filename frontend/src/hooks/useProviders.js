@@ -36,6 +36,24 @@ export default function useProvider() {
     }
   };
 
+  const findByEMail = async (email) => {
+    try {
+      const res = await Provider.findByEMail(email);
+      if (res) {
+        setProvider(res);
+        setError(null);
+        return res;  
+      } else {
+        setError({ message: 'No se encontró proveedor con ese email.' });
+        return null;  
+      }
+    } catch (err) {
+      console.log("Error en findByEMail:", err);
+      setError(err);
+      return null; 
+    }
+  }
+
   const createChat = async (body) => {
     try {
       const res = await Provider.createChat(body);
@@ -83,6 +101,7 @@ export default function useProvider() {
     messages,
     error,
     createNewProvider,
+    findByEMail,
     getAllProviders,
     createChat,
     sendMessageAsUser,
