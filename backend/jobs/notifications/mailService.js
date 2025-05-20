@@ -3,16 +3,17 @@ const nodemailer = require('nodemailer')
 let mailTransporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'erickcedeno558@gmail.com',
-        pass: 'kefo uixq iauf vstq'
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
+        
     }
 })
 
 const sendDepositEmail = async (amount, coin, toEmail) => {
     const mailDetails = {
-        from: 'NextCryptoAtm Exchange <correo>',
+        from: 'BlokVault <correo>',
         to: toEmail,
-        subject: `[NextCryptoAtm] Confirmación de Depósito`,
+        subject: `[BlokVault] Confirmación de Depósito`,
         html: `
         <html>
         <head>
@@ -35,11 +36,11 @@ const sendDepositEmail = async (amount, coin, toEmail) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>NextCryptoAtm Exchange</h1>
+                    <h1>BlokVault</h1>
                 </div>
                 <h3><strong>Depósito completado correctamente</strong></h3>
                 <p>Tu depósito de <strong>${amount} ${coin.toUpperCase()}</strong> 
-                ya está disponible en tu cuenta de NextCryptoAtm. 
+                ya está disponible en tu cuenta de BlokVault. 
                 <a href="http://localhost:3000/wallet/${coin.toLowerCase()}"
                  target="_blank" rel="noopener">Comprueba tu balance aquí.</a></p>
                 
@@ -55,7 +56,7 @@ const sendDepositEmail = async (amount, coin, toEmail) => {
                 </div>
 
                 <div class="footer">
-                    <p>Gracias por usar NextCryptoAtm Exchange. Si tienes alguna pregunta, no dudes en contactarnos.</p>
+                    <p>Gracias por usar BlokVault. Si tienes alguna pregunta, no dudes en contactarnos.</p>
                 </div>
             </div>
         </body>
@@ -67,9 +68,9 @@ const sendDepositEmail = async (amount, coin, toEmail) => {
 
 const sendWithdrawEmail = async (amount, coin, toAddress, txId, toEmail) => {
     const mailDetails = {
-        from: 'NextCryptoAtm Exchange <correo>',
+        from: 'BlokVault <correo>',
         to: toEmail,
-        subject: `[NextCryptoAtm] Confirmación de Retiro`,
+        subject: `[BlokVault] Confirmación de Retiro`,
         html: `
         <html>
         <head>
@@ -91,11 +92,11 @@ const sendWithdrawEmail = async (amount, coin, toAddress, txId, toEmail) => {
         <body>
             <div class="container">
                 <div class="header">
-                    <h1>NextCryptoAtm Exchange</h1>
+                    <h1>BlokVault</h1>
                 </div>
                 <h3><strong>Retiro completado correctamente</strong></h3>
                 <div>Has realizado una retirada de <strong>${amount} ${coin.toUpperCase()}</strong> 
-                en tu cuenta de NextCryptoAtm.</div>
+                en tu cuenta de BlokVault.</div>
                 <div>&nbsp;</div>
                 <div><strong>Dirección de retiro:</strong> ${toAddress}</div>
                 <div><strong>ID de Transacción:</strong> ${txId}</div>
@@ -112,7 +113,7 @@ const sendWithdrawEmail = async (amount, coin, toAddress, txId, toEmail) => {
                 </div>
 
                 <div class="footer">
-                    <p>Gracias por usar NextCryptoAtm Exchange. Si tienes alguna pregunta, no dudes en contactarnos.</p>
+                    <p>Gracias por usar BlokVault. Si tienes alguna pregunta, no dudes en contactarnos.</p>
                 </div>
             </div>
         </body>
