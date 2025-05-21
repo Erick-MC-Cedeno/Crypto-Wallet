@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Provider from '../services/providerService';
 
 export default function useProvider() {
@@ -7,92 +7,136 @@ export default function useProvider() {
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const createNewProvider = async (body) => {
+    setIsLoading(true);
     try {
       const res = await Provider.createProvider(body);
       setProvider(res);
       setError(null);
+      return res;
     } catch (err) {
-      setError(err);
+      setError(err.response?.data || err);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getAllProviders = async () => {
+  const getAllProviders = useCallback(async () => {
+    setIsLoading(true);
     try {
       const res = await Provider.getAllProviders();
-      if (res) {
+      if (Array.isArray(res)) {
         setProviders(res);
         setError(null);
-        return res;  
-      } else {
-        setError({ message: 'No se encontraron proveedores.' });
-        return [];  
+        return res;
       }
+      setError({ message: 'No se encontraron proveedores.' });
+      return [];
     } catch (err) {
-      console.log("Error en getAllProviders:", err);
-      setError(err);
-      return []; 
+      setError(err.response?.data || err);
+      setProviders([]);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, []);
 
-  const findByEMail = async (email) => {
+  const findByEMail = useCallback(async (email) => {
+    setIsLoading(true);
     try {
       const res = await Provider.findByEMail(email);
       if (res) {
         setProvider(res);
         setError(null);
-        return res;  
-      } else {
-        setError({ message: 'Aun no eres un proveedor P2P debes registrarte.' });
-        return null;  
+        return res;
       }
+      setError({ message: 'Aún no eres un proveedor P2P, debes registrarte.' });
+      return null;
     } catch (err) {
-      console.log("Error en findByEMail:", err);
-      setError(err);
-      return null; 
+      setError(err.response?.data || err);
+      setProvider(null);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
-  }
+  }, []);
 
   const createChat = async (body) => {
+    setIsLoading(true);
     try {
       const res = await Provider.createChat(body);
       setChat(res);
       setError(null);
+      return res;
     } catch (err) {
-      setError(err);
+      setError(err.response?.data || err);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const sendMessageAsUser = async (body) => {
+    setIsLoading(true);
     try {
-      const res = await Provider.sendMessageAsUser(body);
+      const res = await Provider.sendMessageAsUser({
+        sender: body.sender,
+        message: body.message,
+        chatId: body.chatId
+      });
       setChat(res);
       setError(null);
+      return res;
     } catch (err) {
-      setError(err);
+      setError(err.response?.data || err);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const sendMessageAsProvider = async (body) => {
+    setIsLoading(true);
     try {
-      const res = await Provider.sendMessageAsProvider(body);
+      const res = await Provider.sendMessageAsProvider({
+        sender: body.sender,
+        message: body.message,
+        chatId: body.chatId
+      });
       setChat(res);
       setError(null);
+      return res;
     } catch (err) {
-      setError(err);
+      setError(err.response?.data || err);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getMessages = async (chatId) => {
+  const getMessages = useCallback(async (chatId) => {
+    setIsLoading(true);
     try {
       const res = await Provider.getMessages(chatId);
-      setMessages(res);
-      setError(null);
+      if (Array.isArray(res)) {
+        setMessages(res);
+        setError(null);
+        return res;
+      }
+      setMessages([]);
+      setError({ message: 'No se encontraron mensajes.' });
+      return [];
     } catch (err) {
-      setError(err);
+      setError(err.response?.data || err);
+      setMessages([]);
+      throw err;
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, []);
 
   return {
     providers,
@@ -100,6 +144,7 @@ export default function useProvider() {
     chat,
     messages,
     error,
+    isLoading,
     createNewProvider,
     findByEMail,
     getAllProviders,

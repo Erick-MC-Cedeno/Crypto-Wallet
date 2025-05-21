@@ -1,38 +1,85 @@
-import React, { useEffect, useState } from 'react';
-import { Grid, Card, CardContent, Typography, Box, Button, Alert } from '@mui/material';
+import React, { useEffect, useState, useContext } from 'react';
+import { 
+  Grid, 
+  Card, 
+  CardContent, 
+  Typography, 
+  Box, 
+  Button, 
+  Alert,
+  CircularProgress  // Added this import
+} from '@mui/material';
 import useProvider from '../../hooks/useProviders';
+import { AuthContext } from '../../hooks/AuthContext';
 
 export default function ProviderCard() {
-  const { getAllProviders } = useProvider();
+  const { getAllProviders, createChat } = useProvider();
+  const { auth } = useContext(AuthContext);
   const [providers, setProviders] = useState([]);
   const [error, setError] = useState(null);
+  const [isCreatingChat, setIsCreatingChat] = useState(false);
 
   const fetchProviders = async () => {
-    console.log("Intentando obtener los proveedores...");
     try {
       const res = await getAllProviders();
-      console.log("Respuesta de getAllProviders:", res);
-
       if (res && res.length > 0) {
         setProviders(res);
         setError(null);
       } else {
-        console.log("No se encontraron proveedores.");
         setError({ message: 'No se encontraron proveedores.' });
         setProviders([]);
       }
     } catch (err) {
-      console.log("Error al obtener proveedores:", err);
       setError(err);
       setProviders([]);
     }
   };
 
+  const handleCreateChat = async (providerEmail) => {
+    if (!auth?.email || isCreatingChat) return;
+    
+    setIsCreatingChat(true);
+    
+    try {
+      const chatBody = {
+        chatName: `Chat con ${providerEmail}`,
+        users: [auth.email, providerEmail],
+        latestMessage: 'Chat iniciado'
+      };
+
+      const response = await createChat(chatBody);
+      
+      if (response?.chatroomId) {
+        // Clear any existing chat data first
+        localStorage.removeItem('chatData');
+        
+        // Save new chat data with timestamp
+        const chatData = {
+          chat: {
+            chatroomId: response.chatroomId,
+            providerEmail,
+            userEmail: auth.email,
+            createdAt: new Date().toISOString()
+          }
+        };
+        
+        localStorage.setItem('chatData', JSON.stringify(chatData));
+        window.location.href = '/chat';
+      } else {
+        throw new Error('No se recibió un ID de chat válido');
+      }
+    } catch (err) {
+      console.error('Error al crear el chat:', err);
+      alert(`Error al crear el chat: ${err.message}`);
+    } finally {
+      setIsCreatingChat(false);
+    }
+  };
+
   useEffect(() => {
+    // Clear old chat data when component mounts
+    localStorage.removeItem('chatData');
     fetchProviders();
-    return () => {
-     
-    };
   }, []);
 
   return (
@@ -54,15 +101,19 @@ export default function ProviderCard() {
                 <Typography variant="body2" color="textSecondary">
                   Correo electrónico: {provider.email}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Número de identificación: {provider.idNumber}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Dirección: {provider.streetName}, {provider.city}, {provider.postalCode}
-                </Typography>
                 <Box mt={2}>
-                  <Button variant="contained" color="primary" fullWidth>
-                    Ver detalles
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    onClick={() => handleCreateChat(provider.email)}
+                    disabled={isCreatingChat}
+                  >
+                    {isCreatingChat ? (
+                      <CircularProgress size={24} color="inherit" />
+                    ) : (
+                      'Vender P2P'
+                    )}
                   </Button>
                 </Box>
               </CardContent>

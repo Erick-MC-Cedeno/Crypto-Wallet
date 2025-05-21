@@ -13,7 +13,4 @@ export class CreateChatDto {
   @IsString()
   latestMessage?: string;
 
-  @IsOptional()
-  @IsString()
-  photo?: string;
 }

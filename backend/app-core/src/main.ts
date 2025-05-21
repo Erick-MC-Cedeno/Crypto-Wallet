@@ -12,7 +12,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['https://curly-happiness-x795wpw9x45c97g7-3000.app.github.dev'],
+    origin: ['https://bookish-cod-45gj7v7gwp7h5qx9-3000.app.github.dev'],
     credentials: true
   })
 

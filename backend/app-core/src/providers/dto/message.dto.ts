@@ -11,9 +11,5 @@ export class CreateMessageDto {
 
   @IsNotEmpty()
   @IsString()
-  chatId: string;
-
-  @IsNotEmpty()
-  @IsString()
-  hash: string;
+  chatroomId: string;
 }

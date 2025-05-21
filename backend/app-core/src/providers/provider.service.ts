@@ -65,70 +65,82 @@ export class ProviderService {
 
 
   async sendMessageAsUser(createMessageDto: CreateMessageDto): Promise<Chat> {
-    const { sender, message, chatId, hash } = createMessageDto;
-    const chat = await this.chatModel.findOne({ chatroomId: chatId });
-    if (!chat) {
-      throw new BadRequestException('Chat not found.');
-    }
-    if (!chat.users.includes(sender)) {
-      throw new BadRequestException('User is not part of this chat.');
-    }
-    const newMessage = new this.messageModel({
-      sender,
-      message,
-      chatId,
-      hash,
-    });
-    await newMessage.save();
-    chat.latestMessage = message;
-    await chat.save();
-    return chat;
+  const { sender, message, chatroomId } = createMessageDto;
+
+  const chat = await this.chatModel.findOne({ chatroomId });
+  if (!chat) {
+    throw new BadRequestException('Chat not found.');
   }
+
+  if (!chat.users.includes(sender)) {
+    throw new BadRequestException('User is not part of this chat.');
+  }
+
+  const newMessage = new this.messageModel({
+    sender,
+    message,
+    chatroomId,
+  });
+
+  await newMessage.save();
+  chat.latestMessage = message;
+  await chat.save();
+
+  return chat;
+}
 
 
   async sendMessageAsProvider(createMessageDto: CreateMessageDto): Promise<Chat> {
-    const { sender, message, chatId, hash } = createMessageDto;
-    const chat = await this.chatModel.findOne({ chatroomId: chatId });
-    if (!chat) {
-      throw new BadRequestException('Chat not found.');
-    }
-    const provider = await this.providerModel.findOne({ email: sender });
-    if (!provider) {
-      throw new BadRequestException('Provider not found.');
-    }
-    const newMessage = new this.messageModel({
-      sender,
-      message,
-      chatId,
-      hash,
-    });
-    await newMessage.save();
-    chat.latestMessage = message;
-    await chat.save();
-    return chat;
+  const { sender, message, chatroomId } = createMessageDto;
+
+  const chat = await this.chatModel.findOne({ chatroomId });
+  if (!chat) {
+    throw new BadRequestException('Chat not found.');
   }
 
-
-  async getMessages(chatId: string): Promise<any> {  
-    const chat = await this.chatModel.findOne({ chatroomId: chatId }).exec();
-    if (!chat) {
-      throw new BadRequestException('Chat not found.');
-    }
-    const messages = await this.messageModel
-      .find({ chatroomId: chat.chatroomId })  
-      .sort({ timeStamp: 1 })
-      .exec();
-    return {
-      chatId: chat.chatroomId,
-      chatName: chat.chatName,
-      users: chat.users,
-      messages: messages.map((message) => ({
-        sender: message.sender,
-        message: message.message,
-        timeStamp: message.timeStamp,
-        hash: message.hash,
-      })),
-    };
+  const provider = await this.providerModel.findOne({ email: sender });
+  if (!provider) {
+    throw new BadRequestException('Provider not found.');
   }
+
+  const newMessage = new this.messageModel({
+    sender,
+    message,
+    chatroomId,
+  });
+
+  await newMessage.save();
+
+  chat.latestMessage = message;
+  await chat.save();
+
+  return chat;
+}
+
+
+
+  async getMessages(chatroomId: string): Promise<any> {
+  const chat = await this.chatModel.findOne({ chatroomId }).exec();
+  if (!chat) {
+    throw new BadRequestException('Chat not found.');
+  }
+
+  const messages = await this.messageModel
+    .find({ chatroomId: chat.chatroomId })
+    .sort({ timeStamp: 1 })
+    .exec();
+
+  return {
+    chatroomId: chat.chatroomId,
+    chatName: chat.chatName,
+    users: chat.users,
+    messages: messages.map((message) => ({
+      sender: message.sender,
+      message: message.message,
+      timeStamp: message.timeStamp,
+    })),
+  };
+}
+
   
 }
