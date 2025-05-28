@@ -1,109 +1,82 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import { AuthContext } from './hooks/AuthContext';
-import useFindUser from './hooks/useFindUser';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Box, Container, CssBaseline } from '@mui/material';
-import PublicRoute from './components/route-control/PublicRoute';
-import PrivateRoute from './components/route-control/PrivateRoute';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Navbar from './components/Navbar';
-import Dashboard from './pages/Dashboard';
-import Wallets from './pages/Wallets';
-import Wallet from './pages/Wallet';
-import Settings from './components/settings/Settings';
-import VerifyToken from './components/2FA/verify-token';
+import React from 'react'
+import { BrowserRouter as Router, Switch } from 'react-router-dom'
+import { AuthContext } from './hooks/AuthContext'
+import useFindUser from './hooks/useFindUser'
+
+import Login from "./pages/Login"
+import { Box, Container, CssBaseline, Toolbar } from '@mui/material'
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import PublicRoute from './components/route-control/PublicRoute'
+import PrivateRoute from './components/route-control/PrivateRoute'
+import Register from './pages/Register'
+import Navbar from './components/Navbar'
+import Home from './components/Home'
+import Wallets from './pages/Wallets'
+import Wallet from './pages/Wallet'
+import WelcomeTemplate from './pages/welcometemplate'
+import ProviderCard from './components/providers/ProviderCard'
+import CreateProvider from './pages/Create';
+import Nextmain from './pages/Nextmain'
+import VerifyToken from './components/2FA/verify-token'
+import Settings from './components/settings/Settings'
+import ResendTokenForm from './components/2FA/ResendTokenForm'
+import EmailVerificationComponent from './components/settings/verify'
 import { LanguageProvider } from './hooks/LanguageContext';
-import './i18n';
+import './i18n'; 
+import Chatcomponent from './components/providers/Chat';
+import ProviderChatComponent from './components/providers/ProviderChatComponent';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#2196F3',
-      light: '#64B5F6',
-      dark: '#1976D2',
-    },
-    secondary: {
-      main: '#FF4081',
-      light: '#FF80AB',
-      dark: '#F50057',
-    },
-    background: {
-      default: '#F5F7FF',
-      paper: '#FFFFFF',
-    },
-  },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h4: {
-      fontWeight: 600,
-    },
-    h5: {
-      fontWeight: 500,
-    },
-    h6: {
-      fontWeight: 500,
-    },
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          textTransform: 'none',
-          fontWeight: 500,
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 12,
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-        },
-      },
-    },
-  },
-});
-
+// APLICACION CLIENTE
 export default function App() {
-  const { auth, setAuth, loading } = useFindUser();
+    const { auth, setAuth, loading } = useFindUser();
+    const mdTheme = createTheme();
 
-  return (
-    <Router>
-      <AuthContext.Provider value={{ auth, setAuth, loading }}>
-        <LanguageProvider>
-          <ThemeProvider theme={theme}>
-            <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-              <CssBaseline />
-              {auth && <Navbar />}
-              <Box
-                component="main"
-                sx={{
-                  flexGrow: 1,
-                  pt: auth ? 8 : 0,
-                  pb: 4,
-                  overflow: 'auto',
-                  width: '100%',
-                }}
-              >
-                <Container maxWidth={false}>
-                  <Switch>
-                    <PrivateRoute exact path="/" component={Dashboard} />
-                    <PrivateRoute exact path="/wallets" component={Wallets} />
-                    <PrivateRoute exact path="/wallet/:walletId" component={Wallet} />
-                    <PrivateRoute exact path="/settings" component={Settings} />
-                    <PublicRoute exact path="/login" component={Login} />
-                    <PublicRoute exact path="/register" component={Register} />
-                    <PublicRoute exact path="/verifytoken" component={VerifyToken} />
-                  </Switch>
-                </Container>
-              </Box>
-            </Box>
-          </ThemeProvider>
-        </LanguageProvider>
-      </AuthContext.Provider>
-    </Router>
-  );
+    return (
+        <Router>
+            <AuthContext.Provider value={{ auth, setAuth, loading }}>
+                <LanguageProvider>
+                <ThemeProvider theme={mdTheme}>
+                    <Box sx={{ display: 'flex' }}>
+                        <CssBaseline />
+                        <Navbar />
+                        <Box
+                            component="main"
+                            sx={{
+                                backgroundColor: (theme) =>
+                                    theme.palette.mode === 'light'
+                                        ? theme.palette.grey[100]
+                                        : theme.palette.grey[900],
+                                flexGrow: 1,
+                                height: '100vh',
+                                overflow: 'auto',
+                            }}
+                        >
+                            <Toolbar />
+                            <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                                <Switch>
+                                    <PrivateRoute exact path='/' component={Home} />
+                                    <PrivateRoute exact path="/wallets" component={Wallets} />
+                                    <PrivateRoute exact path="/wallet/:walletId" component={Wallet} />
+                                    <PrivateRoute exact path="/providers" component={ProviderCard} />
+                                    <PrivateRoute exact path="/create" component={CreateProvider} />
+                                    <PrivateRoute exact path='/welcome' component={WelcomeTemplate}/>
+                                    <PrivateRoute exact path='/settings' component={Settings}/>
+                                    <PrivateRoute exact path='/verifyemail' component={EmailVerificationComponent}/>
+                                    <PrivateRoute exact path='/chat' component={Chatcomponent}/>
+                                    <PrivateRoute exact path='/providerchat' component={ProviderChatComponent}/>
+                                    <PublicRoute exact path='/login' component={Login} />
+                                    <PublicRoute exact path='/register' component={Register} />
+                                    <PublicRoute exact path='/nextmain' component={Nextmain}/>
+                                    <PublicRoute exact path='/verifytoken' component={VerifyToken} />
+                                    <PublicRoute exact path='/resendtoken' component={ResendTokenForm}/>
+                                </Switch>
+                                
+                            </Container>
+                        </Box>
+                    </Box>
+                </ThemeProvider>
+                </LanguageProvider>
+            </AuthContext.Provider>
+        </Router>
+    )
 }
