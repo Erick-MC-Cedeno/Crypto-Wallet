@@ -76,37 +76,14 @@ export class TwoFactorAuthService {
       const token = await this.emailService.generateToken();
       const tokenHash = await this.hashService.hashPassword(token);
 
-      try {
-        await this.tokenModel.create({
-          email: toEmail,
-          tokenHash,
-          createdAt: new Date(),
-          isValid: false,
-          attempts: 0,
-          lastSentAt: now,
-        });
-      } catch (err: any) {
-        // Handle legacy unique index on `token` (e.g., token:null duplicates)
-        if (err && err.code === 11000 && err.keyPattern && err.keyPattern.token) {
-          try {
-            await this.tokenModel.collection.dropIndex('token_1');
-            // retry once
-            await this.tokenModel.create({
-              email: toEmail,
-              tokenHash,
-              createdAt: new Date(),
-              isValid: false,
-              attempts: 0,
-              lastSentAt: now,
-            });
-          } catch (dropErr) {
-            console.error('Error al intentar eliminar índice legacy token_1', dropErr);
-            throw err;
-          }
-        } else {
-          throw err;
-        }
-      }
+      await this.tokenModel.create({
+        email: toEmail,
+        tokenHash,
+        createdAt: new Date(),
+        isValid: false,
+        attempts: 0,
+        lastSentAt: now,
+      });
 
       await this.emailService.sendTokenLogin(toEmail, token);
       return { message: `Token enviado a ${toEmail}` };

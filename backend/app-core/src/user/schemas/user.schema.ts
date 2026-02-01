@@ -28,9 +28,7 @@ export class User {
 
     _id?: string; 
 
-    @Prop()
-    token: string;
-
+    // Email verification flag retained for account verification flows
     @Prop({ default: false })
     isValid: boolean;
 

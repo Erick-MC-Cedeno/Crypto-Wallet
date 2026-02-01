@@ -10,6 +10,7 @@ import {
   Patch
 } from '@nestjs/common';
 import { AuthService } from '../auth/auth.service';
+import { TwoFactorAuthService } from '../two-factor/verification.service';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -23,7 +24,8 @@ import { UpdateProfileDto } from './dto/update-profile';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly twoFactorAuthService: TwoFactorAuthService,
   ) {}
 
   @Post('register')
@@ -44,7 +46,7 @@ export class UserController {
 
   @Post('resend-token')
   async resendToken(@Body() { email }: { email: string }) {
-    await this.authService.resendVerificationToken(email);
+    await this.twoFactorAuthService.resendToken(email);
     return { message: 'Código de verificación reenviado a tu correo electrónico.' };
   }
 

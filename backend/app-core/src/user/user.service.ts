@@ -85,47 +85,7 @@ async sendVerificationEmail(email: string): Promise<boolean> {
   }
 }
 
-
-  async updateUserToken(email: string, token: string) {
-    const tokenHash = await this.hashService.hashPassword(token);
-    return this.userModel.findOneAndUpdate({ email }, { token: tokenHash, isValid: false }).exec();
-  }
-
-  async validateUserToken(email: string, token: string) {
-    const user = await this.getUserByEmail(email);
-    if (user && user.token) {
-      const match = await this.hashService.comparePassword(token, user.token);
-      if (match && !user.isValid) {
-        user.isValid = true;
-        user.token = undefined;
-        await user.save();
-        return true;
-      }
-    }
-    return false;
-  }
-
-  async sendVerificationToken(email: string): Promise<void> {
-    const user = await this.getUserByEmail(email);
-    if (user?.isTokenEnabled) {
-      try {
-        await this.twoFactorAuthService.sendToken(email);
-      } catch (error) {
-        throw new InternalServerErrorException('Failed to send verification token.');
-      }
-    }
-  }
-
-  async resendVerificationToken(email: string): Promise<void> {
-    const user = await this.getUserByEmail(email);
-    if (user?.isTokenEnabled) {
-      try {
-        await this.twoFactorAuthService.resendToken(email);
-      } catch (error) {
-        throw new InternalServerErrorException('Failed to resend verification token.');
-      }
-    }
-  }
+  // Legacy token management removed. Two-factor auth is handled solely by TwoFactorAuthService.
 
   async updateTokenStatus(email: string, isTokenEnabled: boolean) {
     const user = await this.getUserByEmail(email);
