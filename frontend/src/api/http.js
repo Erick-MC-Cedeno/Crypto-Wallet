@@ -1,7 +1,7 @@
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
-const baseApi = 'https://stunning-giggle-76rv959r4x7hwrqx-4000.app.github.dev/secure/api'
+const baseApi = 'https://cuddly-space-rotary-phone-6qr9g5gr57gc549x-4000.app.github.dev/secure/api'
 
 // Endpoints usuario
 const loginApi = `${baseApi}/user/login`
