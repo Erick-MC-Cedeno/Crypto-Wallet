@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { randomInt } from 'crypto';
 
 @Injectable()
 export class EmailService {
@@ -78,9 +79,9 @@ export class EmailService {
   }
 
   async generateToken(): Promise<string> {
-    // Genera un token aleatorio de 6 dígitos
-    const token = Math.floor(100000 + Math.random() * 900000).toString();
-    return token;
+    // Genera un token aleatorio de 6 dígitos usando crypto
+    const num = randomInt(0, 1000000);
+    return String(num).padStart(6, '0');
   }
 
 

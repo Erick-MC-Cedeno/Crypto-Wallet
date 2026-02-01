@@ -1,16 +1,20 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { EmailService } from '../user/email.service';
 import { Token } from './schemas/verification.schema';
+import { HashService } from '../user/hash.service';
 
 @Injectable()
 export class TwoFactorAuthService {
-  private readonly TOKEN_EXPIRY_MS = 60000; // 1 minuto
+  private readonly TOKEN_EXPIRY_MS = 5 * 60 * 1000; // 5 minutos
+  private readonly COOLDOWN_MS = 60 * 1000; // 1 minuto entre envíos
+  private readonly MAX_ATTEMPTS = 5;
 
   constructor(
     private readonly emailService: EmailService,
     @InjectModel('Token') private readonly tokenModel: Model<Token>,
+    private readonly hashService: HashService,
   ) {}
 
   async sendToken(toEmail: string): Promise<{ message: string }> {
@@ -19,20 +23,31 @@ export class TwoFactorAuthService {
 
   async verifyToken(toEmail: string, token: string): Promise<{ isValid: boolean; message: string }> {
     try {
-      const tokenEntry = await this.tokenModel.findOne({ token, email: toEmail }).exec();
+      const tokenEntry = await this.tokenModel.findOne({ email: toEmail }).sort({ createdAt: -1 }).exec();
       if (!tokenEntry) {
         return { isValid: false, message: 'Token incorrecto o correo electrónico incorrecto' };
       }
 
       const currentTime = Date.now();
-      const tokenAge = currentTime - tokenEntry.timestamp;
+      const tokenAge = currentTime - tokenEntry.createdAt.getTime();
       if (tokenAge > this.TOKEN_EXPIRY_MS) {
-        await this.tokenModel.deleteOne({ token }).exec();
+        await this.tokenModel.deleteOne({ _id: tokenEntry._id }).exec();
         return { isValid: false, message: 'Token expirado' };
       }
 
       if (tokenEntry.isValid) {
         return { isValid: false, message: 'Token ya validado' };
+      }
+
+      if (tokenEntry.attempts >= this.MAX_ATTEMPTS) {
+        return { isValid: false, message: 'Demasiados intentos. Intenta más tarde.' };
+      }
+
+      const isMatch = await this.hashService.comparePassword(token, tokenEntry.tokenHash);
+      if (!isMatch) {
+        tokenEntry.attempts = (tokenEntry.attempts || 0) + 1;
+        await tokenEntry.save();
+        return { isValid: false, message: 'Token incorrecto' };
       }
 
       tokenEntry.isValid = true;
@@ -50,17 +65,54 @@ export class TwoFactorAuthService {
 
   private async createAndSendToken(toEmail: string): Promise<{ message: string }> {
     try {
-      const token = await this.emailService.generateToken(); 
-      const timestamp = Date.now();
-      await this.tokenModel.create({
-        email: toEmail,
-        token,
-        timestamp,
-        isValid: false,
-      });
+      const last = await this.tokenModel.findOne({ email: toEmail }).sort({ createdAt: -1 }).exec();
+      const now = Date.now();
+      if (last && last.lastSentAt && (now - last.lastSentAt) < this.COOLDOWN_MS) {
+        const remainingMs = this.COOLDOWN_MS - (now - last.lastSentAt);
+        const remainingSec = Math.ceil(remainingMs / 1000);
+        throw new BadRequestException(`Debes esperar ${remainingSec} segundos antes de solicitar otro token.`);
+      }
+
+      const token = await this.emailService.generateToken();
+      const tokenHash = await this.hashService.hashPassword(token);
+
+      try {
+        await this.tokenModel.create({
+          email: toEmail,
+          tokenHash,
+          createdAt: new Date(),
+          isValid: false,
+          attempts: 0,
+          lastSentAt: now,
+        });
+      } catch (err: any) {
+        // Handle legacy unique index on `token` (e.g., token:null duplicates)
+        if (err && err.code === 11000 && err.keyPattern && err.keyPattern.token) {
+          try {
+            await this.tokenModel.collection.dropIndex('token_1');
+            // retry once
+            await this.tokenModel.create({
+              email: toEmail,
+              tokenHash,
+              createdAt: new Date(),
+              isValid: false,
+              attempts: 0,
+              lastSentAt: now,
+            });
+          } catch (dropErr) {
+            console.error('Error al intentar eliminar índice legacy token_1', dropErr);
+            throw err;
+          }
+        } else {
+          throw err;
+        }
+      }
+
       await this.emailService.sendTokenLogin(toEmail, token);
       return { message: `Token enviado a ${toEmail}` };
     } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      console.error('Error al crear/enviar token', error);
       throw new InternalServerErrorException('Error al enviar el token.');
     }
   }

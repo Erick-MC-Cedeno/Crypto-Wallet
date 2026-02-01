@@ -34,60 +34,12 @@ export class UserController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async loginUser(@Body() loginUserDto: LoginUserDto, @Request() req) {
-    const { email, password } = loginUserDto;
-    const user = await this.authService.validateUser(email, password);
-    if (!user) {
-      throw new UnauthorizedException('Credenciales incorrectas.');
-    }
-
-    if (user.isTokenEnabled) {
-      await this.authService.sendVerificationToken(email);
-      return { msg: 'Código de verificación enviado a tu correo electrónico.' };
-    } else {
-      return new Promise((resolve, reject) => {
-        req.login(user, (err) => {
-          if (err) {
-            reject(new UnauthorizedException('Error al iniciar sesión.'));
-          } else {
-            resolve({ msg: 'Logged in!' });
-          }
-        });
-      });
-    }
+    return this.authService.login(loginUserDto, req);
   }
 
   @Post('verify-token')
   async verifyToken(@Body() verifyTokenDto: VerifyTokenDto, @Request() req) {
-    const { email, token } = verifyTokenDto;
-    try {
-      const tokenData = await this.authService.validateToken(email, token);
-      if (tokenData && tokenData.isValid) {
-        const user = await this.userService.getUserByEmail(email);
-        if (!user) {
-          throw new UnauthorizedException('Usuario no encontrado.');
-        }
-        if (!user.isTokenEnabled) {
-          throw new UnauthorizedException('La verificación de token está desactivada.');
-        }
-        return new Promise((resolve, reject) => {
-          req.login(user, (err) => {
-            if (err) {
-              reject(new UnauthorizedException('Error al iniciar sesión.'));
-            } else {
-              resolve({ msg: 'Logged in!' });
-            }
-          });
-        });
-      } else {
-        throw new UnauthorizedException(tokenData.message || 'Código de verificación inválido.');
-      }
-    } catch (error) {
-      if (error instanceof UnauthorizedException) {
-        throw error;
-      } else {
-        throw new BadRequestException('Token o correo electrónico incorrectos.');
-      }
-    }
+    return this.authService.verifyAndLogin(verifyTokenDto, req);
   }
 
   @Post('resend-token')
@@ -100,13 +52,7 @@ export class UserController {
   @Patch('update-token-status')
   async updateTokenStatus(@Body() updateTokenStatusDto: { email: string; isTokenEnabled: boolean }) {
     const { email, isTokenEnabled } = updateTokenStatusDto;
-    const user = await this.userService.getUserByEmail(email);
-    if (!user) {
-      throw new UnauthorizedException('Usuario no encontrado.');
-    }
-    user.isTokenEnabled = isTokenEnabled;
-    await user.save();
-    return { msg: 'Seguridad de la cuenta actualizada con éxito.' };
+    return this.userService.updateTokenStatus(email, isTokenEnabled);
   }
 
   @UseGuards(AuthenticatedGuard)

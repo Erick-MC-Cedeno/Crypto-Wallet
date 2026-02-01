@@ -87,15 +87,20 @@ async sendVerificationEmail(email: string): Promise<boolean> {
 
 
   async updateUserToken(email: string, token: string) {
-    return this.userModel.findOneAndUpdate({ email }, { token, isValid: false }).exec();
+    const tokenHash = await this.hashService.hashPassword(token);
+    return this.userModel.findOneAndUpdate({ email }, { token: tokenHash, isValid: false }).exec();
   }
 
   async validateUserToken(email: string, token: string) {
     const user = await this.getUserByEmail(email);
-    if (user && user.token === token && !user.isValid) {
-      user.isValid = true;
-      await user.save();
-      return true;
+    if (user && user.token) {
+      const match = await this.hashService.comparePassword(token, user.token);
+      if (match && !user.isValid) {
+        user.isValid = true;
+        user.token = undefined;
+        await user.save();
+        return true;
+      }
     }
     return false;
   }
@@ -120,6 +125,16 @@ async sendVerificationEmail(email: string): Promise<boolean> {
         throw new InternalServerErrorException('Failed to resend verification token.');
       }
     }
+  }
+
+  async updateTokenStatus(email: string, isTokenEnabled: boolean) {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado.');
+    }
+    user.isTokenEnabled = isTokenEnabled;
+    await user.save();
+    return { msg: 'Seguridad de la cuenta actualizada con éxito.' };
   }
 
   async changePassword(email: string, changePasswordDto: ChangePasswordDto) {

@@ -49,18 +49,19 @@ export default function useAuth() {
         try {
             const { data } = await User.login(body);
             if (data && 'msg' in data) {
-                if (data.msg === 'Código de verificación enviado a tu correo electrónico.') {
-                    history.push('/verifytoken');
-                } else if (data.msg === 'Logged in!') {
+                if (data.msg === 'Logged in!') {
                     await setUserContext();
-                } else {
-                    setError(data.error);
                 }
+                return data;
             } else {
-                setError('Credenciales incorrectas.');
+                const errMsg = data?.error || 'Credenciales incorrectas.';
+                setError(errMsg);
+                return null;
             }
         } catch (err) {
-            setError('Credenciales incorrectas.');
+            const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Credenciales incorrectas.';
+            setError(msg);
+            return null;
         }
     };
 
