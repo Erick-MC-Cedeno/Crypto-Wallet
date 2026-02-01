@@ -24,7 +24,6 @@ export default function Login() {
         setLoading(true); 
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
             const responseMessage = await loginUser(data);
             if (isMounted.current) {
                 if (responseMessage && responseMessage.msg === 'Código de verificación enviado a tu correo electrónico.') {
