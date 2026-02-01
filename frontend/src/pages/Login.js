@@ -59,9 +59,10 @@ export default function Login() {
     return (
         <Box
             sx={{
-                marginTop: 8,
+                minHeight: 'calc(100vh - 140px)',
                 display: 'flex',
                 flexDirection: 'column',
+                justifyContent: 'center',
                 alignItems: 'center',
                 width: '100%',
             }}
@@ -69,17 +70,12 @@ export default function Login() {
             <Box
                 sx={{
                     width: '100%',
-                    maxWidth: '500px',
-                    padding: 3,
-                    borderRadius: 2,
-                    boxShadow: '0 0 25px rgba(0, 123, 255, 0.6)', 
-                    bgcolor: 'white',
+                    maxWidth: '480px',
+                    mt: 0,
+                    px: 2,
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    animation: 'glow 1.5s infinite alternate', 
                 }}
             >
                 <Box
@@ -102,7 +98,7 @@ export default function Login() {
                 <Box
                     sx={{
                         width: '100%',
-                        mt: 3,
+                        mt: 0,
                     }}
                     component="form"
                     onSubmit={handleSubmit}
