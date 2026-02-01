@@ -101,7 +101,7 @@ export default function Register() {
             </Box>
 
             <Typography component="h1" variant="h5" sx={{ fontWeight: 502 }}>
-              BlockVault register
+              Register now
             </Typography>
           </Box>
 

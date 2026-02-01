@@ -116,7 +116,7 @@ export default function Login() {
             </Box>
 
             <Typography component="h1" variant="h5" sx={{ fontWeight: 502 }}>
-              BlockVault login
+              Login now
             </Typography>
           </Box>
 
