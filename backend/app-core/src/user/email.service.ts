@@ -86,7 +86,7 @@ export class EmailService {
 
 
   async sendVerificationEmail(email: string): Promise<void> {
-    const verificationUrl = `https://organic-capybara-pjq44v49rvjxf76jw-3000.app.github.dev/verifyemail`;
+    const verificationUrl = `https://cuddly-broccoli-x795wpw9p55fpg5r-3000.app.github.dev/verifyemail`;
 
     const mailOptions = {
       from: 'BlockVault <noreply@blockvault.com>',
@@ -146,7 +146,7 @@ export class EmailService {
   }
 
   async sendForgotPasswordEmail(email: string, token: string): Promise<void> {
-    const resetUrl = `https://organic-capybara-pjq44v49rvjxf76jw-3000.app.github.dev/reset-password?email=${encodeURIComponent(
+    const resetUrl = `https://cuddly-broccoli-x795wpw9p55fpg5r-3000.app.github.dev/reset-password?email=${encodeURIComponent(
       email,
     )}&token=${encodeURIComponent(token)}`;
 
