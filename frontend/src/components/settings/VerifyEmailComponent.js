@@ -1,8 +1,11 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import { Alert, Typography, CircularProgress, Button, Snackbar } from '@mui/material'; 
+import { Alert, Typography, CircularProgress, Button, Snackbar, Box } from '@mui/material'; 
 import { AuthContext } from '../../hooks/AuthContext'; 
 import useAuth from '../../hooks/useAuth'; 
 import MuiAlert from '@mui/material/Alert';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 const VerifyEmailComponent = () => {
     const { auth } = useContext(AuthContext); 
@@ -84,28 +87,33 @@ const VerifyEmailComponent = () => {
                 variant="h4" 
                 gutterBottom 
                 sx={{ 
-                    fontWeight: 'bold', 
-                    color: '#333', 
+                    fontWeight: 700,
+                    color: '#0E1BCE', 
                     textAlign: 'center', 
                     padding: 2,
-                    fontSize: { xs: '1.5rem', sm: '2rem' } 
+                    fontSize: { xs: '1.4rem', sm: '1.9rem' } 
                 }}
             >
-                Verificar Correo Electrónico
+                Verificar correo electrónico
             </Typography>
-            <Typography 
-                variant="body1" 
-                gutterBottom 
-                sx={{ 
-                    color: '#555', 
-                    textAlign: 'center', 
-                    maxWidth: '400px', 
-                    margin: '0 auto', 
-                    fontSize: { xs: '0.9rem', sm: '1rem' } 
-                }}
-            >
-                Correo electrónico autenticado: <strong>{auth?.email || 'Correo no disponible'}</strong>
-            </Typography>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 1 }}>
+                <EmailOutlinedIcon sx={{ color: '#6b7280' }} />
+                <Typography 
+                    variant="body1" 
+                    gutterBottom 
+                    sx={{ 
+                        color: '#4b5563', 
+                        textAlign: 'center', 
+                        maxWidth: '520px', 
+                        margin: '0 auto', 
+                        fontSize: { xs: '0.9rem', sm: '1rem' } 
+                    }}
+                >
+                    Correo autenticado: <Box component="span" sx={{ fontWeight: 700, color: '#111827' }}>{auth?.email || 'Correo no disponible'}</Box>
+                </Typography>
+            </Box>
+
             {loading ? (
                 <CircularProgress sx={{ display: 'block', margin: '20px auto', color: '#1976d2' }} />
             ) : (
@@ -113,40 +121,46 @@ const VerifyEmailComponent = () => {
                     {localError && (
                         <Alert 
                             severity="error" 
+                            variant="filled"
                             sx={{ 
                                 mt: 3, 
                                 borderRadius: '8px', 
-                                backgroundColor: '#f44336', 
                                 color: '#fff', 
-                                fontWeight: 'bold', 
+                                fontWeight: 600, 
                                 textAlign: 'center', 
-                                maxWidth: '400px', 
-                                margin: '0 auto' 
+                                maxWidth: '520px', 
+                                margin: '0 auto',
+                                px: 2
                             }}
                         >
                             {localError}
                         </Alert>
                     )}
+
                     {verificationStatus && (
                         <Alert 
                             severity={verificationStatus.verified ? 'success' : 'warning'} 
+                            variant="outlined"
+                            icon={verificationStatus.verified ? <CheckCircleOutlineIcon /> : <WarningAmberIcon />}
                             sx={{ 
                                 mt: 3, 
-                                borderRadius: '8px', 
-                                backgroundColor: verificationStatus.verified ? '#4caf50' : '#ff9800', 
-                                color: '#fff', 
-                                fontWeight: 'bold', 
+                                borderRadius: '10px', 
                                 textAlign: 'center', 
-                                maxWidth: '400px', 
-                                margin: '0 auto' 
+                                maxWidth: '520px', 
+                                margin: '0 auto',
+                                px: 2,
+                                py: 1.2,
+                                bgcolor: verificationStatus.verified ? 'rgba(16,185,129,0.06)' : 'rgba(255,152,0,0.06)'
                             }}
                         >
-                            {verificationStatus.message}
+                            <Typography component="span" sx={{ fontWeight: 700, color: verificationStatus.verified ? '#065f46' : '#7c2d00' }}>
+                                {verificationStatus.message}
+                            </Typography>
                         </Alert>
                     )}
+
                     <Button
                         variant="contained"
-                        color="primary"
                         onClick={handleSendVerificationEmail}
                         disabled={emailVerified || sending} 
                         sx={{ 
@@ -154,31 +168,37 @@ const VerifyEmailComponent = () => {
                             margin: '20px auto', 
                             padding: '10px 20px', 
                             fontSize: { xs: '14px', sm: '16px' }, 
-                            borderRadius: '20px', 
-                            maxWidth: '200px' 
+                            borderRadius: '12px', 
+                            maxWidth: '220px',
+                            background: 'linear-gradient(90deg,#115AF7,#0E1BCE)',
+                            boxShadow: '0 8px 24px rgba(14,27,206,0.12)',
+                            '&:hover': { filter: 'brightness(0.97)' }
                         }}
                     >
-                        {sending ? <CircularProgress size={24} color="inherit" /> : (emailVerified ? 'Verificado' : 'Enviar Correo')}
+                        {sending ? <CircularProgress size={22} color="inherit" /> : (emailVerified ? 'Verificado' : 'Enviar correo')}
                     </Button>
                 </>
             )}
+
             <Snackbar open={snackbar.open} autoHideDuration={4000} onClose={handleCloseSnackbar}>
                 <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
                     {snackbar.message}
                 </MuiAlert>
             </Snackbar>
+
             {error && (
                 <Alert 
                     severity="error" 
+                    variant="filled"
                     sx={{ 
                         mb: 2, 
                         borderRadius: '8px', 
-                        backgroundColor: '#f44336', 
                         color: '#fff', 
                         fontWeight: 'bold', 
                         textAlign: 'center', 
-                        maxWidth: '400px', 
-                        margin: '0 auto' 
+                        maxWidth: '520px', 
+                        margin: '0 auto',
+                        px: 2
                     }}
                 >
                     {error}

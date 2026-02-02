@@ -61,54 +61,57 @@ const EmailVerificationComponent = () => {
                 textAlign: 'center',
             }}
         >
-            <Paper elevation={3} sx={{ padding: 3, borderRadius: 2, maxWidth: 400, width: '100%', backgroundColor: 'white' }}>
-                {!showCloseMessage ? (
-                    <>
-                        <Typography variant="h4" gutterBottom sx={{ fontSize: '2rem', fontWeight: 'bold', color: '#333' }}>
-                            Verificar Correo Electrónico
-                        </Typography>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleVerifyClick}
-                            sx={{ mt: 3, fontSize: '1.2rem', padding: '10px 20px', backgroundColor: '#0366d6', '&:hover': { backgroundColor: '#005cc5' } }} // Colores de GitHub
-                        >
-                            Enviar Correo de Verificación
-                        </Button>
+            <Box sx={{ maxWidth: 480, width: '100%' }}>
+                    {!showCloseMessage ? (
+                        <>
+                            <Typography variant="h4" gutterBottom sx={{ fontSize: '1.8rem', fontWeight: 700, color: '#0E1BCE' }}>
+                                Verificar correo electrónico
+                            </Typography>
+                            <Typography variant="body1" sx={{ color: '#555', mb: 2 }}>
+                                Haz clic en el botón para validar tu dirección de correo asociada a la cuenta.
+                            </Typography>
 
-                        <Dialog
-                            open={openDialog}
-                            onClose={handleCloseDialog}
-                            PaperProps={{
-                                sx: {
-                                    padding: 3,
-                                    textAlign: 'center',
-                                    borderRadius: 2,
-                                    bgcolor: 'background.paper',
-                                },
-                            }}
-                        >
-                            <DialogTitle>Estado de Verificación</DialogTitle>
-                            <DialogContent
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
+                            <Button
+                                variant="contained"
+                                onClick={handleVerifyClick}
+                                sx={{ mt: 2, fontSize: '1rem', padding: '10px 18px', background: 'linear-gradient(90deg,#115AF7,#0E1BCE)', boxShadow: '0 6px 18px rgba(14,27,206,0.12)', '&:hover': { filter: 'brightness(0.95)' } }}
+                            >
+                                Validar correo electrónico
+                            </Button>
+
+                            <Dialog
+                                open={openDialog}
+                                onClose={handleCloseDialog}
+                                PaperProps={{
+                                    sx: {
+                                        padding: 3,
+                                        textAlign: 'center',
+                                        borderRadius: 2,
+                                        minWidth: 300,
+                                    },
                                 }}
                             >
-                                <Typography variant="body1" sx={{ mt: 2, color: '#333' }}>
-                                    {dialogMessage}
-                                </Typography>
-                            </DialogContent>
-                        </Dialog>
-                    </>
-                ) : (
-                    <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary', fontSize: '1.1rem' }}>
-                        Puedes cerrar esta ventana.
-                    </Typography>
-                )}
-            </Paper>
+                                <DialogTitle sx={{ fontWeight: 700 }}>Estado de verificación</DialogTitle>
+                                <DialogContent
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Typography variant="body1" sx={{ mt: 2, color: '#333' }}>
+                                        {dialogMessage}
+                                    </Typography>
+                                </DialogContent>
+                            </Dialog>
+                        </>
+                    ) : (
+                        <Typography variant="body2" sx={{ mt: 2, color: 'text.secondary', fontSize: '1.05rem' }}>
+                            Puedes cerrar esta ventana.
+                        </Typography>
+                    )}
+                </Box>
         </Box>
     );
 };

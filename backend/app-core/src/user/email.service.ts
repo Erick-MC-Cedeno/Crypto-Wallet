@@ -86,15 +86,63 @@ export class EmailService {
 
 
   async sendVerificationEmail(email: string): Promise<void> {
-    const verificationUrl = `http://localhost:3000/verifyemail`;
+    const verificationUrl = `https://organic-capybara-pjq44v49rvjxf76jw-3000.app.github.dev/verifyemail`;
 
-    await this.transporter.sendMail({
-      from: '"Your App" <your-email@example.com>',
+    const mailOptions = {
+      from: 'BlockVault <noreply@blockvault.com>',
       to: email,
-      subject: 'Email Verification',
-      text: `Please verify your email by clicking on the following link: ${verificationUrl}`,
-      html: `<p>Please verify your email by clicking on the following link: <a href="${verificationUrl}">Verify Email</a></p>`,
-    });
+      subject: 'Verifica tu correo electrónico',
+      html: `
+        <html>
+        <head>
+          <meta charset="utf-8" />
+          <meta name="viewport" content="width=device-width,initial-scale=1" />
+          <style>
+            body { font-family: Arial, sans-serif; background-color: #003366; margin:0; padding:0; color:#333 }
+            .container { max-width:600px; margin:20px auto; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15) }
+            .header { background:linear-gradient(90deg,#115AF7,#0E1BCE); color:#fff; padding:18px; text-align:center }
+            .header h1 { margin:0; font-size:24px }
+            .content { padding:24px }
+            .lead { font-size:16px; margin-bottom:18px }
+            .button { display:inline-block; background:#115AF7; color:#fff; padding:12px 20px; border-radius:6px; text-decoration:none; font-weight:600 }
+            .muted { color:#666; font-size:14px; margin-top:16px }
+            .footer { background:#f4f4f4; padding:14px; text-align:center; font-size:13px; color:#666 }
+            @media (max-width:420px){ .container{margin:10px} .content{padding:16px} }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>BlockVault</h1>
+            </div>
+            <div class="content">
+              <p class="lead">Hola,</p>
+              <p>Por favor verifica tu correo electrónico haciendo clic en el botón de abajo para activar tu cuenta.</p>
+
+              <p style="text-align:center; margin:24px 0"> 
+                <a class="button" href="${verificationUrl}">Verificar correo</a>
+              </p>
+
+              <p class="muted">Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
+              <p class="muted"><a href="${verificationUrl}">${verificationUrl}</a></p>
+
+              <p class="muted">Este enlace expirará en 60 minutos. Si no solicitaste esta verificación, ignora este correo.</p>
+            </div>
+            <div class="footer">
+              <div>Consejos para proteger tu cuenta: utiliza 2FA y no compartas tus credenciales.</div>
+              <div style="margin-top:8px">Gracias por usar BlockVault.</div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error al enviar el correo de verificación:', error);
+    }
   }
 
 
