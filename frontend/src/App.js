@@ -21,6 +21,8 @@ import VerifyToken from './components/2FA/verify-token'
 import Settings from './components/settings/Settings'
 import ResendTokenForm from './components/2FA/ResendTokenForm'
 import EmailVerificationComponent from './components/settings/verify'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import { LanguageProvider } from './hooks/LanguageContext';
 import './i18n'; 
 import Chatcomponent from './components/providers/Chat';
@@ -66,6 +68,8 @@ export default function App() {
                                     <PrivateRoute exact path='/providerchat' component={ProviderChatComponent}/>
                                     <PublicRoute exact path='/login' component={Login} />
                                     <PublicRoute exact path='/register' component={Register} />
+                                    <PublicRoute exact path='/forgot-password' component={ForgotPassword} />
+                                    <PublicRoute exact path='/reset-password' component={ResetPassword} />
                                     <PublicRoute exact path='/nextmain' component={Nextmain}/>
                                     <PublicRoute exact path='/verifytoken' component={VerifyToken} />
                                     <PublicRoute exact path='/resendtoken' component={ResendTokenForm}/>

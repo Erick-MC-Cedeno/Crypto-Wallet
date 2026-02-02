@@ -21,12 +21,13 @@ import MuiAlert from '@mui/material/Alert';
 
 const TwoFactorAuthComponent = () => {
   const { auth } = useContext(AuthContext);
-  const { updateTokenStatus, error, setError } = useAuth();
+  const { updateTokenStatus } = useAuth();
 
   const [isTokenEnabled, setIsTokenEnabled] = useState(() => localStorage.getItem('isTokenEnabled') === 'true');
   const [showWarning, setShowWarning] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: '' });
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTokenStatus = async () => {
@@ -34,11 +35,13 @@ const TwoFactorAuthComponent = () => {
       try {
         const { data } = await User.getInfo();
         if (data?.data) {
-          const { isTokenEnabled } = data.data;
-          setIsTokenEnabled(isTokenEnabled);
-          localStorage.setItem('isTokenEnabled', isTokenEnabled);
+          const { isTokenEnabled: tokenStatus } = data.data;
+          if (tokenStatus !== undefined) {
+            setIsTokenEnabled(tokenStatus);
+            localStorage.setItem('isTokenEnabled', String(tokenStatus));
+          }
         } else {
-          setError(data.error);
+          setError(data?.error || 'Error fetching token status');
         }
       } catch (err) {
         setError(err.message);
@@ -46,7 +49,7 @@ const TwoFactorAuthComponent = () => {
     };
 
     fetchTokenStatus();
-  }, [auth, setError]);
+  }, [auth]);
 
   const toggleTwoFactorAuth = () => {
     if (isTokenEnabled) {

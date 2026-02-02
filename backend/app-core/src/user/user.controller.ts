@@ -19,6 +19,7 @@ import { LocalAuthGuard } from '../guard/auth/local-auth.guard';
 import { AuthenticatedGuard } from '../guard/auth/authenticated.guard';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile';
+import { ForgotPasswordService } from './forgot.password.service';
 
 @Controller('user')
 export class UserController {
@@ -26,6 +27,7 @@ export class UserController {
     private readonly userService: UserService,
     private readonly authService: AuthService,
     private readonly twoFactorAuthService: TwoFactorAuthService,
+    private readonly forgotPasswordService: ForgotPasswordService,
   ) {}
 
   @Post('register')
@@ -113,4 +115,24 @@ async isEmailVerified(@Request() req): Promise<{ isVerified: boolean; message: s
     const email = req.user.email; 
     return this.userService.isEmailVerified(email); 
 }
+  @Post('forgot-password')
+  async forgotPassword(@Body() body: { email: string }) {
+    const { email } = body;
+    try {
+      await this.forgotPasswordService.requestPasswordReset(email);
+      return { message: 'Correo de restablecimiento enviado si el usuario existe.' };
+    } catch (error) {
+      throw new BadRequestException(error.message || 'No se pudo procesar la solicitud.');
+    }
+  }
+
+  @Post('reset-password')
+  async resetPassword(@Body() body: { email: string; token: string; newPassword: string; confirmNewPassword: string }) {
+    const { email, token, newPassword, confirmNewPassword } = body;
+    try {
+      return await this.forgotPasswordService.resetPassword(email, token, newPassword, confirmNewPassword);
+    } catch (error) {
+      throw new BadRequestException(error.message || 'No se pudo restablecer la contraseña.');
+    }
+  }
 }

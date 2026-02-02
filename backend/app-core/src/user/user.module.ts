@@ -7,6 +7,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { AuthService } from '../auth/auth.service';
 import { TwoFactorAuthModule } from 'src/two-factor/verification.module';
 import { EmailModule } from './email.module';
+import { ForgotPasswordService } from './forgot.password.service';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { EmailModule } from './email.module';
     UserService,
     HashService,
     AuthService
+  ,ForgotPasswordService
   ],
   exports: [UserService, MongooseModule.forFeature([{ name: User.name, schema: UserSchema }])], 
 })

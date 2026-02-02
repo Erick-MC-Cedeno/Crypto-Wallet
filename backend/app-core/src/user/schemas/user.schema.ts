@@ -35,6 +35,13 @@ export class User {
     @Prop({ default: false })
     isTokenEnabled: boolean;
     
+    // Campos para restablecimiento de contraseña
+    @Prop()
+    resetPasswordToken?: string;
+
+    @Prop()
+    resetPasswordExpires?: Date;
+    
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

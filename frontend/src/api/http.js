@@ -16,6 +16,8 @@ const resendTokenApi = `${baseApi}/user/resend-token`
 const verifyEmailApi = `${baseApi}/user/verify-email`;
 const sendVerificationEmailApi = `${baseApi}/user/send-verification-email`;
 const isEmailVerifiedApi = `${baseApi}/user/is-email-verified`;
+const forgotPasswordApi = `${baseApi}/user/forgot-password`;
+const resetPasswordApi = `${baseApi}/user/reset-password`;
 
 // Endpoints wallet
 const walletInfoApi = `${baseApi}/wallet/info`
@@ -79,6 +81,8 @@ export {
     verifyEmailApi,
     sendVerificationEmailApi,
     isEmailVerifiedApi,
+    forgotPasswordApi,
+    resetPasswordApi,
     createProvider,
     findByEMail,
     getAllProviders,
