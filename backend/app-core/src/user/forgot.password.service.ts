@@ -6,6 +6,7 @@ import { User, UserDocument } from './schemas/user.schema';
 import { HashService } from './hash.service';
 import { EmailService } from './email.service';
 
+// Service for handling forgot password functionality
 @Injectable()
 export class ForgotPasswordService {
   constructor(
@@ -14,12 +15,15 @@ export class ForgotPasswordService {
     private emailService: EmailService,
   ) {}
 
+
+  // Handles password reset requests by generating a token, saving it to the user, and sending an email
   async requestPasswordReset(email: string): Promise<boolean> {
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
       throw new BadRequestException('Usuario no encontrado');
     }
 
+    // Rate limit: only allow one reset request every 2 minutes
     const now = Date.now();
     const RATE_LIMIT_MS = 2 * 60 * 1000; // 2 minutos
     if (user.resetPasswordLastSentAt && (now - user.resetPasswordLastSentAt) < RATE_LIMIT_MS) {
@@ -27,7 +31,7 @@ export class ForgotPasswordService {
       const remainingSec = Math.ceil(remainingMs / 1000);
       throw new BadRequestException(`Debes esperar ${remainingSec} segundos antes de solicitar otro restablecimiento.`);
     }
-
+// Generate a secure random token and save its hash to the user document
     const token = randomBytes(20).toString('hex');
     const expires = new Date(now + RATE_LIMIT_MS); // 2 minutos
 
@@ -45,6 +49,8 @@ export class ForgotPasswordService {
     return true;
   }
 
+
+// Resets the user's password after validating the token and new password
   async resetPassword(email: string, token: string, newPassword: string, confirmNewPassword: string) {
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {

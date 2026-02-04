@@ -17,10 +17,14 @@ export class TwoFactorAuthService {
     private readonly hashService: HashService,
   ) {}
 
+
+  //Methods for 2FA token management
   async sendToken(toEmail: string): Promise<{ message: string }> {
     return this.createAndSendToken(toEmail);
   }
 
+
+  // Verify the token provided by the user
   async verifyToken(toEmail: string, token: string): Promise<{ isValid: boolean; message: string }> {
     try {
       const tokenEntry = await this.tokenModel.findOne({ email: toEmail }).sort({ createdAt: -1 }).exec();
@@ -59,10 +63,14 @@ export class TwoFactorAuthService {
     }
   }
 
+
+  // Resend a new token to the user, enforcing cooldown
   async resendToken(toEmail: string): Promise<{ message: string }> {
     return this.createAndSendToken(toEmail);
   }
 
+
+  // Internal method to create a new token, save it, and send it via email
   private async createAndSendToken(toEmail: string): Promise<{ message: string }> {
     try {
       const last = await this.tokenModel.findOne({ email: toEmail }).sort({ createdAt: -1 }).exec();

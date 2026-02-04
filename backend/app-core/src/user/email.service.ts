@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { randomInt } from 'crypto';
 
+
+// Service for sending various types of emails to users
 @Injectable()
 export class EmailService {
   private transporter = nodemailer.createTransport({
@@ -12,6 +14,7 @@ export class EmailService {
     },
   });
 
+  // Sends a login token email to the user with security tips
   async sendTokenLogin(toEmail: string, token: string): Promise<void> {
     const mailOptions = {
       from: 'BlockVault <noreply@blockvault.com>',
@@ -78,6 +81,8 @@ export class EmailService {
     }
   }
 
+
+  // Generates a secure random 6-digit token as a string
   async generateToken(): Promise<string> {
     // Genera un token aleatorio de 6 dígitos usando crypto
     const num = randomInt(0, 1000000);
@@ -85,6 +90,7 @@ export class EmailService {
   }
 
 
+  // Sends a verification email to the user with a link to verify their email address
   async sendVerificationEmail(email: string): Promise<void> {
     const verificationUrl = `https://cuddly-broccoli-x795wpw9p55fpg5r-3000.app.github.dev/verifyemail`;
 
@@ -145,6 +151,8 @@ export class EmailService {
     }
   }
 
+
+  // Sends a forgot password email to the user with a link to reset their password
   async sendForgotPasswordEmail(email: string, token: string): Promise<void> {
     const resetUrl = `https://cuddly-broccoli-x795wpw9p55fpg5r-3000.app.github.dev/reset-password?email=${encodeURIComponent(
       email,
@@ -209,6 +217,7 @@ export class EmailService {
   }
 
 
+// Sends a login notification email to the user with security tips
   async sendLoginNotificationEmail(toEmail: string): Promise<void> {
     const mailOptions = {
       from: 'BlockVault <noreply@nextcryptoatm.com>',
@@ -264,7 +273,6 @@ export class EmailService {
     };
 
 
-    
 
     try {
       await this.transporter.sendMail(mailOptions);

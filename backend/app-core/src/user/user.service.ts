@@ -9,6 +9,7 @@ import { TwoFactorAuthService } from '../two-factor/verification.service';
 import { UpdateProfileDto } from './dto/update-profile';
 import { EmailService } from './email.service';
 
+// Service to handle user-related operations such as registration, password management, and profile updates
 @Injectable()
 export class UserService {
   constructor(
@@ -22,6 +23,8 @@ export class UserService {
     return this.userModel.findOne({ email }).exec();
   }
 
+
+  //Register a new user, hash the password, and save to the database
   async register(createUserDto: CreateUserDto) {
     const createUser = new this.userModel(createUserDto);
     const user = await this.getUserByEmail(createUserDto.email);
@@ -33,6 +36,8 @@ export class UserService {
     return createUser.save();
   }
 
+
+// Check if the user's email is verified by looking at the isValid field in the database
   async isEmailVerified(email: string): Promise<{ isVerified: boolean; message: string }> {
     const user = await this.getUserByEmail(email);
     if (!user) {
@@ -46,6 +51,8 @@ export class UserService {
     }
 }
 
+
+// Verify the user's email by setting the isValid field to true in the database
 async verifyEmail(email: string): Promise<boolean> {
   const user = await this.getUserByEmail(email);
   
@@ -66,6 +73,9 @@ async verifyEmail(email: string): Promise<boolean> {
   }
 }
 
+
+
+// Verify the user's email by setting the isValid field to true in the database
 async sendVerificationEmail(email: string): Promise<boolean> {
   const user = await this.getUserByEmail(email);
   
@@ -85,8 +95,8 @@ async sendVerificationEmail(email: string): Promise<boolean> {
   }
 }
 
-  // Legacy token management removed. Two-factor auth is handled solely by TwoFactorAuthService.
 
+// Update the user's token status (enable or disable) in the database
   async updateTokenStatus(email: string, isTokenEnabled: boolean) {
     const user = await this.getUserByEmail(email);
     if (!user) {
@@ -97,6 +107,8 @@ async sendVerificationEmail(email: string): Promise<boolean> {
     return { msg: 'Seguridad de la cuenta actualizada con éxito.' };
   }
 
+
+// Get the user's token status (enabled or disabled) from the database
   async getTokenStatus(email: string) {
     const user = await this.getUserByEmail(email);
     if (!user) {
@@ -105,6 +117,8 @@ async sendVerificationEmail(email: string): Promise<boolean> {
     return { isTokenEnabled: !!user.isTokenEnabled };
   }
 
+
+// Change the user's password by verifying the current password and updating it with the new password in the database
   async changePassword(email: string, changePasswordDto: ChangePasswordDto) {
     const user = await this.getUserByEmail(email);
     if (!user) {
@@ -125,6 +139,8 @@ async sendVerificationEmail(email: string): Promise<boolean> {
     return { message: 'Contraseña actualizada con éxito' };
   }
 
+
+// Update the user's profile information (first name, last name, and email) in the database
   async updateProfile(email: string, updateProfileDto: UpdateProfileDto) {
     const user = await this.getUserByEmail(email);
     if (!user) {

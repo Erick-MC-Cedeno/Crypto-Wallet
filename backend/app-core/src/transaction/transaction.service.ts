@@ -6,6 +6,8 @@ import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { QueryDto } from './dto/query.dto';
 
+
+// This service handles operations related to transactions, such as retrieving specific transactions and fetching all transactions for a user based on their email and the specified coin.
 @Injectable()
 export class TransactionService {
   constructor(
@@ -14,6 +16,8 @@ export class TransactionService {
     @InjectModel(Transaction.name) private transactionModel: Model<TransactionDocument>
   ) { }
 
+
+  // Get a specific transaction by its ID
   async getTransaction(queryDto: QueryDto) {
     const data = await this.transactionModel.findOne(
       { _id: new Types.ObjectId(queryDto.transactionId) },
@@ -25,6 +29,8 @@ export class TransactionService {
     }
   }
 
+
+  // Get all transactions for a user based on their email and the specified coin
   async getTransactions(email: string, queryDto: QueryDto) {
     const data = await this.userModel.aggregate([
       { $match: { email } },

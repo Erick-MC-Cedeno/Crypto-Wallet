@@ -13,6 +13,8 @@ import { Queue } from 'bullmq';
 import { v4 as uuidv4 } from 'uuid';
 import { Transaction, TransactionDocument } from '../transaction/schemas/transaction.schema';
 
+
+// This service handles operations related to wallets, such as creating a new wallet for a user, retrieving wallet information, and processing withdrawal requests. It interacts with the User, Wallet, WalletContract, and Transaction models to perform these operations and uses a queue to handle withdrawal requests asynchronously.
 @Injectable()
 export class WalletService {
 
@@ -24,6 +26,8 @@ export class WalletService {
     @InjectQueue(QueueType.WITHDRAW_REQUEST) private withdrawQueue: Queue
   ) { }
 
+
+  // Create a new wallet for a user based on the provided email, coin, and chainId. If the user already has a wallet for the specified coin and chainId, it returns the existing wallet information. Otherwise, it reserves a new wallet from the wallet contract collection, creates a new wallet document, and associates it with the user.
   async create(createWalletDto: CreateWalletDto) {
     let data = await this.userModel.aggregate([
       { $match: { email: createWalletDto.email } },
@@ -95,6 +99,8 @@ export class WalletService {
     }
   }
 
+
+  // Get a specific wallet for a user based on their email, coin, and chainId. It retrieves the wallet information from the user's associated wallets and returns it if found.
   async getWallet(email: string, queryDto: QueryDto) {
     const data = await this.userModel.aggregate([
       { $match: { email } },
@@ -131,6 +137,8 @@ export class WalletService {
     }
   }
 
+
+  // Get all wallets for a user based on their email. It retrieves the wallet information from the user's associated wallets and returns it as a list.
   async getWallets(email: string) {
     const data = await this.userModel.aggregate([
       { $match: { email } },
@@ -163,6 +171,8 @@ export class WalletService {
     }
   }
 
+
+  // Process a withdrawal request for a user based on the provided email, coin, amount, and destination address. It checks if the user has sufficient balance in their wallet, creates a new transaction for the withdrawal, updates the wallet balance, and adds the withdrawal request to a queue for asynchronous processing.
   async withdraw(withdrawDto: WithdrawDto) {
     const data = await this.userModel.aggregate([
       { $match: { email: withdrawDto.email } },
