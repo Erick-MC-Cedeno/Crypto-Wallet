@@ -9,6 +9,7 @@ import {
     verifyTokenApi,
     changePasswordApi,
     updateTokenStatusApi,
+    tokenStatusApi,
     resendTokenApi,
     updateUserProfileApi,
     sendVerificationEmailApi,
@@ -36,6 +37,10 @@ export default class User {
 
     static async getInfo() {
         return await get(userInfoApi, {});
+    }
+
+    static async getTokenStatus(config) {
+        return await get(tokenStatusApi, {}, config);
     }
 
     static async changePassword(body) {

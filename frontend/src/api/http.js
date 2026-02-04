@@ -1,7 +1,7 @@
 import axios from 'axios'
 axios.defaults.withCredentials = true
 
-const baseApi = 'https://cuddly-broccoli-x795wpw9p55fpg5r-4000.app.github.dev/secure/api'
+const baseApi = 'https://humble-potato-v6746w6ggqgwf6wgv-4000.app.github.dev/secure/api'
 
 // Endpoints usuario
 const loginApi = `${baseApi}/user/login`
@@ -12,6 +12,7 @@ const updateUserProfileApi = `${baseApi}/user/update-profile`
 const changePasswordApi = `${baseApi}/user/change-password`;
 const verifyTokenApi = `${baseApi}/user/verify-token`;
 const updateTokenStatusApi = `${baseApi}/user/update-token-status`;
+const tokenStatusApi = `${baseApi}/user/token-status`;
 const resendTokenApi = `${baseApi}/user/resend-token`
 const verifyEmailApi = `${baseApi}/user/verify-email`;
 const sendVerificationEmailApi = `${baseApi}/user/send-verification-email`;
@@ -44,9 +45,10 @@ const getMessagesApi = `${baseApi}/providers/getMessages/:chatId`
 
 const priceApi = 'https://min-api.cryptocompare.com/data/price?tsyms=USD&fsym='
 
-async function get(url, body) {
+async function get(url, body, config = {}) {
     return await axios.get(url, {
-        params: body || {}
+        params: body || {},
+        ...config
     })
 }
 
@@ -76,6 +78,7 @@ export {
     verifyTokenApi,
     changePasswordApi,
     updateTokenStatusApi,
+    tokenStatusApi,
     resendTokenApi,
     updateUserProfileApi,
     verifyEmailApi,

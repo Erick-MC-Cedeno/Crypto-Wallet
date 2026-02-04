@@ -60,6 +60,13 @@ export class UserController {
   }
 
   @UseGuards(AuthenticatedGuard)
+  @Get('token-status')
+  async getTokenStatus(@Request() req) {
+    const email = req.user.email;
+    return this.userService.getTokenStatus(email);
+  }
+
+  @UseGuards(AuthenticatedGuard)
   @Get('info')
   getUsers(@Request() req) {
     return {

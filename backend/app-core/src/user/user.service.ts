@@ -97,6 +97,14 @@ async sendVerificationEmail(email: string): Promise<boolean> {
     return { msg: 'Seguridad de la cuenta actualizada con éxito.' };
   }
 
+  async getTokenStatus(email: string) {
+    const user = await this.getUserByEmail(email);
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado.');
+    }
+    return { isTokenEnabled: !!user.isTokenEnabled };
+  }
+
   async changePassword(email: string, changePasswordDto: ChangePasswordDto) {
     const user = await this.getUserByEmail(email);
     if (!user) {

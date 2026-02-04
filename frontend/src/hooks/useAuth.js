@@ -115,14 +115,17 @@ export default function useAuth() {
 
     const updateTokenStatus = async (body) => {
         try {
-            const { data } = await User.updateTokenStatus(body);
+            const response = await User.updateTokenStatus(body);
+            const { data } = response || {};
             if (data && data.msg === 'Seguridad de la cuenta actualizada con éxito.') {
                 setSuccessMessage('Seguridad de la cuenta actualizada con éxito.');
             } else {
-                setError(data.error || 'Error al actualizar el estado de seguridad.');
+                setError(data?.error || 'Error al actualizar el estado de seguridad.');
             }
+            return data;
         } catch (err) {
             setError(err.message);
+            return null;
         }
     };
 

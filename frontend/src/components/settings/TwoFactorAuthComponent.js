@@ -23,32 +23,36 @@ const TwoFactorAuthComponent = () => {
   const { auth } = useContext(AuthContext);
   const { updateTokenStatus } = useAuth();
 
-  const [isTokenEnabled, setIsTokenEnabled] = useState(() => localStorage.getItem('isTokenEnabled') === 'true');
+  const [isTokenEnabled, setIsTokenEnabled] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showWarning, setShowWarning] = useState(false);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: '' });
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchTokenStatus = async () => {
-      if (!auth) return;
+      if (!auth) {
+        setLoading(false);
+        return;
+      }
       try {
-        const { data } = await User.getInfo();
-        if (data?.data) {
-          const { isTokenEnabled: tokenStatus } = data.data;
-          if (tokenStatus !== undefined) {
-            setIsTokenEnabled(tokenStatus);
-            localStorage.setItem('isTokenEnabled', String(tokenStatus));
-          }
-        } else {
-          setError(data?.error || 'Error fetching token status');
-        }
+        const response = await User.getTokenStatus({ signal: controller.signal });
+        // backend may return { isTokenEnabled } or { data: { isTokenEnabled } }
+        const tokenStatus = response?.data?.isTokenEnabled ?? response?.data?.data?.isTokenEnabled;
+        setIsTokenEnabled(Boolean(tokenStatus));
       } catch (err) {
-        setError(err.message);
+        if (err.name !== 'CanceledError' && err.name !== 'AbortError') {
+          setError(err.message || 'Error fetching token status');
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchTokenStatus();
+    return () => controller.abort();
   }, [auth]);
 
   const toggleTwoFactorAuth = () => {
@@ -56,32 +60,34 @@ const TwoFactorAuthComponent = () => {
       setShowWarning(true);
       setConfirmDialogOpen(true);
     } else {
-      updateTokenStatusAndLocalStorage(true);
+      updateTokenStatusOnly(true);
     }
   };
-
-  const updateTokenStatusAndLocalStorage = async (newStatus) => {
+  const updateTokenStatusOnly = async (newStatus) => {
+    const previousStatus = isTokenEnabled;
+    // Optimistically update UI
+    setIsTokenEnabled(newStatus);
+    setShowWarning(!newStatus);
+    setLoading(true);
     try {
-      await updateTokenStatus({ email: auth.email, isTokenEnabled: newStatus });
-      setIsTokenEnabled(newStatus);
-      localStorage.setItem('isTokenEnabled', newStatus);
-
-      if (newStatus) {
-        setShowWarning(false); 
-        setSnackbar({ open: true, message: "Autenticación de dos factores activada.", severity: "success" });
-      } else {
-        setShowWarning(true); 
-        setSnackbar({ open: true, message: "Autenticación de dos factores desactivada.", severity: "success" });
-      }
+      const res = await updateTokenStatus({ email: auth.email, isTokenEnabled: newStatus });
+      setSnackbar({ open: true, message: newStatus ? 'Autenticación de dos factores activada.' : 'Autenticación de dos factores desactivada.', severity: 'success' });
+      return res;
     } catch (err) {
-      setError(err.message);
+      // Revert optimistic change on error
+      setIsTokenEnabled(previousStatus);
+      setShowWarning(!previousStatus);
+      setError(err?.message || 'No se pudo actualizar el estado.');
+      return null;
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleConfirmDialogClose = (confirm) => {
     setConfirmDialogOpen(false);
     if (confirm) {
-      updateTokenStatusAndLocalStorage(false);
+      updateTokenStatusOnly(false);
     }
   };
 
@@ -100,7 +106,7 @@ const TwoFactorAuthComponent = () => {
         2FA Auth
       </Typography>
       <FormControlLabel
-        control={<Switch checked={isTokenEnabled} onChange={toggleTwoFactorAuth} color="primary" />}
+        control={<Switch checked={isTokenEnabled} onChange={toggleTwoFactorAuth} color="primary" disabled={loading} />}
         label={
           isTokenEnabled
             ? <span style={{ display: 'flex', alignItems: 'center' }}>
