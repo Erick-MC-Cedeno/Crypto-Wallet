@@ -210,17 +210,19 @@ export default function Login() {
                 variant="body2"
                 sx={{
                   mt: 2,
-                  fontSize: '0.875rem',
-                  color: '#326DEB',
+                  fontSize: '0.9rem',
+                  color: '#1E5BB5',
                   fontWeight: 600,
                   textDecoration: 'none',
+                  textTransform: 'none',
+                  letterSpacing: '0.2px',
                   '&:hover': {
                     textDecoration: 'underline',
-                    color: '#1E5BB5',
+                    color: '#163f7a',
                   },
                 }}
               >
-                No tienes una cuenta? Regístrate
+                ¿Aún no tienes cuenta? Regístrate
               </Link>
             </Grid>
 
@@ -230,17 +232,19 @@ export default function Login() {
                 variant="body2"
                 sx={{
                   mt: 1,
-                  fontSize: '0.875rem',
-                  color: '#326DEB',
+                  fontSize: '0.9rem',
+                  color: '#1E5BB5',
                   fontWeight: 600,
                   textDecoration: 'none',
+                  textTransform: 'none',
+                  letterSpacing: '0.2px',
                   '&:hover': {
                     textDecoration: 'underline',
-                    color: '#1E5BB5',
+                    color: '#163f7a',
                   },
                 }}
               >
-                Olvidé mi contraseña
+                ¿Olvidaste tu contraseña?
               </Link>
             </Grid>
           </Grid>
