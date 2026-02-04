@@ -37,10 +37,22 @@ export class User {
     
     // Campos para restablecimiento de contraseña
     @Prop()
-    resetPasswordToken?: string;
+    resetPasswordTokenHash?: string;
+
+    @Prop()
+    resetPasswordTokenPurpose?: string;
+
+    @Prop({ default: false })
+    resetPasswordTokenUsed?: boolean;
 
     @Prop()
     resetPasswordExpires?: Date;
+
+    @Prop()
+    resetPasswordLastSentAt?: number;
+    
+    @Prop()
+    lastPasswordChange?: number;
     
 }
 
