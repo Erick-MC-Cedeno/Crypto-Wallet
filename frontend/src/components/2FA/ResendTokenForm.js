@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Container, Typography, Box, Grid, Alert } from '@mui/material';
+import { TextField, Button, Typography, Box, Grid, Alert } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useAuth from '../../hooks/useAuth'; 
 import { useHistory } from 'react-router-dom';
@@ -25,88 +25,81 @@ const ResendTokenForm = () => {
     };
 
     return (
-        <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+        <Box
+            sx={{
+                minHeight: 'calc(100vh - 140px)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%'
+            }}
+        >
             <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
                 sx={{
+                    width: '100%',
+                    maxWidth: '480px',
+                    mt: 0,
+                    px: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    width: '100%',
-                    padding: 3,
-                    borderRadius: 2,
-                    boxShadow: '0 0 25px rgba(0, 123, 255, 0.6)',
-                    bgcolor: 'background.paper',
-                    border: '1px solid #ddd',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    animation: 'glow 1.5s infinite alternate'
+                    alignItems: 'center'
                 }}
             >
-                <Box
-                    sx={{
-                        width: 45,
-                        height: 50,
-                        clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-                        bgcolor: '#2186EB',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mb: 2,
-                    }}
-                >
-                    <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ width: '100%', mt: 0 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
+                        <Box sx={{ width: 45, height: 50, clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', bgcolor: '#2186EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <ArrowDropDownIcon sx={{ color: 'white', fontSize: 40 }} />
+                        </Box>
+
+                        <Typography component="h1" variant="h5" sx={{ fontWeight: 502 }}>
+                            BlockVault
+                        </Typography>
+                    </Box>
+
+                    <Typography variant="body1" align="center" sx={{ mb: 2 }}>
+                        Ingresa tu correo electrónico para reenviar el código de verificación
+                    </Typography>
+
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="email"
+                        label="Correo electrónico"
+                        name="email"
+                        autoFocus
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
+                        InputLabelProps={{ shrink: true }}
+                    />
+
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2, color: 'white', bgcolor: '#326DEB', '&:hover': { bgcolor: '#326DEB' } }}
+                    >
+                        Reenviar Código
+                    </Button>
+
+                    <Grid container direction="column" alignItems="center">
+                        {error && (
+                            <Grid item>
+                                <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>
+                            </Grid>
+                        )}
+                        {successMessage && (
+                            <Grid item>
+                                <Alert severity="success" sx={{ mt: 2 }}>{successMessage}</Alert>
+                            </Grid>
+                        )}
+                    </Grid>
                 </Box>
-                <Typography component="h1" variant="h5">
-                    BlockVault
-                </Typography>
-                <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
-                    Ingresa tu correo electrónico para reenviar el código de verificación
-                </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="Correo Electrónico"
-                            variant="outlined"
-                            fullWidth
-                            margin="normal"
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            sx={{ borderRadius: 2 }}
-                        >
-                            Reenviar Código
-                        </Button>
-                    </Grid>
-                    {error && (
-                        <Grid item xs={12}>
-                            <Alert severity="error" sx={{ mt: 2 }}>
-                                {error}
-                            </Alert>
-                        </Grid>
-                    )}
-                    {successMessage && (
-                        <Grid item xs={12}>
-                            <Alert severity="success" sx={{ mt: 2 }}>
-                                {successMessage}
-                            </Alert>
-                        </Grid>
-                    )}
-                </Grid>
             </Box>
-        </Container>
+        </Box>
     );
 };
 

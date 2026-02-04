@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Typography, Box, Button, TextField, Grid, Alert, Container, CircularProgress } from '@mui/material';
+import { Typography, Box, Button, TextField, Grid, Alert, CircularProgress } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import RefreshIcon from '@mui/icons-material/Refresh'; 
 import { useHistory } from 'react-router-dom';
@@ -51,111 +51,94 @@ const VerifyToken = () => {
     };
 
     return (
-        <Container maxWidth="xs" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 2 }}>
+        <Box
+            sx={{
+                minHeight: 'calc(100vh - 140px)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%'
+            }}
+        >
             <Box
-                component="form"
-                onSubmit={handleSubmit}
-                noValidate
                 sx={{
+                    width: '100%',
+                    maxWidth: '480px',
+                    mt: 0,
+                    px: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    alignItems: 'center',
-                    width: '100%',
-                    padding: 3,
-                    borderRadius: 2,
-                    boxShadow: '0 0 25px rgba(0, 123, 255, 0.6)',
-                    bgcolor: 'background.paper',
-                    border: '1px solid #ddd',
-                    position: 'relative',
-                    overflow: 'hidden',
-                    animation: 'glow 1.5s infinite alternate'
+                    alignItems: 'center'
                 }}
             >
-                <Box
-                    sx={{
-                        width: 45,
-                        height: 50,
-                        clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
-                        bgcolor: '#2186EB',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mb: 2,
-                    }}
-                >
-                    <ArrowDropDownIcon sx={{ color: 'white', fontSize: 50 }} />
-                </Box>
-                <Typography component="h1" variant="h5">
-                    BlockVault
-                </Typography>
-                <Typography variant="body1" align="center" sx={{ mb: 4, fontFamily: 'Arial, sans-serif' }}>
-                    Por favor, ingresa el token que recibiste en el correo electrónico
-                </Typography>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Token"
-                            variant="outlined"
-                            name="token"
-                            value={formValues.token}
-                            onChange={handleChange}
-                            required
-                            margin="normal"
-                            InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button 
-                            type="submit" 
-                            variant="contained" 
-                            color="primary" 
-                            fullWidth
-                            sx={{ borderRadius: 2 }} 
-                            disabled={loading} 
-                        >
-                            {loading ? (
-                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <CircularProgress size={20} sx={{ color: '#074EE7FF' }} />
-                                    <Typography sx={{ ml: 1, color: '#074EE7FF', fontSize: '0.875rem' }}>Verificando...</Typography>
-                                </Box>
-                            ) : 'Verificar'}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Box 
-                            sx={{ 
-                                display: 'flex', 
-                                justifyContent: 'center', 
-                                alignItems: 'center', 
-                                mt: 2, 
-                                cursor: 'pointer',
-                                textDecoration: 'underline', 
-                                color: 'primary.main' 
-                            }}
-                            onClick={handleResend} 
-                        >
-                            <RefreshIcon sx={{ mr: 1 }} /> 
-                            <Typography variant="body2">Reenviar Token</Typography>
+                <Box component="form" onSubmit={handleSubmit} noValidate sx={{ width: '100%', mt: 0 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1, mb: 2 }}>
+                        <Box sx={{ width: 45, height: 50, clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', bgcolor: '#2186EB', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <ArrowDropDownIcon sx={{ color: 'white', fontSize: 40 }} />
                         </Box>
-                    </Grid>
-                    {localError && ( 
-                        <Grid item xs={12}>
-                            <Alert severity="error" sx={{ mt: 2 }}>
-                                {localError}
-                            </Alert>
+
+                        <Typography component="h1" variant="h5" sx={{ fontWeight: 502 }}>
+                            BlockVault
+                        </Typography>
+                    </Box>
+
+                    <Typography variant="body1" align="center" sx={{ mb: 2 }}>
+                        Por favor, ingresa el token que recibiste en el correo electrónico
+                    </Typography>
+
+                    <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="token"
+                        label="Token"
+                        name="token"
+                        autoFocus
+                        value={formValues.token}
+                        onChange={handleChange}
+                        InputProps={{ sx: { borderRadius: 2, border: '1px solid #ddd' } }}
+                        InputLabelProps={{ shrink: true }}
+                    />
+
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        sx={{ mt: 3, mb: 2, color: 'white', bgcolor: '#326DEB', '&:hover': { bgcolor: '#326DEB' } }}
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <CircularProgress size={20} sx={{ color: '#074EE7FF' }} />
+                                <Typography sx={{ ml: 1, color: '#074EE7FF', fontSize: '0.875rem' }}>Verificando...</Typography>
+                            </Box>
+                        ) : (
+                            'Verificar'
+                        )}
+                    </Button>
+
+                    <Grid container direction="column" alignItems="center">
+                        <Grid item>
+                            <Box onClick={handleResend} sx={{ mt: 2, fontSize: '0.875rem', color: '#326DEB', fontWeight: 600, cursor: 'pointer', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
+                                Reenviar Token
+                            </Box>
                         </Grid>
+                    </Grid>
+
+                    {localError && (
+                        <Alert severity="error" sx={{ mt: 2 }}>
+                            {localError}
+                        </Alert>
                     )}
                     {error && (
-                        <Grid item xs={12}>
-                            <Alert severity="error" sx={{ mt: 2 }}>
-                                {error}
-                            </Alert>
-                        </Grid>
+                        <Alert severity="error" sx={{ mt: 2 }}>
+                            {error}
+                        </Alert>
                     )}
-                </Grid>
+                </Box>
             </Box>
-        </Container>
+        </Box>
     );
 };
 
