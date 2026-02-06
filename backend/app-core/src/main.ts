@@ -14,7 +14,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['https://cuddly-broccoli-x795wpw9p55fpg5r-3000.app.github.dev'],
+    origin: ['http://localhost:3000'],
     credentials: true
   })
 
