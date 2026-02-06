@@ -77,7 +77,7 @@ const navLinkItemStyle = {
 };
 
 function DashboardContent() {
-  const { auth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { logoutUser } = useAuth();
@@ -93,7 +93,9 @@ function DashboardContent() {
     const action = e.target.innerHTML;
 
     if (action === 'Logout') {
-      await logoutUser();
+      setAuth(null);
+      // Trigger server logout but don't wait for it — reload immediately for instant UX
+      logoutUser().catch(() => {});
       window.location.reload();
     } else if (action === 'Mis billeteras') {
       history.push('/wallets');

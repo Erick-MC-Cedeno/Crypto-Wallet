@@ -25,13 +25,6 @@ export default function useAuth() {
     const logoutUser = async () => {
         try {
             await User.logout();
-            // Preserve isTokenEnabled before clearing localStorage
-            const isTokenEnabled = localStorage.getItem('isTokenEnabled');
-            localStorage.clear();
-            // Restore isTokenEnabled after clearing
-            if (isTokenEnabled) {
-                localStorage.setItem('isTokenEnabled', isTokenEnabled);
-            }
             setAuth(null);
             history.push('/login');
         } catch (err) {
