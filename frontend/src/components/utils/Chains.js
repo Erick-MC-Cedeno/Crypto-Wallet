@@ -1,7 +1,6 @@
 
 const getNetworkName = (chainId) => {
-    const network = getNetWorkList().find(network => String(network.id) === String(chainId))
-    return network ? network.name : `Chain ${chainId}`
+    return getNetWorkList().find(network => network.id === chainId).name
 }
 
 const getCoinList = () => {
@@ -49,11 +48,11 @@ const getNetWorkList = (coin) => {
             explorerBase: 'https://testnet.snowtrace.io/tx/'
         },
         {
-            id: 17000,
+            id: 11155111,
             name: 'Ethereum',
             abbr: 'ethereum',
             coin: 'eth',
-            explorerBase: 'https://holesky.etherscan.io/tx/'
+            explorerBase: 'https://sepolia-optimism.etherscan.io/tx'
         },
         {
             id: 4002,
@@ -72,7 +71,7 @@ const getNetWorkList = (coin) => {
 
 
         {
-            id: 11155111,
+            id: 11155420,
             name: 'Optimism',
             abbr: 'optimism',
             coin: 'op',
@@ -95,13 +94,12 @@ const getDefaultNetworkId = (coin) => {
         eth: 11155111,
         ftm: 4002,
         matic: 80002,
-        op: 11155111
+        op: 11155420
     }[coin.toLowerCase()]
 }
 
 const getNetworkExplorerBase = (chainId) => {
-    const network = getNetWorkList().find(network => String(network.id) === String(chainId))
-    return network ? network.explorerBase : ''
+    return getNetWorkList().find(network => network.id === chainId).explorerBase
 }
 
 const getCoinFee = (coin) => {
