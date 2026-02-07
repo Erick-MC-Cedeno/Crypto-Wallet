@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
     TextField,
     Button,
@@ -12,9 +12,11 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import LockIcon from '@mui/icons-material/Lock';
 import useAuth from '../../hooks/useAuth';
+import { AuthContext } from '../../hooks/AuthContext';
 
 function ChangePasswordComponent() {
     const { changePassword, successMessage, error } = useAuth();
+    const { auth } = useContext(AuthContext);
 
     const [passwords, setPasswords] = useState({
         currentPassword: '',
@@ -37,12 +39,33 @@ function ChangePasswordComponent() {
         setShowPasswords(prev => ({ ...prev, [field]: !prev[field] }));
     };
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const TEN_MINUTES_MS = 10 * 60 * 1000;
+    let remainingMinutes = 0;
+    if (auth && auth.lastPasswordChange) {
+        const elapsed = Date.now() - auth.lastPasswordChange;
+        if (elapsed < TEN_MINUTES_MS) {
+            remainingMinutes = Math.ceil((TEN_MINUTES_MS - elapsed) / (60 * 1000));
+        }
+    }
+
     const handleChangePassword = async () => {
         if (passwords.newPassword !== passwords.confirmNewPassword) {
             alert('Las nuevas contraseñas no coinciden.');
             return;
         }
-        await changePassword(passwords);
+
+        if (passwords.currentPassword === passwords.newPassword) {
+            alert('La nueva contraseña no puede ser igual a la actual.');
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+            await changePassword(passwords);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -84,10 +107,16 @@ function ChangePasswordComponent() {
                     variant="contained"
                     color="primary"
                     onClick={handleChangePassword}
+                    disabled={isSubmitting || remainingMinutes > 0}
                     style={{ marginTop: '16px' }}
                 >
-                    Cambiar Contraseña
+                    {isSubmitting ? 'Cambiando...' : 'Cambiar Contraseña'}
                 </Button>
+                {remainingMinutes > 0 && (
+                    <Alert severity="warning" style={{ marginTop: '16px' }}>
+                        No puedes cambiar la contraseña por otros {remainingMinutes} minuto(s).
+                    </Alert>
+                )}
                 {successMessage && <Alert severity="success" style={{ marginTop: '16px' }}>{successMessage}</Alert>}
                 {error && <Alert severity="error" style={{ marginTop: '16px' }}>{error}</Alert>}
             </form>

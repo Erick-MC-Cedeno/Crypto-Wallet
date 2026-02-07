@@ -54,6 +54,9 @@ export class User {
     @Prop()
     lastPasswordChange?: number;
     
+    @Prop()
+    lastProfileUpdate?: number;
+    
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

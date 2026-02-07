@@ -19,6 +19,16 @@ function UserProfileComponent() {
     const [email, setEmail] = useState(auth.email || '');
     const [localError, setLocalError] = useState('');
     const [localSuccessMessage, setLocalSuccessMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const TEN_MINUTES_MS = 10 * 60 * 1000;
+    let remainingMinutes = 0;
+    if (auth && auth.lastProfileUpdate) {
+        const elapsed = Date.now() - auth.lastProfileUpdate;
+        if (elapsed < TEN_MINUTES_MS) {
+            remainingMinutes = Math.ceil((TEN_MINUTES_MS - elapsed) / (60 * 1000));
+        }
+    }
 
     useEffect(() => {
         if (auth) {
@@ -37,8 +47,22 @@ function UserProfileComponent() {
             return;
         }
 
+        const firstNameChanged = firstName !== (auth.firstName || '');
+        const lastNameChanged = lastName !== (auth.lastName || '');
+        const emailChanged = email !== (auth.email || '');
+
+        if (!firstNameChanged && !lastNameChanged && !emailChanged) {
+            setLocalError('Debes proporcionar valores diferentes a los actuales');
+            return;
+        }
+
         const body = { firstName, lastName, email };
-        await updateUserProfile(body);
+        try {
+            setIsSubmitting(true);
+            await updateUserProfile(body);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     useEffect(() => {
@@ -87,10 +111,16 @@ function UserProfileComponent() {
                     variant="contained"
                     color="primary"
                     onClick={handleUpdateProfile}
+                    disabled={isSubmitting || remainingMinutes > 0}
                     style={{ marginTop: '16px' }}
                 >
-                    Actualizar Perfil
+                    {isSubmitting ? 'Guardando...' : 'Actualizar Perfil'}
                 </Button>
+                {remainingMinutes > 0 && (
+                    <Alert severity="warning" style={{ marginTop: '16px' }}>
+                        No puedes actualizar tu perfil por otros {remainingMinutes} minuto(s).
+                    </Alert>
+                )}
                 {localSuccessMessage && (
                     <Alert severity="success" style={{ marginTop: '16px' }}>
                         {localSuccessMessage}

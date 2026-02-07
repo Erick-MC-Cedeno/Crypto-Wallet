@@ -109,8 +109,8 @@ export class UserController {
   @UseGuards(AuthenticatedGuard)
   @Post('update-profile')
   async updateProfile(@Request() req, @Body() updateProfileDto: UpdateProfileDto) {
-    const email = req.user.email; 
-    return this.userService.updateProfile(email, updateProfileDto);
+    const email = req.user.email;
+    return this.userService.updateProfile(email, updateProfileDto, req);
   }
 
 

@@ -98,6 +98,13 @@ export default function useAuth() {
             const { data } = await User.changePassword(body);
             if (data && data.message === 'Contraseña actualizada con éxito') {
                 setSuccessMessage('Contraseña actualizada con éxito');
+                try {
+                    const infoResp = await User.getInfo();
+                    const user = infoResp?.data?.data;
+                    if (user) setAuth(user);
+                } catch (err) {
+                    // ignore refresh errors
+                }
             } else {
                 setError(data.error || 'Error al cambiar la contraseña.');
             }
@@ -127,6 +134,13 @@ export default function useAuth() {
             const { data } = await User.updateProfile(body);
             if (data && data.message === 'Perfil actualizado con éxito') {
                 setSuccessMessage(data.message);
+                try {
+                    const infoResp = await User.getInfo();
+                    const user = infoResp?.data?.data;
+                    if (user) setAuth(user);
+                } catch (err) {
+                    // ignore refresh errors; UI will still show success
+                }
             } else {
                 setError(data.error || 'Error al actualizar el perfil.');
             }
