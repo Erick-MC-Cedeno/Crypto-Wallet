@@ -6,7 +6,7 @@ const {
     getWeb3WssInstance
 } = require('./index')
 
-const chainId = 17000
+const chainId = 11155111 
 const coin = 'ETH'
 
 const transactionsQueue = new Queue('eth-transactions')
