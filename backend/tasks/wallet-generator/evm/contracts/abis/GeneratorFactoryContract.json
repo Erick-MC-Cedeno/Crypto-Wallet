@@ -27,9 +27,9 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"}],\"name\":\"WalletGenerated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"generate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/GeneratorFactoryContract.sol\":\"GeneratorFactoryContract\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/GeneratorFactoryContract.sol\":{\"keccak256\":\"0x783055e1249ed3ad05a16e0f667b85d2534f859fc1b4451a354a0cbba47800fe\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://af499027e139374ed6dbc85e5f695e6d06b9c0268ed40480dce554bc392f647f\",\"dweb:/ipfs/QmUmkcLaqm7EnCX28XeZY5ivcavLGvNqLhyV4kCcgx262E\"]},\"project:/contracts/WalletContract.sol\":{\"keccak256\":\"0x2c1fe0446a7bd5e3e7cfdefde8ce7206fb2c4b664473bef6dedf5de424d88399\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5ac83999d805c9610845777ce57167a7e39cfcfcecc98459455df5e9fa738c54\",\"dweb:/ipfs/QmRoMw6xU2nNfSfNoMUvXjwzVpFv5pwpNb2eMraDEJwFpm\"]}},\"version\":1}",
-  "bytecode": "0x60a0604052348015600e575f5ffd5b503360805260805161020c61002a5f395f603d015261020c5ff3fe6080604052348015600e575f5ffd5b50600436106026575f3560e01c80632a1bbc3414602a575b5f5ffd5b60306032565b005b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146065575f5ffd5b5f60405160709060cb565b604051809103905ff0801580156088573d5f5f3e3d5ffd5b506040516001600160a01b03821681529091507ffafd07415b3087fafb527aa8504fed621d09005ed8c59e270595d81b99989f4f9060200160405180910390a150565b60ff806100d88339019056fe6080604052348015600e575f5ffd5b5060e48061001b5f395ff3fe608060405236601057600e6013565b005b600e5b662386f26fc10000341060ac576040515f9073a3c3a32fe09709f30ccbfad233c12b85290361d19047908381818185875af1925050503d805f81146071576040519150601f19603f3d011682016040523d82523d5f602084013e6076565b606091505b50509050806082575f5ffd5b6040517fc90bc2a3b112366988312f7a5e1f090f2244e68230808f152122ad4d6d53e8dc905f90a1505b56fea2646970667358221220a3683564df3f078113516c836a71b6bc2c63af0aacf36c834ff12eca8f7560b464736f6c63430008210033a26469706673582212206865d69a42cd31fb80f9c31a2ba1b4e9616865a4e3dd1abb7cd20696b6a94e2364736f6c63430008210033",
-  "deployedBytecode": "0x6080604052348015600e575f5ffd5b50600436106026575f3560e01c80632a1bbc3414602a575b5f5ffd5b60306032565b005b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146065575f5ffd5b5f60405160709060cb565b604051809103905ff0801580156088573d5f5f3e3d5ffd5b506040516001600160a01b03821681529091507ffafd07415b3087fafb527aa8504fed621d09005ed8c59e270595d81b99989f4f9060200160405180910390a150565b60ff806100d88339019056fe6080604052348015600e575f5ffd5b5060e48061001b5f395ff3fe608060405236601057600e6013565b005b600e5b662386f26fc10000341060ac576040515f9073a3c3a32fe09709f30ccbfad233c12b85290361d19047908381818185875af1925050503d805f81146071576040519150601f19603f3d011682016040523d82523d5f602084013e6076565b606091505b50509050806082575f5ffd5b6040517fc90bc2a3b112366988312f7a5e1f090f2244e68230808f152122ad4d6d53e8dc905f90a1505b56fea2646970667358221220a3683564df3f078113516c836a71b6bc2c63af0aacf36c834ff12eca8f7560b464736f6c63430008210033a26469706673582212206865d69a42cd31fb80f9c31a2ba1b4e9616865a4e3dd1abb7cd20696b6a94e2364736f6c63430008210033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.33+commit.64118f21\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"}],\"name\":\"WalletGenerated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"generate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/GeneratorFactoryContract.sol\":\"GeneratorFactoryContract\"},\"evmVersion\":\"osaka\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/GeneratorFactoryContract.sol\":{\"keccak256\":\"0xf8157ea9854d5f63e5b2a6ffcfcae688320a43615170186a43f7628e41dc19ce\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a8100afd53d136b20342a38f4ddae9ded136baaab0bdb73af8723cbd38dad17a\",\"dweb:/ipfs/QmXNmVNWXxbHuHGfqySQQrErPjFicFeBuhsvfqaQoc9WJy\"]},\"project:/contracts/WalletContract.sol\":{\"keccak256\":\"0x2c1fe0446a7bd5e3e7cfdefde8ce7206fb2c4b664473bef6dedf5de424d88399\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://5ac83999d805c9610845777ce57167a7e39cfcfcecc98459455df5e9fa738c54\",\"dweb:/ipfs/QmRoMw6xU2nNfSfNoMUvXjwzVpFv5pwpNb2eMraDEJwFpm\"]}},\"version\":1}",
+  "bytecode": "0x60a0604052348015600e575f5ffd5b503360805260805161020c61002a5f395f603d015261020c5ff3fe6080604052348015600e575f5ffd5b50600436106026575f3560e01c80632a1bbc3414602a575b5f5ffd5b60306032565b005b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146065575f5ffd5b5f60405160709060cb565b604051809103905ff0801580156088573d5f5f3e3d5ffd5b506040516001600160a01b03821681529091507ffafd07415b3087fafb527aa8504fed621d09005ed8c59e270595d81b99989f4f9060200160405180910390a150565b60ff806100d88339019056fe6080604052348015600e575f5ffd5b5060e48061001b5f395ff3fe608060405236601057600e6013565b005b600e5b662386f26fc10000341060ac576040515f9073a3c3a32fe09709f30ccbfad233c12b85290361d19047908381818185875af1925050503d805f81146071576040519150601f19603f3d011682016040523d82523d5f602084013e6076565b606091505b50509050806082575f5ffd5b6040517fc90bc2a3b112366988312f7a5e1f090f2244e68230808f152122ad4d6d53e8dc905f90a1505b56fea2646970667358221220a3683564df3f078113516c836a71b6bc2c63af0aacf36c834ff12eca8f7560b464736f6c63430008210033a2646970667358221220fcf638b81185f5b3442e4ea04c981b35d57291f57db083ed742aee5cf676d56364736f6c63430008210033",
+  "deployedBytecode": "0x6080604052348015600e575f5ffd5b50600436106026575f3560e01c80632a1bbc3414602a575b5f5ffd5b60306032565b005b336001600160a01b037f000000000000000000000000000000000000000000000000000000000000000016146065575f5ffd5b5f60405160709060cb565b604051809103905ff0801580156088573d5f5f3e3d5ffd5b506040516001600160a01b03821681529091507ffafd07415b3087fafb527aa8504fed621d09005ed8c59e270595d81b99989f4f9060200160405180910390a150565b60ff806100d88339019056fe6080604052348015600e575f5ffd5b5060e48061001b5f395ff3fe608060405236601057600e6013565b005b600e5b662386f26fc10000341060ac576040515f9073a3c3a32fe09709f30ccbfad233c12b85290361d19047908381818185875af1925050503d805f81146071576040519150601f19603f3d011682016040523d82523d5f602084013e6076565b606091505b50509050806082575f5ffd5b6040517fc90bc2a3b112366988312f7a5e1f090f2244e68230808f152122ad4d6d53e8dc905f90a1505b56fea2646970667358221220a3683564df3f078113516c836a71b6bc2c63af0aacf36c834ff12eca8f7560b464736f6c63430008210033a2646970667358221220fcf638b81185f5b3442e4ea04c981b35d57291f57db083ed742aee5cf676d56364736f6c63430008210033",
   "immutableReferences": {
     "4": [
       {
@@ -233,7 +233,7 @@
   ],
   "sourceMap": "95:378:0:-:0;;;222:50;;;;;;;;;-1:-1:-1;254:10:0;246:18;;95:378;;;;;;;;;;;;",
   "deployedSourceMap": "95:378:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;280:190;;;:::i;:::-;;;328:10;-1:-1:-1;;;;;342:5:0;328:19;;320:28;;;;;;359:14;402:20;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;439:23:0;;-1:-1:-1;;;;;178:32:4;;160:51;;359:64:0;;-1:-1:-1;439:23:0;;148:2:4;133:18;439:23:0;;;;;;;309:161;280:190::o;-1:-1:-1:-;;;;;;;;:::o",
-  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.17;\r\n\r\nimport './WalletContract.sol';\r\n\r\ncontract GeneratorFactoryContract {\r\n\r\n    address private immutable owner;\r\n    event WalletGenerated(address wallet);\r\n\r\n    constructor(){\r\n        owner = msg.sender;\r\n    }\r\n\r\n    function generate() external {\r\n        require(msg.sender == owner);\r\n        address wallet = address(\r\n                new WalletContract());\r\n        emit WalletGenerated(wallet);\r\n    }\r\n}",
+  "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.33;\r\n\r\nimport './WalletContract.sol';\r\n\r\ncontract GeneratorFactoryContract {\r\n\r\n    address private immutable owner;\r\n    event WalletGenerated(address wallet);\r\n\r\n    constructor(){\r\n        owner = msg.sender;\r\n    }\r\n\r\n    function generate() external {\r\n        require(msg.sender == owner);\r\n        address wallet = address(\r\n                new WalletContract());\r\n        emit WalletGenerated(wallet);\r\n    }\r\n}",
   "sourcePath": "C:\\Users\\loredounipass\\Downloads\\Crypto-Wallet\\backend\\tasks\\wallet-generator\\evm\\contracts\\GeneratorFactoryContract.sol",
   "ast": {
     "absolutePath": "project:/contracts/GeneratorFactoryContract.sol",
@@ -255,7 +255,7 @@
           "solidity",
           "^",
           "0.8",
-          ".17"
+          ".33"
         ],
         "nodeType": "PragmaDirective",
         "src": "33:24:0"
@@ -828,8 +828,8 @@
     "11155111": {
       "events": {},
       "links": {},
-      "address": "0xe6D541EBAB9F02A94bbAff12B4059de6A5e7fD5e",
-      "transactionHash": "0x4cb8cd584b7e13d3a6f42f314198ff0daa58476e7844d408e01e3a406d540d40"
+      "address": "0x3F433a1816E6D463bc4Fb83B27808B07E0C43AC8",
+      "transactionHash": "0x48d0e50856fa489ed8cbac5b319efe51393d61d24f64a5697a361d4549003587"
     },
     "11155420": {
       "events": {},
@@ -839,7 +839,7 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-02-07T21:59:02.918Z",
+  "updatedAt": "2026-02-08T02:24:03.884Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
