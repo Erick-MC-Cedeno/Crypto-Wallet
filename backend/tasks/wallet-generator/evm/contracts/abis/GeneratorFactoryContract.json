@@ -234,7 +234,7 @@
   "sourceMap": "95:378:0:-:0;;;222:50;;;;;;;;;-1:-1:-1;254:10:0;246:18;;95:378;;;;;;;;;;;;",
   "deployedSourceMap": "95:378:0:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;280:190;;;:::i;:::-;;;328:10;-1:-1:-1;;;;;342:5:0;328:19;;320:28;;;;;;359:14;402:20;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;439:23:0;;-1:-1:-1;;;;;178:32:4;;160:51;;359:64:0;;-1:-1:-1;439:23:0;;148:2:4;133:18;439:23:0;;;;;;;309:161;280:190::o;-1:-1:-1:-;;;;;;;;:::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.33;\r\n\r\nimport './WalletContract.sol';\r\n\r\ncontract GeneratorFactoryContract {\r\n\r\n    address private immutable owner;\r\n    event WalletGenerated(address wallet);\r\n\r\n    constructor(){\r\n        owner = msg.sender;\r\n    }\r\n\r\n    function generate() external {\r\n        require(msg.sender == owner);\r\n        address wallet = address(\r\n                new WalletContract());\r\n        emit WalletGenerated(wallet);\r\n    }\r\n}",
-  "sourcePath": "C:\\Users\\loredounipass\\Downloads\\Crypto-Wallet\\backend\\tasks\\wallet-generator\\evm\\contracts\\GeneratorFactoryContract.sol",
+  "sourcePath": "/workspaces/Crypto-Wallet/backend/tasks/wallet-generator/evm/contracts/GeneratorFactoryContract.sol",
   "ast": {
     "absolutePath": "project:/contracts/GeneratorFactoryContract.sol",
     "exportedSymbols": {
@@ -828,8 +828,8 @@
     "11155111": {
       "events": {},
       "links": {},
-      "address": "0x3F433a1816E6D463bc4Fb83B27808B07E0C43AC8",
-      "transactionHash": "0x48d0e50856fa489ed8cbac5b319efe51393d61d24f64a5697a361d4549003587"
+      "address": "0xE8e6C9614922E33e48aFaca5AB1E4Cd2Baed90d2",
+      "transactionHash": "0x35b1a4465230dbfd665181c4e8b3b97f2448ab501d795e5780c11d5b30715eaf"
     },
     "11155420": {
       "events": {},
@@ -839,7 +839,7 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-02-08T02:24:03.884Z",
+  "updatedAt": "2026-02-08T04:34:00.894Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

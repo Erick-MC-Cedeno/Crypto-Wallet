@@ -95,7 +95,7 @@
   "sourceMap": "61:561:1:-:0;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "61:561:1:-:0;;;;;;561:9;:7;:9::i;:::-;61:561;;608:9;283:241;125:17;324:9;:16;321:196;;375:58;;357:12;;196:42;;407:21;;357:12;375:58;357:12;375:58;407:21;196:42;375:58;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;356:77;;;456:7;448:16;;;;;;484:21;;;;;;;341:176;321:196;283:241::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.33;\r\n\r\ncontract WalletContract {\r\n\r\n    uint256 private constant MIN = 10000000000000000; // 0.01 \r\n    address private constant HOT_WALLET = 0xA3c3a32Fe09709f30CCbfaD233c12b85290361d1;\r\n\r\n    event DepositedOnMetaDapp();\r\n\r\n    function forward() private {\r\n        if(msg.value >= MIN){\r\n            (bool success, ) = payable(HOT_WALLET).call{value: address(this).balance}(\"\");\r\n            require(success);\r\n            emit DepositedOnMetaDapp();\r\n        }\r\n    }\r\n\r\n    receive() external payable { forward();}\r\n    fallback() external payable { forward();}\r\n}",
-  "sourcePath": "C:\\Users\\loredounipass\\Downloads\\Crypto-Wallet\\backend\\tasks\\wallet-generator\\evm\\contracts\\WalletContract.sol",
+  "sourcePath": "/workspaces/Crypto-Wallet/backend/tasks/wallet-generator/evm/contracts/WalletContract.sol",
   "ast": {
     "absolutePath": "project:/contracts/WalletContract.sol",
     "exportedSymbols": {
@@ -835,7 +835,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.16",
-  "updatedAt": "2026-02-08T02:22:25.367Z",
+  "updatedAt": "2026-02-08T04:12:22.586Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
