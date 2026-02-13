@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid')
 const connectDB = require(`${appRoot}/config/db/getMongoose`)
 
 connectDB.then(() => {
-    new Worker('WithdrawedFromBlockVault', async (job) => {
+    new Worker('WithdrawedFromMetaDapp', async (job) => {
         const { withdrawAddress, transactionHash, transactionId, amount, coin, chainId } = job.data
         const withDrawQueue = new Queue(`${coin.toLowerCase()}-withdraws`)
         withDrawQueue.add('withdraw', {
